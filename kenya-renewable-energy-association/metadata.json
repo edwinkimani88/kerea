@@ -1,0 +1,6 @@
+{
+  "name": "Kenya Renewable Energy Association",
+  "description": "The official web platform of KEREA, promoting the growth and development of renewable energy technologies and services in Kenya.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
