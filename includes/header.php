@@ -6,7 +6,8 @@ if(!isset($active_page)) $active_page = "home";
 <!-- Premium Preloader - Using Logo Load -->
 <div id="preloader">
     <div class="loader-content">
-        <img src="<?php echo $base_url; ?>assets/Logo Load.png" alt="Kerea Loading" class="loader-logo">
+        <img src="<?php echo $base_url; ?>assets/logo-load.png" alt="Kerea Loading" class="loader-logo">
+
         <div class="w-32 h-1 bg-slate-100 rounded-full overflow-hidden mt-4">
             <div id="preloader-bar" class="h-full bg-primary w-0 transition-all duration-700"></div>
         </div>
@@ -42,7 +43,7 @@ if(!isset($active_page)) $active_page = "home";
         <div class="flex justify-between items-center">
             <!-- Logo - Official KereaMain -->
             <a href="<?php echo $base_url; ?>" class="flex items-center gap-4 group">
-                <img src="<?php echo $base_url; ?>assets/Kerea Logo Main.png" alt="KEREA" class="h-12 w-auto object-contain">
+                <img src="<?php echo $base_url; ?>assets/kerea-logo-main.png" alt="KEREA" class="h-12 w-auto object-contain">
                 <div class="hidden sm:flex flex-col border-l border-slate-200 pl-4">
                     <span class="text-xl font-black tracking-tight text-black leading-none">KEREA</span>
                     <span class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mt-1">Industry Peak Body</span>
@@ -88,7 +89,7 @@ if(!isset($active_page)) $active_page = "home";
     <div class="absolute top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl flex flex-col overflow-y-auto">
         <div class="p-6 border-b border-slate-100 flex items-center justify-between">
             <a href="<?php echo $base_url; ?>" class="flex items-center gap-3">
-                <img src="<?php echo $base_url; ?>assets/Kerea Logo Main.png" alt="KEREA" class="h-9 w-auto">
+                <img src="<?php echo $base_url; ?>assets/kerea-logo-main.png" alt="KEREA" class="h-9 w-auto">
                 <span class="font-black text-lg tracking-tight text-black">KEREA</span>
             </a>
             <button id="mobile-menu-close" class="p-2 rounded-xl bg-slate-100 hover:bg-primary transition-all">

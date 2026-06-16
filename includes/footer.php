@@ -8,7 +8,7 @@
             <!-- Brand Column -->
             <div class="space-y-8">
                 <a href="<?php echo $base_url; ?>" class="flex items-center gap-3">
-                    <img src="<?php echo $base_url; ?>assets/Kerea Logo Main.png" alt="KEREA" class="h-10 w-auto filter brightness-0 invert opacity-90">
+                    <img src="<?php echo $base_url; ?>assets/kerea-logo-main.png" alt="KEREA" class="h-10 w-auto filter brightness-0 invert opacity-90">
                     <span class="text-xl font-black tracking-tight">KEREA</span>
                 </a>
                 <p class="text-sm text-slate-400 leading-relaxed max-w-xs font-medium">
