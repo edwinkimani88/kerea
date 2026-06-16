@@ -95,128 +95,247 @@ $active_page = "marketplace";
             </div>
         </section>
 
-        <!-- 3. TRENDING HARDWARE (RESTORED CONTENT) -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <div class="lg:col-span-8 space-y-12">
-                <div class="reveal-on-scroll border-b border-slate-100 pb-8">
-                    <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">New Inventory</span>
-                    <h2 class="text-4xl font-black text-black tracking-tight">Verified Hardware Sales</h2>
-                </div>
-
-                <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-3 gap-8">
-                    <?php 
-                    $prods = [
-                        ['Solar Module 450W', 'Solar PV', 18500, 22000, 'https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=600&q=80', true],
-                        ['Induction Tablet', 'E-Cooking', 28000, null, 'https://images.unsplash.com/photo-1574269603917-389f5a6550bf?auto=format&fit=crop&w=600&q=80', false],
-                        ['LiFePO4 5kWh Array', 'Storage', 135000, 150000, 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=600&q=80', true]
-                    ];
-                    foreach($prods as $p):
-                        $discount = $p[3] ? round((($p[3] - $p[2]) / $p[3]) * 100) : null;
-                    ?>
-                    <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500">
-                        <div class="relative aspect-square bg-slate-50 overflow-hidden">
-                            <img src="<?php echo $p[4]; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                            <?php if($discount): ?><span class="absolute top-6 left-6 bg-red-600 text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg">-<?php echo $discount; ?>%</span><?php endif; ?>
-                            <?php if($p[5]): ?><span class="absolute bottom-6 left-6 bg-primary text-black text-[9px] font-black uppercase px-3 py-1 rounded-lg tracking-wider border border-black/10 shadow-lg">EPRA Approved</span><?php endif; ?>
-                        </div>
-                        <div class="p-8 space-y-8 flex flex-col justify-between">
-                            <div>
-                                <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p[1]; ?></span>
-                                <h3 class="font-black text-base text-black group-hover:text-primary transition mt-2 leading-tight"><?php echo $p[0]; ?></h3>
-                            </div>
-                            <div class="pt-8 border-t border-slate-50 flex items-center justify-between">
-                                <span class="text-lg font-black text-black leading-none">KES <?php echo number_format($p[2]); ?></span>
-                                <a href="product/" class="w-12 h-12 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center shadow-lg">
-                                    <i data-lucide="chevron-right" class="w-6 h-6"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <!-- Deal of the Week - Updated Spotlight -->
-            <div class="lg:col-span-4 bg-black p-10 rounded-[3rem] space-y-10 relative overflow-hidden shadow-3xl border border-white/5">
-                <div class="absolute -right-24 -top-24 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
-                <div class="flex justify-between items-center relative z-10">
-                    <span class="text-[10px] font-black uppercase tracking-widest px-5 py-2 bg-primary text-black rounded-full shadow-2xl">Bundle Deal</span>
-                    <div class="flex items-center gap-2 text-xs text-primary font-black">
-                        <i data-lucide="zap" class="w-4 h-4 animate-pulse"></i> STOCK LOW
-                    </div>
-                </div>
-                <div class="space-y-4 relative z-10">
-                    <h3 class="text-3xl font-black text-white leading-tight">Solar Pumping <br />Hybrid Module</h3>
-                    <p class="text-slate-500 text-xs font-bold uppercase tracking-widest">Complete borehole extraction kit.</p>
-                </div>
-                <div class="aspect-video bg-white/5 rounded-3xl overflow-hidden relative z-10 group border border-white/10 shadow-inner">
-                    <img src="https://images.unsplash.com/photo-1548543604-a87a9989fd0f?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700">
-                </div>
-                <div class="flex items-end gap-3 relative z-10 border-b border-white/10 pb-8">
-                    <span class="text-4xl font-black text-primary leading-none">KES 45k</span>
-                    <span class="text-sm text-slate-600 line-through font-bold">KES 60k</span>
-                </div>
-                <button class="w-full py-6 bg-white text-black hover:bg-primary font-black text-[11px] uppercase tracking-[0.3em] rounded-2xl transition duration-500 shadow-2xl relative z-10">Claim This Offer</button>
-            </div>
-        </section>
-
-        <!-- 4. VETTES VENDOR DIRECTORY (RESTORED CONTENT) -->
+        <!-- 3. ELECTRIC COOKING SECTION -->
         <section class="space-y-12">
-            <div class="reveal-on-scroll flex flex-col md:flex-row justify-between items-end gap-6 border-b border-slate-100 pb-8">
-                <div class="space-y-3">
-                    <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">SME Ecosystem</span>
-                    <h2 class="text-4xl font-black text-black tracking-tight">Kerea Verified Manufacturers</h2>
-                </div>
-                <a href="vendor/" class="px-8 py-3 bg-slate-50 hover:bg-black hover:text-white text-black font-black text-[10px] uppercase tracking-widest rounded-xl transition-all border border-slate-200">View All Partners</a>
+            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
+                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 01</span>
+                <h2 class="text-4xl font-black text-black tracking-tight">Electric Cooking (EPCs & Induction)</h2>
             </div>
-            <div class="stagger-reveal grid grid-cols-1 md:grid-cols-2 gap-10">
-                <!-- Vendor 1 -->
-                <div class="p-10 bg-white border border-slate-100 rounded-4xl shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all flex flex-col sm:flex-row gap-8 items-start group">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-5xl shrink-0 shadow-inner group-hover:bg-black group-hover:text-primary transition-all">☀️</div>
-                    <div class="space-y-5 flex-1">
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-[9px] px-3 py-1 rounded bg-black text-primary font-black uppercase tracking-widest">Verified Tier 1</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">EST. 2012</span>
-                            </div>
-                            <h3 class="text-2xl font-black text-black">Safi Solar Solutions</h3>
-                            <p class="text-[11px] text-slate-400 flex items-center gap-2 font-black uppercase tracking-widest"><i data-lucide="map-pin" class="w-4 h-4 text-primary"></i> Nairobi Headquarters</p>
+
+            <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                <?php 
+                $electric = [
+                    ['Sayona SPC-100 EPC', '6L | 1000W | Sauté Mode', 7127, 'assets/Sayona Sayona SPC-100.png', 'Nagoya Holdings'],
+                    ['Tefal All-in-One EPC', '6L | 1000W | 16 Options', 8500, 'assets/Tefal Electric Pressure.png', 'Mwangaza Light'],
+                    ['Sayona SPC 4413 EPC', '6L | 1000W | 8 Options', 8301, 'assets/SPC 4413 EPC - Sayonna.png', 'Nagoya Holdings'],
+                    ['Sayona SPC 4572 EPC', '8L | 1200W | 16 Options', 10571, 'assets/Sayonna SPC 4572 EPC.png', 'Nagoya Holdings'],
+                    ['Quooker Digi EPC', '6L | 1000W | 16 Options', 11600, 'assets/Quooker Digi EPC.png', 'Nyalore Impact'],
+                    ['Sayona SPC 4567 (Cooker & Air Fryer)', '6L | Air Fryer 1500W', 11683, 'assets/Sayonna SPC 4567 pressure cooker & Air Fryer.png', 'Nagoya Holdings'],
+                    ['PawaPot JD-29ED EPC', '6L | 1000W | 17 Menus', 12100, 'assets/PawaPot JD-29ED EPC.png', 'SCODE Ltd'],
+                    ['Ramtons RM/582 EPC', '6L | 1100W | 12 Recipes', 11900, 'assets/Ramtons RM 582 EPC.png', 'Hypermart Ltd'],
+                    ['Ramtons RM/782 EPC', '8L | 1100W | 12 Recipes', 15900, 'assets/Ramtons RM 782 EPC.png', 'Hypermart Ltd'],
+                    ['Sayona SPC 4328 (Cooker & Air Fryer)', '6L | 1500W | 29 Presets', 15592, 'assets/Sayonna SPC 4328 Electric Pressure Cooker & Air Fryer.png', 'Nagoya Holdings'],
+                    ['Ramtons RM/381 Single Induction', '2000W | Crystal Glass | Timer', 9900, 'assets/Ramtons RM 381 Induction cooker.png', 'Hypermart Ltd'],
+                    ['Ramtons RM/773 Double Induction', '2000W | Double Burner | Safety Lock', 14990, 'assets/Ramtons RM 773 Induction cooker.png', 'Hypermart Ltd'],
+                    ['ECook Double Induction', '2000W | 7 Menu Functions', 28000, 'assets/ECook Induction cooker.png', 'Mwangaza Light']
+                ];
+                foreach($electric as $p):
+                ?>
+                <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full">
+                    <div class="relative aspect-square bg-slate-50 overflow-hidden shrink-0">
+                        <img src="<?php echo $base_url . $p[3]; ?>" alt="<?php echo $p[0]; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <span class="absolute bottom-4 left-4 bg-primary text-black text-[8px] font-black uppercase px-2 py-1 rounded-md tracking-wider border border-black/5 shadow-sm">Verified Gear</span>
+                    </div>
+                    <div class="p-6 space-y-4 flex flex-col justify-between flex-1">
+                        <div>
+                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p[4]; ?></span>
+                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p[0]; ?></h3>
+                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo $p[1]; ?></p>
                         </div>
-                        <p class="text-xs text-slate-500 font-bold leading-relaxed">EPRA Registered Commercial Installer. Specialists in Large-scale solar irrigation and agri-PV systems.</p>
-                        <div class="flex justify-between items-center pt-8 border-t border-slate-50">
-                            <div class="flex items-center gap-1">
-                                <i data-lucide="star" class="w-4 h-4 fill-primary text-primary"></i>
-                                <span class="text-xs text-black font-black">4.9 Performance Rating</span>
-                            </div>
-                            <a href="#" class="text-[10px] font-black text-black hover:text-primary transition-colors flex items-center gap-1 uppercase tracking-widest">Storefront <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                        <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
+                            <span class="text-base font-black text-black">KES <?php echo number_format($p[2]); ?></span>
+                            <a href="product/" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
+                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <!-- 4. BIO-ETHANOL & GEL STOVES -->
+        <section class="space-y-12">
+            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
+                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 02</span>
+                <h2 class="text-4xl font-black text-black tracking-tight">Bio-Ethanol & Gel Stoves</h2>
+            </div>
+
+            <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <?php 
+                $ethanol = [
+                    ['Moto Safe Double Burner', 'Iron Construction | Manual', 2500, 'assets/Moto Safe Bio Ethanol Stove.png', 'PharmChem Labs'],
+                    ['Moto Safe Single Burner', 'Iron Construction | Manual', 2000, 'assets/Moto Safe Bio Ethanol Stove sINGLE BURNER.png', 'PharmChem Labs'],
+                    ['Moto Smart Gel Stove (M)', 'Pure Aluminium | Portable', 1500, 'assets/Moto Smart Stove.png', 'SilverTech'],
+                    ['Moto Smart Gel Stove (L)', 'Heavy-Duty Build', 3500, 'assets/Moto Smart Stove.png', 'SilverTech']
+                ];
+                foreach($ethanol as $p):
+                ?>
+                <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500">
+                    <div class="relative aspect-square bg-slate-50 overflow-hidden">
+                        <img src="<?php echo $base_url . $p[3]; ?>" alt="<?php echo $p[0]; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div>
+                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p[4]; ?></span>
+                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p[0]; ?></h3>
+                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo $p[1]; ?></p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
+                            <span class="text-base font-black text-black">KES <?php echo number_format($p[2]); ?></span>
+                            <a href="product/" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
+                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Fuels and Refills -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
+                <div class="p-8 bg-slate-50 rounded-[30px] border border-slate-100 flex items-center gap-6 group hover:bg-white hover:shadow-xl transition-all">
+                    <img src="<?php echo $base_url; ?>assets/Moto Safe Bio Ethanol Fuel.png" class="w-20 h-20 object-contain">
+                    <div>
+                        <h4 class="font-black text-black text-sm">Bio Ethanol Liquid</h4>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">KES 200 / Litre</p>
+                    </div>
+                </div>
+                <div class="p-8 bg-slate-50 rounded-[30px] border border-slate-100 flex items-center gap-6 group hover:bg-white hover:shadow-xl transition-all">
+                    <img src="<?php echo $base_url; ?>assets/Moto Safe Fuel Gel.png" class="w-20 h-20 object-contain">
+                    <div>
+                        <h4 class="font-black text-black text-sm">Moto Safe Fuel Gel</h4>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">From KES 180 / Litre</p>
+                    </div>
+                </div>
+                <div class="p-8 bg-slate-50 rounded-[30px] border border-slate-100 flex items-center gap-6 group hover:bg-white hover:shadow-xl transition-all">
+                    <img src="<?php echo $base_url; ?>assets/Moto Smart Gel Fuel (Low smoke).png" class="w-20 h-20 object-contain">
+                    <div>
+                        <h4 class="font-black text-black text-sm">Low Smoke Smart Gel</h4>
+                        <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">KES 160 / Litre</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. BIO-DIGESTERS -->
+        <section class="space-y-12">
+            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
+                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 03</span>
+                <h2 class="text-4xl font-black text-black tracking-tight">Bio-Digester Systems</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <!-- Fixed Dome -->
+                <div class="group bg-white border border-slate-100 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-3xl transition-all">
+                    <div class="w-full md:w-2/5 aspect-square bg-slate-100 overflow-hidden">
+                        <img src="<?php echo $base_url; ?>assets/Biodigester Dome.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-10 flex-1 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Masonry Construction</span>
+                            <h3 class="text-3xl font-black text-black leading-tight">Fixed Dome Biodigester</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed font-bold">Built-to-last underground system. Zero maintenance, delivers continuous clean gas and bio-slurry fertilizer.</p>
+                        </div>
+                        <div class="pt-8 flex items-center justify-between">
+                            <span class="text-xs font-black text-black uppercase tracking-widest">Quote on Assessment</span>
+                            <a href="../contact/" class="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-black transition">Book Survey</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Vendor 2 -->
-                <div class="p-10 bg-white border border-slate-100 rounded-4xl shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all flex flex-col sm:flex-row gap-8 items-start group">
-                    <div class="w-20 h-20 rounded-3xl bg-slate-50 flex items-center justify-center text-5xl shrink-0 shadow-inner group-hover:bg-black group-hover:text-primary transition-all">🔋</div>
-                    <div class="space-y-5 flex-1">
-                        <div class="space-y-2">
-                            <div class="flex items-center gap-3">
-                                <span class="text-[9px] px-3 py-1 rounded bg-black text-primary font-black uppercase tracking-widest">Verified Tier 1</span>
-                                <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">EST. 2015</span>
-                            </div>
-                            <h3 class="text-2xl font-black text-black">Voltaic Kenya Hub</h3>
-                            <p class="text-[11px] text-slate-400 flex items-center gap-2 font-black uppercase tracking-widest"><i data-lucide="map-pin" class="w-4 h-4 text-primary"></i> Mombasa Industrial Hub</p>
+                <!-- Prefabricated -->
+                <div class="group bg-white border border-slate-100 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-3xl transition-all">
+                    <div class="w-full md:w-2/5 aspect-square bg-slate-100 overflow-hidden">
+                        <img src="<?php echo $base_url; ?>assets/Prefabricated Biodigester.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-10 flex-1 flex flex-col justify-between">
+                        <div class="space-y-4">
+                            <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Portable HDPE</span>
+                            <h3 class="text-3xl font-black text-black leading-tight">Prefabricated Biodigester</h3>
+                            <p class="text-xs text-slate-500 leading-relaxed font-bold">Ready-to-use modern setup. Lightweight, portable, and starts producing fuel immediately.</p>
                         </div>
-                        <p class="text-xs text-slate-500 font-bold leading-relaxed">Leading distributor of Tier 1 PERC modules and Lithium storage banks. 10-year local service warranty guaranteed.</p>
-                        <div class="flex justify-between items-center pt-8 border-t border-slate-50">
-                            <div class="flex items-center gap-1">
-                                <i data-lucide="star" class="w-4 h-4 fill-primary text-primary"></i>
-                                <span class="text-xs text-black font-black">4.8 Performance Rating</span>
-                            </div>
-                            <a href="#" class="text-[10px] font-black text-black hover:text-primary transition-colors flex items-center gap-1 uppercase tracking-widest">Storefront <i data-lucide="arrow-right" class="w-4 h-4"></i></a>
+                        <div class="pt-8 flex items-center justify-between">
+                            <span class="text-xs font-black text-black uppercase tracking-widest">Quick Installation</span>
+                            <a href="../contact/" class="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-black transition">Inquire Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-10 bg-black rounded-[3rem] text-center space-y-6">
+                <p class="text-slate-400 text-sm font-bold">Biogas systems require a physical site survey prior to installation.</p>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <div class="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-black text-xs uppercase tracking-widest">
+                        Dial <span class="text-primary">*789*788#</span>
+                    </div>
+                    <a href="https://abc.kenyabiogas.com/companies/" target="_blank" class="px-8 py-4 bg-primary text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white transition">Visit ABC Kenya</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. IMPROVED COOKSTOVES (ICS) -->
+        <section class="space-y-12 pb-24">
+            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
+                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 04</span>
+                <h2 class="text-4xl font-black text-black tracking-tight">Improved Cookstoves (ICS)</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Portable Jiko -->
+                <div class="group bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all">
+                    <div class="aspect-square rounded-[2rem] overflow-hidden mb-8">
+                        <img src="<?php echo $base_url; ?>assets/Portable Jikosasa Stove.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <h3 class="text-xl font-black text-black mb-3">Portable Jiko Kisasa</h3>
+                    <p class="text-xs text-slate-500 font-bold leading-relaxed mb-8">Traditional ceramic liner in durable metal housing. Perfect for small to medium households.</p>
+                    <div class="flex justify-between items-center pt-6 border-t border-slate-50">
+                        <span class="text-[10px] font-black uppercase text-slate-400">Available</span>
+                        <a href="../contact/" class="text-[10px] font-black uppercase text-primary hover:text-black transition">Inquire <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
+                    </div>
+                </div>
+
+                <!-- Fixed Jiko -->
+                <div class="group bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all">
+                    <div class="aspect-square rounded-[2rem] overflow-hidden mb-8">
+                        <img src="<?php echo $base_url; ?>assets/Fixed Jikosasa Stove.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <h3 class="text-xl font-black text-black mb-3">Fixed Jiko Kisasa</h3>
+                    <p class="text-xs text-slate-500 font-bold leading-relaxed mb-8">Stationary brick/clay installation. Customizable with multiple burners for efficiency.</p>
+                    <div class="flex justify-between items-center pt-6 border-t border-slate-50">
+                        <span class="text-[10px] font-black uppercase text-slate-400">Custom Built</span>
+                        <a href="../contact/" class="text-[10px] font-black uppercase text-primary hover:text-black transition">Inquire <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
+                    </div>
+                </div>
+
+                <!-- Institutional -->
+                <div class="group bg-black p-10 rounded-[3rem] border border-white/10 shadow-3xl text-white flex flex-col justify-center">
+                    <div class="space-y-6">
+                        <i data-lucide="shovels" class="w-12 h-12 text-primary"></i>
+                        <h3 class="text-2xl font-black text-white">Institutional Cookstoves</h3>
+                        <p class="text-xs text-slate-400 font-bold leading-relaxed">High-capacity iron installations for schools, hospitals, and community centers.</p>
+                        <div class="pt-6 border-t border-white/10">
+                            <a href="../contact/" class="inline-flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-widest">Connect with Artisan <i data-lucide="external-link" class="w-4 h-4"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Eco Impact Banner -->
+            <div class="relative rounded-[3rem] overflow-hidden bg-emerald-950 p-12 text-center text-white">
+                <div class="absolute inset-0 opacity-10">
+                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200" class="w-full h-full object-cover">
+                </div>
+                <div class="relative z-10 max-w-3xl mx-auto space-y-8">
+                    <h3 class="text-3xl font-black">1 Million+ Clean Cookstoves Deployed</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                        <div>
+                            <p class="text-3xl font-black text-primary">$50M+</p>
+                            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-300">Fuel Savings</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-black text-primary">800k+</p>
+                            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-300">Tonnes CO2 Offset</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-black text-primary">12k+</p>
+                            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-300">Local Jobs Created</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+
 
     </main>
 
