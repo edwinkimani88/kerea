@@ -104,37 +104,24 @@ $active_page = "marketplace";
 
             <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 <?php 
-                $electric = [
-                    ['Sayona SPC-100 EPC', '6L | 1000W | Sauté Mode', 7127, 'assets/Sayona Sayona SPC-100.png', 'Nagoya Holdings'],
-                    ['Tefal All-in-One EPC', '6L | 1000W | 16 Options', 8500, 'assets/Tefal Electric Pressure.png', 'Mwangaza Light'],
-                    ['Sayona SPC 4413 EPC', '6L | 1000W | 8 Options', 8301, 'assets/SPC 4413 EPC - Sayonna.png', 'Nagoya Holdings'],
-                    ['Sayona SPC 4572 EPC', '8L | 1200W | 16 Options', 10571, 'assets/Sayonna SPC 4572 EPC.png', 'Nagoya Holdings'],
-                    ['Quooker Digi EPC', '6L | 1000W | 16 Options', 11600, 'assets/Quooker Digi EPC.png', 'Nyalore Impact'],
-                    ['Sayona SPC 4567 (Cooker & Air Fryer)', '6L | Air Fryer 1500W', 11683, 'assets/Sayonna SPC 4567 pressure cooker & Air Fryer.png', 'Nagoya Holdings'],
-                    ['PawaPot JD-29ED EPC', '6L | 1000W | 17 Menus', 12100, 'assets/PawaPot JD-29ED EPC.png', 'SCODE Ltd'],
-                    ['Ramtons RM/582 EPC', '6L | 1100W | 12 Recipes', 11900, 'assets/Ramtons RM 582 EPC.png', 'Hypermart Ltd'],
-                    ['Ramtons RM/782 EPC', '8L | 1100W | 12 Recipes', 15900, 'assets/Ramtons RM 782 EPC.png', 'Hypermart Ltd'],
-                    ['Sayona SPC 4328 (Cooker & Air Fryer)', '6L | 1500W | 29 Presets', 15592, 'assets/Sayonna SPC 4328 Electric Pressure Cooker & Air Fryer.png', 'Nagoya Holdings'],
-                    ['Ramtons RM/381 Single Induction', '2000W | Crystal Glass | Timer', 9900, 'assets/Ramtons RM 381 Induction cooker.png', 'Hypermart Ltd'],
-                    ['Ramtons RM/773 Double Induction', '2000W | Double Burner | Safety Lock', 14990, 'assets/Ramtons RM 773 Induction cooker.png', 'Hypermart Ltd'],
-                    ['ECook Double Induction', '2000W | 7 Menu Functions', 28000, 'assets/ECook Induction cooker.png', 'Mwangaza Light']
-                ];
-                foreach($electric as $p):
+                include 'products_data.php';
+                foreach($products as $slug => $p):
+                    if($p['category'] !== 'Electric Cooking') continue;
                 ?>
                 <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full">
                     <div class="relative aspect-square bg-slate-50 overflow-hidden shrink-0">
-                        <img src="<?php echo $base_url . $p[3]; ?>" alt="<?php echo $p[0]; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                        <img src="<?php echo $base_url . $p['image']; ?>" alt="<?php echo $p['name']; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                         <span class="absolute bottom-4 left-4 bg-primary text-black text-[8px] font-black uppercase px-2 py-1 rounded-md tracking-wider border border-black/5 shadow-sm">Verified Gear</span>
                     </div>
                     <div class="p-6 space-y-4 flex flex-col justify-between flex-1">
                         <div>
-                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p[4]; ?></span>
-                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p[0]; ?></h3>
-                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo $p[1]; ?></p>
+                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p['distributor']; ?></span>
+                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p['name']; ?></h3>
+                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo reset($p['specs']); ?></p>
                         </div>
                         <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
-                            <span class="text-base font-black text-black">KES <?php echo number_format($p[2]); ?></span>
-                            <a href="product/" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
+                            <span class="text-base font-black text-black"><?php echo $p['price'] > 0 ? 'KES ' . number_format($p['price']) : 'Get Quote'; ?></span>
+                            <a href="product/?id=<?php echo $slug; ?>" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
                                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
                             </a>
                         </div>
@@ -153,27 +140,22 @@ $active_page = "marketplace";
 
             <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 <?php 
-                $ethanol = [
-                    ['Moto Safe Double Burner', 'Iron Construction | Manual', 2500, 'assets/Moto Safe Bio Ethanol Stove.png', 'PharmChem Labs'],
-                    ['Moto Safe Single Burner', 'Iron Construction | Manual', 2000, 'assets/Moto Safe Bio Ethanol Stove sINGLE BURNER.png', 'PharmChem Labs'],
-                    ['Moto Smart Gel Stove (M)', 'Pure Aluminium | Portable', 1500, 'assets/Moto Smart Stove.png', 'SilverTech'],
-                    ['Moto Smart Gel Stove (L)', 'Heavy-Duty Build', 3500, 'assets/Moto Smart Stove.png', 'SilverTech']
-                ];
-                foreach($ethanol as $p):
+                foreach($products as $slug => $p):
+                    if($p['category'] !== 'Bio-Ethanol Stoves') continue;
                 ?>
-                <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500">
-                    <div class="relative aspect-square bg-slate-50 overflow-hidden">
-                        <img src="<?php echo $base_url . $p[3]; ?>" alt="<?php echo $p[0]; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full">
+                    <div class="relative aspect-square bg-slate-50 overflow-hidden shrink-0">
+                        <img src="<?php echo $base_url . $p['image']; ?>" alt="<?php echo $p['name']; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                     </div>
-                    <div class="p-6 space-y-4">
+                    <div class="p-6 space-y-4 flex flex-col justify-between flex-1">
                         <div>
-                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p[4]; ?></span>
-                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p[0]; ?></h3>
-                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo $p[1]; ?></p>
+                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p['distributor']; ?></span>
+                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p['name']; ?></h3>
+                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo reset($p['specs']); ?></p>
                         </div>
                         <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
-                            <span class="text-base font-black text-black">KES <?php echo number_format($p[2]); ?></span>
-                            <a href="product/" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
+                            <span class="text-base font-black text-black"><?php echo $p['price'] > 0 ? 'KES ' . number_format($p['price']) : 'Get Quote'; ?></span>
+                            <a href="product/?id=<?php echo $slug; ?>" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
                                 <i data-lucide="chevron-right" class="w-5 h-5"></i>
                             </a>
                         </div>
@@ -216,41 +198,28 @@ $active_page = "marketplace";
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <!-- Fixed Dome -->
+                <?php 
+                foreach($products as $slug => $p):
+                    if($p['category'] !== 'Bio-Digesters') continue;
+                ?>
+                <!-- Biodigester Card -->
                 <div class="group bg-white border border-slate-100 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-3xl transition-all">
                     <div class="w-full md:w-2/5 aspect-square bg-slate-100 overflow-hidden">
-                        <img src="<?php echo $base_url; ?>assets/Biodigester Dome.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                        <img src="<?php echo $base_url . $p['image']; ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                     </div>
                     <div class="p-10 flex-1 flex flex-col justify-between">
                         <div class="space-y-4">
-                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Masonry Construction</span>
-                            <h3 class="text-3xl font-black text-black leading-tight">Fixed Dome Biodigester</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed font-bold">Built-to-last underground system. Zero maintenance, delivers continuous clean gas and bio-slurry fertilizer.</p>
+                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest"><?php echo reset($p['specs']); ?></span>
+                            <h3 class="text-3xl font-black text-black leading-tight"><?php echo $p['name']; ?></h3>
+                            <p class="text-xs text-slate-500 leading-relaxed font-bold"><?php echo $p['description']; ?></p>
                         </div>
                         <div class="pt-8 flex items-center justify-between">
                             <span class="text-xs font-black text-black uppercase tracking-widest">Quote on Assessment</span>
-                            <a href="../contact/" class="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-black transition">Book Survey</a>
+                            <a href="product/?id=<?php echo $slug; ?>" class="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-black transition">Full Specs</a>
                         </div>
                     </div>
                 </div>
-
-                <!-- Prefabricated -->
-                <div class="group bg-white border border-slate-100 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-3xl transition-all">
-                    <div class="w-full md:w-2/5 aspect-square bg-slate-100 overflow-hidden">
-                        <img src="<?php echo $base_url; ?>assets/Prefabricated Biodigester.png" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    </div>
-                    <div class="p-10 flex-1 flex flex-col justify-between">
-                        <div class="space-y-4">
-                            <span class="text-[10px] font-black text-blue-600 uppercase tracking-widest">Portable HDPE</span>
-                            <h3 class="text-3xl font-black text-black leading-tight">Prefabricated Biodigester</h3>
-                            <p class="text-xs text-slate-500 leading-relaxed font-bold">Ready-to-use modern setup. Lightweight, portable, and starts producing fuel immediately.</p>
-                        </div>
-                        <div class="pt-8 flex items-center justify-between">
-                            <span class="text-xs font-black text-black uppercase tracking-widest">Quick Installation</span>
-                            <a href="../contact/" class="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-black transition">Inquire Now</a>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
 
             <div class="p-10 bg-black rounded-[3rem] text-center space-y-6">
@@ -272,33 +241,27 @@ $active_page = "marketplace";
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <!-- Portable Jiko -->
-                <div class="group bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all">
-                    <div class="aspect-square rounded-[2rem] overflow-hidden mb-8">
-                        <img src="<?php echo $base_url; ?>assets/Portable Jikosasa Stove.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <?php 
+                foreach($products as $slug => $p):
+                    if($p['category'] !== 'Improved Cookstoves') continue;
+                ?>
+                <!-- ICS Card -->
+                <div class="group bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between h-full">
+                    <div>
+                        <div class="aspect-square rounded-[2rem] overflow-hidden mb-8">
+                            <img src="<?php echo $base_url . $p['image']; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        </div>
+                        <h3 class="text-xl font-black text-black mb-3"><?php echo $p['name']; ?></h3>
+                        <p class="text-xs text-slate-500 font-bold leading-relaxed mb-8"><?php echo $p['description']; ?></p>
                     </div>
-                    <h3 class="text-xl font-black text-black mb-3">Portable Jiko Kisasa</h3>
-                    <p class="text-xs text-slate-500 font-bold leading-relaxed mb-8">Traditional ceramic liner in durable metal housing. Perfect for small to medium households.</p>
                     <div class="flex justify-between items-center pt-6 border-t border-slate-50">
                         <span class="text-[10px] font-black uppercase text-slate-400">Available</span>
-                        <a href="../contact/" class="text-[10px] font-black uppercase text-primary hover:text-black transition">Inquire <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
+                        <a href="product/?id=<?php echo $slug; ?>" class="text-[10px] font-black uppercase text-primary hover:text-black transition">Full Details <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
                     </div>
                 </div>
+                <?php endforeach; ?>
 
-                <!-- Fixed Jiko -->
-                <div class="group bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all">
-                    <div class="aspect-square rounded-[2rem] overflow-hidden mb-8">
-                        <img src="<?php echo $base_url; ?>assets/Fixed Jikosasa Stove.png" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <h3 class="text-xl font-black text-black mb-3">Fixed Jiko Kisasa</h3>
-                    <p class="text-xs text-slate-500 font-bold leading-relaxed mb-8">Stationary brick/clay installation. Customizable with multiple burners for efficiency.</p>
-                    <div class="flex justify-between items-center pt-6 border-t border-slate-50">
-                        <span class="text-[10px] font-black uppercase text-slate-400">Custom Built</span>
-                        <a href="../contact/" class="text-[10px] font-black uppercase text-primary hover:text-black transition">Inquire <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
-                    </div>
-                </div>
-
-                <!-- Institutional -->
+                <!-- Institutional (Special Box) -->
                 <div class="group bg-black p-10 rounded-[3rem] border border-white/10 shadow-3xl text-white flex flex-col justify-center">
                     <div class="space-y-6">
                         <i data-lucide="shovels" class="w-12 h-12 text-primary"></i>
