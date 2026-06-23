@@ -67,6 +67,7 @@ $admin_base = "/admin/";
         .sidebar-bg { background-color: var(--sidebar-bg); border-right: 1px solid var(--border); }
         .topbar-bg { background-color: var(--topbar-bg); border-bottom: 1px solid var(--border); }
         .card-bg { background-color: var(--card-bg); border: 1px solid var(--border); }
+        .content-bg { background-color: var(--bg-main); transition: background-color 0.4s ease; }
         .sidebar-link { color: var(--sidebar-text); }
         .sidebar-link:hover { background-color: var(--sidebar-active-bg); color: var(--sidebar-active-text); }
         .sidebar-link.active { background-color: var(--sidebar-active-bg); color: var(--sidebar-active-text); border-right: 4px solid var(--primary); }
@@ -151,13 +152,13 @@ $admin_base = "/admin/";
             
             <div class="flex items-center gap-8">
                 <!-- Theme Switcher -->
-                <div class="relative group">
-                    <button class="flex items-center gap-3 px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:shadow-premium transition-all">
+                <div class="relative">
+                    <button onclick="UI.toggleDropdown('theme-dropdown')" class="flex items-center gap-3 px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:shadow-premium transition-all">
                         <i data-lucide="palette" class="w-4 h-4 text-primary"></i> 
                         Change Theme
                         <i data-lucide="chevron-down" class="w-3 h-3"></i>
                     </button>
-                    <div class="absolute top-full right-0 mt-3 w-64 bg-white border border-slate-100 rounded-[2rem] shadow-2xl p-4 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all translate-y-2 group-hover:translate-y-0 z-50">
+                    <div id="theme-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-white border border-slate-100 rounded-[2rem] shadow-2xl p-4 hidden z-50">
                         <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 px-3">Professional Presets</p>
                         <div class="grid grid-cols-1 gap-1">
                             <?php 
@@ -175,7 +176,7 @@ $admin_base = "/admin/";
                             ];
                             foreach($themes as $id => $info):
                             ?>
-                            <button onclick="applyTheme('<?php echo $id; ?>'); UI.toast('Theme changed to <?php echo $info[0]; ?>', 'success');" class="flex items-center justify-between w-full p-3 rounded-xl hover:bg-slate-50 text-[10px] font-bold text-slate-600 transition-all">
+                            <button onclick="applyTheme('<?php echo $id; ?>'); UI.toast('Theme changed to <?php echo $info[0]; ?>', 'success'); UI.toggleDropdown('theme-dropdown');" class="flex items-center justify-between w-full p-3 rounded-xl hover:bg-slate-50 text-[10px] font-bold text-slate-600 transition-all text-left">
                                 <?php echo $info[0]; ?> <div class="w-3 h-3 rounded-full border border-slate-100" style="background-color: <?php echo $info[1]; ?>"></div>
                             </button>
                             <?php endforeach; ?>
@@ -256,5 +257,5 @@ $admin_base = "/admin/";
         </script>
 
         <!-- Dynamic Content Area -->
-        <div class="flex-1 overflow-y-auto p-10 space-y-12">
+        <div class="flex-1 overflow-y-auto p-10 space-y-12 content-bg">
 
