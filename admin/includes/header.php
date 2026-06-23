@@ -72,6 +72,14 @@ $admin_base = "/admin/";
         .sidebar-link:hover { background-color: var(--sidebar-active-bg); color: var(--sidebar-active-text); }
         .sidebar-link.active { background-color: var(--sidebar-active-bg); color: var(--sidebar-active-text); border-right: 4px solid var(--primary); }
         
+        /* Typography overrides for themes */
+        h1, h2, h3, h4, h5, h6 { color: var(--text-main); }
+        p, span, label { color: var(--text-muted); }
+        .text-main { color: var(--text-main) !important; }
+        .text-muted { color: var(--text-muted) !important; }
+        
+        button.bg-primary, .btn-primary { color: var(--btn-text) !important; }
+        
         /* Premium Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
