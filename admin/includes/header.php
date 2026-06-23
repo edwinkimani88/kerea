@@ -101,25 +101,25 @@ $admin_base = "/admin/";
             </div>
         </div>
         <nav class="flex-1 p-6 space-y-2">
-            <a href="index.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+            <a href="<?php echo $admin_base; ?>index.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
             </a>
-            <a href="customization.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+            <a href="<?php echo $admin_base; ?>customization.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="palette" class="w-5 h-5"></i> Appearance
             </a>
-            <a href="vendors.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+            <a href="<?php echo $admin_base; ?>vendors.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="users" class="w-5 h-5"></i> Vendors
             </a>
-            <a href="products.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+            <a href="<?php echo $admin_base; ?>products.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="shopping-bag" class="w-5 h-5"></i> Marketplace
             </a>
-            <a href="analytics.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+            <a href="<?php echo $admin_base; ?>analytics.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="pie-chart" class="w-5 h-5"></i> Sector Analytics
             </a>
-            <a href="content.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+            <a href="<?php echo $admin_base; ?>content.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="file-text" class="w-5 h-5"></i> Knowledge Hub
             </a>
-            <a href="support.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+            <a href="<?php echo $admin_base; ?>support.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="message-square" class="w-5 h-5"></i> Support Desk
             </a>
         </nav>
