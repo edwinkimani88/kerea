@@ -21,6 +21,20 @@ $routes = [
     '/policy-advocacy' => 'policy-advocacy/index.php',
     '/member-directory' => 'member-directory/index.php',
     '/marketplace/product' => 'marketplace/product/index.php',
+    '/admin' => 'admin/index.php',
+    '/admin/index.php' => 'admin/index.php',
+    '/admin/vendors' => 'admin/vendors.php',
+    '/admin/vendors.php' => 'admin/vendors.php',
+    '/admin/products' => 'admin/products.php',
+    '/admin/products.php' => 'admin/products.php',
+    '/admin/analytics' => 'admin/analytics.php',
+    '/admin/analytics.php' => 'admin/analytics.php',
+    '/admin/content' => 'admin/content.php',
+    '/admin/content.php' => 'admin/content.php',
+    '/admin/support' => 'admin/support.php',
+    '/admin/support.php' => 'admin/support.php',
+    '/admin/customization' => 'admin/customization.php',
+    '/admin/customization.php' => 'admin/customization.php',
 ];
 
 if (isset($routes[$path])) {
