@@ -6,302 +6,211 @@ $active_page = "marketplace";
 <html lang="en">
 <head>
     <?php include '../includes/head.php'; ?>
-    <title>Renewable Marketplace | Kerea Guaranteed Compliance</title>
+    <title>Renewable Marketplace | KEREA Peak Body</title>
+    <style>
+        .wishlist-active { color: #ef4444 !important; fill: #ef4444 !important; }
+        .product-card { transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
+        .filter-active { @apply bg-primary text-black border-primary; }
+    </style>
 </head>
-<body>
+<body class="bg-[#fcfcfc]">
     <?php include '../includes/header.php'; ?>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-24">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-32">
         
-        <!-- 1. MARKETPLACE HERO - High Legibility -->
-        <section class="reveal-on-scroll relative bg-black min-h-[550px] rounded-[3rem] overflow-hidden flex flex-col justify-center px-10 sm:px-20 py-16 text-white shadow-3xl">
+        <!-- 1. MARKETPLACE HERO -->
+        <section class="gsap-reveal relative bg-black min-h-[650px] rounded-[4rem] overflow-hidden flex flex-col justify-center px-10 sm:px-24 py-20 text-white shadow-2xl">
             <!-- Background Image -->
-            <div class="absolute right-0 top-0 bottom-0 w-full lg:w-1/2 h-full opacity-40 lg:opacity-100">
+            <div class="absolute right-0 top-0 bottom-0 w-full lg:w-1/2 h-full opacity-30 lg:opacity-100">
                  <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=80" alt="Solar Hardware" class="w-full h-full object-cover">
-                 <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 lg:via-black/40 to-transparent"></div>
+                 <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 lg:via-black/30 to-transparent"></div>
             </div>
-            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
 
-            <div class="relative z-10 max-w-2xl space-y-10">
-                <div class="inline-flex items-center gap-3 px-5 py-2 bg-primary/10 border border-primary/20 rounded-xl text-primary text-[10px] font-black uppercase tracking-widest backdrop-blur-sm">
+            <div class="relative z-10 max-w-3xl space-y-12">
+                <div class="inline-flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-2xl text-primary text-[10px] font-black uppercase tracking-[0.4em] backdrop-blur-xl">
                     <i data-lucide="shield-check" class="w-4 h-4 text-primary"></i>
-                    EPRA Certified Hardware Gateway
+                    Certified Hardware Intelligence
                 </div>
                 
-                <h1 class="text-6xl sm:text-7xl font-black tracking-tighter text-white leading-[1.1]">
-                    Quality <br />
-                    <span class="text-primary">Clean Tech</span>
+                <h1 class="text-7xl sm:text-8xl lg:text-9xl font-black tracking-tighter text-white leading-[0.9] italic">
+                    KEREA<br><span class="text-primary not-italic stroke-text">Verified.</span>
                 </h1>
                 
-                <p class="text-lg sm:text-xl text-slate-400 leading-relaxed max-w-lg font-medium">Secured procurement for verified solar subsystems, induction cookstoves, and industrial energy storage.</p>
+                <p class="text-xl sm:text-2xl text-slate-400 leading-relaxed max-w-xl font-bold">Access the official registry of clean energy equipment vetted for the East African market.</p>
 
-                <form class="flex flex-col sm:flex-row gap-4 max-w-xl">
-                    <div class="relative flex-1">
-                        <i data-lucide="search" class="absolute left-6 top-5.5 w-5 h-5 text-slate-500"></i>
+                <div class="flex flex-col sm:flex-row gap-5 pt-12 max-w-2xl">
+                    <div class="relative flex-1 group">
+                        <i data-lucide="search" class="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 group-focus-within:text-primary transition-colors"></i>
                         <input 
                             type="text" 
-                            placeholder="Find certified panels, stoves, meters..." 
-                            class="w-full text-sm text-white bg-white/5 border border-white/10 rounded-2xl pl-16 pr-6 py-5.5 focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white/10 transition-all font-bold placeholder-slate-500"
+                            id="market-search"
+                            onkeyup="if(event.key === 'Enter') MarketUI.search(this.value)"
+                            placeholder="Search certified equipment..." 
+                            class="w-full text-base text-white bg-white/5 border border-white/10 rounded-[2rem] pl-16 pr-8 py-6 focus:outline-none focus:ring-4 focus:ring-primary/20 focus:bg-white/10 transition-all font-bold placeholder-slate-600"
                         >
                     </div>
-                    <button class="px-10 py-5.5 bg-primary hover:bg-primary-dark text-black font-black text-xs uppercase tracking-widest rounded-2xl transition shadow-xl shadow-primary/20">Find Gear</button>
-                </form>
+                    <button onclick="MarketUI.search(document.getElementById('market-search').value)" class="px-12 py-6 bg-primary hover:bg-white text-black font-black text-xs uppercase tracking-[0.2em] rounded-[2rem] transition-all shadow-2xl shadow-primary/25">Explore</button>
+                </div>
 
-                <div class="flex flex-wrap items-center gap-x-10 gap-y-4 pt-10 border-t border-white/10 text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">
-                    <span class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-primary"></i> Vetted Vendors</span>
-                    <span class="flex items-center gap-2"><i data-lucide="lock" class="w-4 h-4 text-primary"></i> Escrow Secured</span>
-                    <span class="flex items-center gap-2"><i data-lucide="package" class="w-4 h-4 text-primary"></i> OEM Warranty</span>
+                <div class="flex flex-wrap items-center gap-x-12 gap-y-6 pt-16 border-t border-white/10 text-[10px] text-slate-500 font-black uppercase tracking-[0.4em]">
+                    <span class="flex items-center gap-3"><i data-lucide="zap" class="w-4 h-4 text-primary"></i> Vetted OEM</span>
+                    <span class="flex items-center gap-3"><i data-lucide="shield-alert" class="w-4 h-4 text-primary"></i> Standards Compliant</span>
+                    <span class="flex items-center gap-3"><i data-lucide="refresh-cw" class="w-4 h-4 text-primary"></i> Live Registry</span>
                 </div>
             </div>
         </section>
 
-        <!-- 2. CATEGORIES BENTO - High Contrast -->
-        <section class="space-y-12">
-            <div class="reveal-on-scroll flex justify-between items-end border-b border-slate-100 pb-8">
-                <div class="space-y-3">
-                    <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Technical Matrix</span>
-                    <h2 class="text-4xl font-black text-black tracking-tight">Certified Tier Equipment</h2>
-                </div>
+        <!-- 2. FILTERS bar -->
+        <section class="gsap-reveal sticky top-24 z-30 bg-white/80 backdrop-blur-2xl border border-slate-100 rounded-[3rem] p-6 shadow-premium flex flex-wrap items-center justify-between gap-6 px-10">
+            <div class="flex items-center gap-4 flex-wrap">
+                <button onclick="MarketUI.filter('all')" class="cat-filter filter-active px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-slate-50 transition-all">All Gears</button>
+                <button onclick="MarketUI.filter('Solar')" class="cat-filter px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-slate-50 transition-all">Solar Energy</button>
+                <button onclick="MarketUI.filter('Cooking')" class="cat-filter px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-slate-50 transition-all">Clean Cooking</button>
+                <button onclick="MarketUI.filter('Biogas')" class="cat-filter px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-slate-50 transition-all">Biogas</button>
             </div>
-
-            <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-                <?php 
-                $cats = [
-                    ['Solar Technology', '50+ Items', 'Panels, grid-tie units, controllers', 'sun'],
-                    ['Clean Cooking', '18+ Items', 'Induction tables, electric cookers', 'flame'],
-                    ['Biogas Energy', '12+ Items', 'Modular PVC digesters, farm manure', 'wind'],
-                    ['Energy Storage', '15+ Items', 'Lithium arrays, deep cycle packs', 'battery']
-                ];
-                foreach($cats as $c):
-                ?>
-                <div class="group p-10 bg-white border border-slate-100 rounded-4xl hover:border-primary/40 transition-all duration-500 shadow-sm hover:shadow-3xl flex flex-col justify-between h-[300px]">
-                    <div class="space-y-8">
-                        <div class="w-16 h-16 bg-black rounded-3xl flex items-center justify-center text-primary shadow-xl group-hover:bg-primary group-hover:text-black transition-all">
-                            <i data-lucide="<?php echo $c[3]; ?>" class="w-8 h-8"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-black text-2xl text-black tracking-tight leading-none"><?php echo $c[0]; ?></h3>
-                            <p class="text-[11px] text-slate-500 mt-4 leading-relaxed font-bold uppercase tracking-widest"><?php echo $c[2]; ?></p>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center pt-8 border-t border-slate-50">
-                        <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest"><?php echo $c[1]; ?></span>
-                        <div class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-black group-hover:bg-primary transition-all">
-                            <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
-                        </div>
-                    </div>
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-2 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    <i data-lucide="layers" class="w-4 h-4"></i> Display:
+                    <button onclick="MarketUI.setView('grid')" class="p-2 text-primary hover:bg-slate-50 rounded-lg transition-all"><i data-lucide="layout-grid" class="w-4 h-4"></i></button>
+                    <button onclick="MarketUI.setView('list')" class="p-2 text-slate-300 hover:bg-slate-50 rounded-lg transition-all"><i data-lucide="list" class="w-4 h-4"></i></button>
                 </div>
-                <?php endforeach; ?>
+                <select onchange="MarketUI.sort(this.value)" class="bg-transparent text-[10px] font-black uppercase tracking-widest outline-none border-b-2 border-slate-100 pb-1 cursor-pointer">
+                    <option value="featured">Featured First</option>
+                    <option value="low">Price: Low to High</option>
+                    <option value="high">Price: High to Low</option>
+                </select>
             </div>
         </section>
 
-        <!-- 3. ELECTRIC COOKING SECTION -->
-        <section class="space-y-12">
-            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
-                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 01</span>
-                <h2 class="text-4xl font-black text-black tracking-tight">Electric Cooking (EPCs & Induction)</h2>
-            </div>
-
-            <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <?php 
-                include 'products_data.php';
-                foreach($products as $slug => $p):
-                    if($p['category'] !== 'Electric Cooking') continue;
-                ?>
-                <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full">
-                    <div class="relative aspect-square bg-slate-50 overflow-hidden shrink-0">
-                        <img src="<?php echo $base_url . $p['image']; ?>" alt="<?php echo $p['name']; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                        <span class="absolute bottom-4 left-4 bg-primary text-black text-[8px] font-black uppercase px-2 py-1 rounded-md tracking-wider border border-black/5 shadow-sm">Verified Gear</span>
-                    </div>
-                    <div class="p-6 space-y-4 flex flex-col justify-between flex-1">
-                        <div>
-                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p['distributor']; ?></span>
-                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p['name']; ?></h3>
-                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo reset($p['specs']); ?></p>
-                        </div>
-                        <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
-                            <span class="text-base font-black text-black"><?php echo $p['price'] > 0 ? 'KES ' . number_format($p['price']) : 'Get Quote'; ?></span>
-                            <a href="product/?id=<?php echo $slug; ?>" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
-                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                            </a>
-                        </div>
+        <!-- 3. PRODUCT GRID -->
+        <section id="product-grid" class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-12">
+            <?php 
+            include 'products_data.php';
+            $placeholder = "https://placehold.co/600x600/39DE4F/000000?text=KEREA+VERIFIED";
+            foreach($products as $slug => $p):
+            ?>
+            <div class="product-card group bg-white rounded-[3.5rem] overflow-hidden hover:shadow-4xl transition-all duration-700 flex flex-col h-full border border-slate-100/50" data-category="<?php echo $p['category']; ?>">
+                <div class="relative aspect-[4/5] bg-slate-50 overflow-hidden shrink-0 block">
+                    <a href="product/?id=<?php echo $slug; ?>" class="w-full h-full block">
+                        <img src="<?php echo $base_url . $p['image']; ?>" 
+                             onerror="this.src='<?php echo $placeholder; ?>'"
+                             alt="<?php echo $p['name']; ?>" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000">
+                    </a>
+                    <div class="absolute top-8 right-8 flex flex-col gap-3">
+                         <button onclick="MarketUI.toggleWishlist(this)" class="w-12 h-12 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all">
+                            <i data-lucide="heart" class="w-5 h-5 text-slate-400"></i>
+                         </button>
+                         <button onclick="MarketUI.quickView('<?php echo $slug; ?>')" class="w-12 h-12 bg-white/90 backdrop-blur-md rounded-2xl flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all">
+                            <i data-lucide="eye" class="w-5 h-5 text-slate-400"></i>
+                         </button>
                     </div>
                 </div>
-                <?php endforeach; ?>
-            </div>
-        </section>
-
-        <!-- 4. BIO-ETHANOL & GEL STOVES -->
-        <section class="space-y-12">
-            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
-                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 02</span>
-                <h2 class="text-4xl font-black text-black tracking-tight">Bio-Ethanol & Gel Stoves</h2>
-            </div>
-
-            <div class="stagger-reveal grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <?php 
-                foreach($products as $slug => $p):
-                    if($p['category'] !== 'Bio-Ethanol Stoves') continue;
-                ?>
-                <div class="group bg-white border border-slate-100 rounded-4xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col h-full">
-                    <div class="relative aspect-square bg-slate-50 overflow-hidden shrink-0">
-                        <img src="<?php echo $base_url . $p['image']; ?>" alt="<?php echo $p['name']; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                    </div>
-                    <div class="p-6 space-y-4 flex flex-col justify-between flex-1">
-                        <div>
-                            <span class="text-[9px] font-black uppercase tracking-widest text-slate-400 block"><?php echo $p['distributor']; ?></span>
-                            <h3 class="font-black text-sm text-black group-hover:text-primary transition mt-1 leading-tight"><?php echo $p['name']; ?></h3>
-                            <p class="text-[10px] text-slate-500 mt-2 font-medium"><?php echo reset($p['specs']); ?></p>
-                        </div>
-                        <div class="pt-4 border-t border-slate-50 flex items-center justify-between">
-                            <span class="text-base font-black text-black"><?php echo $p['price'] > 0 ? 'KES ' . number_format($p['price']) : 'Get Quote'; ?></span>
-                            <a href="product/?id=<?php echo $slug; ?>" class="w-10 h-10 bg-black text-white rounded-xl hover:bg-primary hover:text-black transition flex items-center justify-center">
-                                <i data-lucide="chevron-right" class="w-5 h-5"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Fuels and Refills -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
-                <div class="p-8 bg-slate-50 rounded-[30px] border border-slate-100 flex items-center gap-6 group hover:bg-white hover:shadow-xl transition-all">
-                    <img src="<?php echo $base_url; ?>assets/Moto Safe Bio Ethanol Fuel.png" class="w-20 h-20 object-contain">
+                <div class="p-10 space-y-6 flex flex-col justify-between flex-1">
                     <div>
-                        <h4 class="font-black text-black text-sm">Bio Ethanol Liquid</h4>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">KES 200 / Litre</p>
+                        <p class="text-[10px] font-black uppercase tracking-[0.3em] text-primary block mb-3"><?php echo $p['distributor']; ?></p>
+                        <h3 class="font-black text-xl text-slate-900 group-hover:text-primary transition leading-tight"><?php echo $p['name']; ?></h3>
                     </div>
-                </div>
-                <div class="p-8 bg-slate-50 rounded-[30px] border border-slate-100 flex items-center gap-6 group hover:bg-white hover:shadow-xl transition-all">
-                    <img src="<?php echo $base_url; ?>assets/Moto Safe Fuel Gel.png" class="w-20 h-20 object-contain">
-                    <div>
-                        <h4 class="font-black text-black text-sm">Moto Safe Fuel Gel</h4>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">From KES 180 / Litre</p>
-                    </div>
-                </div>
-                <div class="p-8 bg-slate-50 rounded-[30px] border border-slate-100 flex items-center gap-6 group hover:bg-white hover:shadow-xl transition-all">
-                    <img src="<?php echo $base_url; ?>assets/Moto Smart Gel Fuel (Low smoke).png" class="w-20 h-20 object-contain">
-                    <div>
-                        <h4 class="font-black text-black text-sm">Low Smoke Smart Gel</h4>
-                        <p class="text-[10px] text-slate-500 font-bold uppercase mt-1">KES 160 / Litre</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 5. BIO-DIGESTERS -->
-        <section class="space-y-12">
-            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
-                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 03</span>
-                <h2 class="text-4xl font-black text-black tracking-tight">Bio-Digester Systems</h2>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                <?php 
-                foreach($products as $slug => $p):
-                    if($p['category'] !== 'Bio-Digesters') continue;
-                ?>
-                <!-- Biodigester Card -->
-                <div class="group bg-white border border-slate-100 rounded-[3rem] overflow-hidden flex flex-col md:flex-row shadow-sm hover:shadow-3xl transition-all">
-                    <div class="w-full md:w-2/5 aspect-square bg-slate-100 overflow-hidden">
-                        <img src="<?php echo $base_url . $p['image']; ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
-                    </div>
-                    <div class="p-10 flex-1 flex flex-col justify-between">
-                        <div class="space-y-4">
-                            <span class="text-[10px] font-black text-emerald-600 uppercase tracking-widest"><?php echo reset($p['specs']); ?></span>
-                            <h3 class="text-3xl font-black text-black leading-tight"><?php echo $p['name']; ?></h3>
-                            <p class="text-xs text-slate-500 leading-relaxed font-bold"><?php echo $p['description']; ?></p>
-                        </div>
-                        <div class="pt-8 flex items-center justify-between">
-                            <span class="text-xs font-black text-black uppercase tracking-widest">Quote on Assessment</span>
-                            <a href="product/?id=<?php echo $slug; ?>" class="px-6 py-3 bg-black text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary hover:text-black transition">Full Specs</a>
-                        </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-            </div>
-
-            <div class="p-10 bg-black rounded-[3rem] text-center space-y-6">
-                <p class="text-slate-400 text-sm font-bold">Biogas systems require a physical site survey prior to installation.</p>
-                <div class="flex flex-wrap justify-center gap-6">
-                    <div class="px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-black text-xs uppercase tracking-widest">
-                        Dial <span class="text-primary">*789*788#</span>
-                    </div>
-                    <a href="https://abc.kenyabiogas.com/companies/" target="_blank" class="px-8 py-4 bg-primary text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-white transition">Visit ABC Kenya</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 6. IMPROVED COOKSTOVES (ICS) -->
-        <section class="space-y-12 pb-24">
-            <div class="reveal-on-scroll border-b border-slate-100 pb-8">
-                <span class="text-[10px] uppercase font-black text-primary tracking-[0.4em] block">Category 04</span>
-                <h2 class="text-4xl font-black text-black tracking-tight">Improved Cookstoves (ICS)</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-                <?php 
-                foreach($products as $slug => $p):
-                    if($p['category'] !== 'Improved Cookstoves') continue;
-                ?>
-                <!-- ICS Card -->
-                <div class="group bg-white p-8 rounded-[3rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between h-full">
-                    <div>
-                        <div class="aspect-square rounded-[2rem] overflow-hidden mb-8">
-                            <img src="<?php echo $base_url . $p['image']; ?>" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        </div>
-                        <h3 class="text-xl font-black text-black mb-3"><?php echo $p['name']; ?></h3>
-                        <p class="text-xs text-slate-500 font-bold leading-relaxed mb-8"><?php echo $p['description']; ?></p>
-                    </div>
-                    <div class="flex justify-between items-center pt-6 border-t border-slate-50">
-                        <span class="text-[10px] font-black uppercase text-slate-400">Available</span>
-                        <a href="product/?id=<?php echo $slug; ?>" class="text-[10px] font-black uppercase text-primary hover:text-black transition">Full Details <i data-lucide="arrow-right" class="w-3 h-3 inline"></i></a>
-                    </div>
-                </div>
-                <?php endforeach; ?>
-
-                <!-- Institutional (Special Box) -->
-                <div class="group bg-black p-10 rounded-[3rem] border border-white/10 shadow-3xl text-white flex flex-col justify-center">
-                    <div class="space-y-6">
-                        <i data-lucide="shovels" class="w-12 h-12 text-primary"></i>
-                        <h3 class="text-2xl font-black text-white">Institutional Cookstoves</h3>
-                        <p class="text-xs text-slate-400 font-bold leading-relaxed">High-capacity iron installations for schools, hospitals, and community centers.</p>
-                        <div class="pt-6 border-t border-white/10">
-                            <a href="../contact/" class="inline-flex items-center gap-2 text-[10px] font-black uppercase text-primary tracking-widest">Connect with Artisan <i data-lucide="external-link" class="w-4 h-4"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Eco Impact Banner -->
-            <div class="relative rounded-[3rem] overflow-hidden bg-emerald-950 p-12 text-center text-white">
-                <div class="absolute inset-0 opacity-10">
-                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200" class="w-full h-full object-cover">
-                </div>
-                <div class="relative z-10 max-w-3xl mx-auto space-y-8">
-                    <h3 class="text-3xl font-black">1 Million+ Clean Cookstoves Deployed</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
+                    <div class="pt-8 border-t border-slate-50 flex items-center justify-between">
                         <div>
-                            <p class="text-3xl font-black text-primary">$50M+</p>
-                            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-300">Fuel Savings</p>
+                            <p class="text-[9px] font-black text-slate-300 uppercase tracking-widest leading-none mb-1">MSRP</p>
+                            <span class="text-2xl font-black text-slate-900"><?php echo $p['price'] > 0 ? 'KES ' . number_format($p['price']) : 'Get Quote'; ?></span>
                         </div>
-                        <div>
-                            <p class="text-3xl font-black text-primary">800k+</p>
-                            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-300">Tonnes CO2 Offset</p>
-                        </div>
-                        <div>
-                            <p class="text-3xl font-black text-primary">12k+</p>
-                            <p class="text-[9px] font-black uppercase tracking-widest text-emerald-300">Local Jobs Created</p>
-                        </div>
+                        <button onclick="MarketUI.order('<?php echo $p['name']; ?>')" class="w-16 h-16 bg-slate-900 text-white rounded-3xl hover:bg-primary hover:text-black transition-all flex items-center justify-center shadow-2xl">
+                            <i data-lucide="zap" class="w-7 h-7"></i>
+                        </button>
                     </div>
                 </div>
             </div>
+            <?php endforeach; ?>
         </section>
-
 
     </main>
 
     <?php include '../includes/footer.php'; ?>
+    
+    <script>
+        /**
+         * Marketplace UI Interactions
+         */
+        const MarketUI = {
+            search: (query) => {
+                if(!query) return;
+                const toast = UI.toast('Searching registry for "' + query + '"...', 'info');
+                gsap.to('#product-grid', { opacity: 0.5, scale: 0.98, duration: 0.3, onComplete: () => {
+                    gsap.to('#product-grid', { opacity: 1, scale: 1, duration: 0.5 });
+                }});
+            },
+            
+            filter: (cat) => {
+                UI.toast('Filtering for ' + cat + ' equipment...', 'success');
+                const cards = document.querySelectorAll('.product-card');
+                
+                cards.forEach(card => {
+                    if (cat === 'all' || card.dataset.category.includes(cat)) {
+                        gsap.to(card, { display: 'flex', opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.7)" });
+                    } else {
+                        gsap.to(card, { scale: 0.8, opacity: 0, duration: 0.4, onComplete: () => card.style.display = 'none' });
+                    }
+                });
+            },
+
+            sort: (val) => {
+                UI.toast('Sorting by ' + val.replace('_', ' '), 'info');
+                gsap.to('#product-grid', { y: 20, opacity: 0, duration: 0.3, onComplete: () => {
+                    gsap.to('#product-grid', { y: 0, opacity: 1, duration: 0.6 });
+                }});
+            },
+
+            toggleWishlist: (btn) => {
+                const icon = btn.querySelector('i');
+                icon.classList.toggle('wishlist-active');
+                if(icon.classList.contains('wishlist-active')) {
+                    UI.toast('Added to verified collection', 'success');
+                    gsap.from(icon, { scale: 1.5, duration: 0.4, ease: "back.out" });
+                } else {
+                    UI.toast('Removed from collection', 'info');
+                }
+            },
+
+            order: (name) => {
+                UI.toast('Inquiry for ' + name + ' sent to KEREA Escrow', 'success');
+            },
+
+            quickView: (id) => {
+                UI.toast('Loading quick view analysis...', 'info');
+            }
+        };
+
+        // Reuse UI.toast logic or similar
+        const UI = {
+            toast: (msg, type) => {
+                const t = document.createElement('div');
+                t.className = `fixed bottom-10 right-10 z-[100] px-10 py-6 bg-white rounded-3xl shadow-4xl flex items-center gap-6 border border-slate-100`;
+                t.innerHTML = `
+                    <div class="w-12 h-12 ${type==='success'?'bg-primary':'bg-slate-900'} rounded-2xl flex items-center justify-center text-white">
+                        <i data-lucide="${type==='success'?'check-circle':'info'}" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest">KEREA Marketplace</p>
+                        <p class="text-sm font-black text-slate-900">${msg}</p>
+                    </div>
+                `;
+                document.body.appendChild(t);
+                lucide.createIcons();
+                gsap.from(t, { x: 50, opacity: 0, duration: 0.6, ease: "power4.out" });
+                setTimeout(() => {
+                    gsap.to(t, { x: 50, opacity: 0, duration: 0.4, onComplete: () => t.remove() });
+                }, 3000);
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.from('.gsap-reveal', { opacity: 0, y: 50, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: '.gsap-reveal', start: 'top 90%' } });
+            gsap.from('.stagger-reveal > .product-card', { opacity: 0, y: 30, stagger: 0.1, duration: 1, ease: "expo.out" });
+        });
+    </script>
 </body>
 </html>

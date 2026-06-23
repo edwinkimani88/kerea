@@ -1,0 +1,297 @@
+{
+    "sayona-spc-100": {
+        "name": "Sayona SPC-100 EPC",
+        "price": 7127,
+        "image": "assets\/Sayona Sayona SPC-100.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres Express Pot",
+            "Material": "Sleek Stainless-steel finish",
+            "Key Features": "Saut\u00e9 Mode for browning & pre-cooking",
+            "Operation": "Mechanical Timer (dial knob)",
+            "Power": "1000W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Nagoya Holdings (Serah Mukami: 0725280288)",
+        "description": "A versatile 6L electric pressure cooker with a sleek stainless-steel finish and integrated Saut\u00e9 mode."
+    },
+    "tefal-all-in-one": {
+        "name": "Tefal All-in-One EPC",
+        "price": 8500,
+        "image": "assets\/Tefal Electric Pressure.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres",
+            "Material": "Black \/ Stainless Steel",
+            "Key Features": "16 cooking options customized for local dishes",
+            "Operation": "Mechanical Timer (dial knob)",
+            "Power": "1000W",
+            "Distributor": "Mwangaza Light"
+        },
+        "distributor": "Mwangaza Light (Nairobi: 0706 957720)",
+        "description": "Premium multi-cooker with 16 specialized cooking options for diverse local and international dishes."
+    },
+    "sayona-spc-4413": {
+        "name": "Sayona SPC 4413 EPC",
+        "price": 8301,
+        "image": "assets\/SPC 4413 EPC - Sayonna.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres",
+            "Material": "Black stainless-steel finish",
+            "Key Features": "8 cooking options, integrated Saut\u00e9 Mode",
+            "Operation": "Automatic keypad",
+            "Power": "1000W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Nagoya Holdings",
+        "description": "Efficient automatic keypad pressure cooker with a stylish black finish and 8 preset modes."
+    },
+    "sayona-spc-4572": {
+        "name": "Sayona SPC 4572 EPC",
+        "price": 10571,
+        "image": "assets\/Sayonna SPC 4572 EPC.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "8 Litres",
+            "Material": "Sleek stainless-steel finish",
+            "Key Features": "16 cooking options (Includes Slow cooking, Saut\u00e9ing, Yogurt making & Baking)",
+            "Operation": "Automatic keypad",
+            "Power": "1200W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Nagoya Holdings",
+        "description": "Large capacity 8L EPC perfect for families, featuring a wide array of cooking functions including baking."
+    },
+    "quooker-digi-epc": {
+        "name": "Quooker Digi EPC",
+        "price": 11600,
+        "image": "assets\/Quooker Digi EPC.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres",
+            "Material": "Black \/ Stainless Steel",
+            "Key Features": "16 cooking options tailored for local dishes",
+            "Operation": "Mechanical Timer (dial knob)",
+            "Power": "1000W"
+        },
+        "distributor": "Nyalore Impact Limited (0706012038)",
+        "description": "Reliable and easy-to-use digital pressure cooker optimized for local Kenyan cuisine."
+    },
+    "sayona-spc-4567": {
+        "name": "Sayona SPC 4567 Pressure Cooker & Air Fryer",
+        "price": 11683,
+        "image": "assets\/Sayonna SPC 4567 pressure cooker & Air Fryer.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres",
+            "Material": "Sleek stainless-steel finish",
+            "Key Features": "15 preset cooking menus with Tender Crisp Technology",
+            "Operation": "Automatic keypad",
+            "Power": "1500W (Air Fryer) \/ 1000W (Pressure Cooker)",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Nagoya Holdings",
+        "description": "The ultimate 2-in-1 kitchen appliance combining full pressure cooking and air frying capabilities."
+    },
+    "pawapot-jd-29ed": {
+        "name": "PawaPot JD-29ED EPC",
+        "price": 12100,
+        "image": "assets\/PawaPot JD-29ED EPC.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres",
+            "Material": "Sleek stainless-steel finish",
+            "Key Features": "17 preset cooking menus, 24-hour Keep Warm function",
+            "Operation": "Automatic keypad",
+            "Power": "1000W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "SCODE Ltd",
+        "description": "Features 17 presets and an industry-leading keep-warm function for maximum convenience."
+    },
+    "ramtons-rm-582": {
+        "name": "Ramtons RM\/582 EPC",
+        "price": 11900,
+        "image": "assets\/Ramtons RM 582 EPC.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres",
+            "Material": "Stainless-steel finish",
+            "Key Features": "12 preset cooking recipes, 24-hour preset timer",
+            "Operation": "Automatic keypad",
+            "Power": "1100W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Hypermart Limited",
+        "description": "Trusted Ramtons quality with 12 presets and a high-power heating element for fast cooking."
+    },
+    "ramtons-rm-782": {
+        "name": "Ramtons RM\/782 EPC",
+        "price": 15900,
+        "image": "assets\/Ramtons RM 782 EPC.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "8 Litres",
+            "Material": "Sleek stainless-steel finish",
+            "Key Features": "12 preset cooking recipes, 24-hour preset timer",
+            "Operation": "Automatic keypad",
+            "Power": "1100W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Hypermart Limited",
+        "description": "High-capacity 8L version of the popular Ramtons EPC, ideal for large families and hosting."
+    },
+    "sayona-spc-4328": {
+        "name": "Sayona SPC 4328 All-in-One EPC & Air Fryer",
+        "price": 15592,
+        "image": "assets\/Sayonna SPC 4328 Electric Pressure Cooker & Air Fryer.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "6 Litres",
+            "Material": "Sleek stainless-steel finish",
+            "Key Features": "17 pressure cooker presets + 12 Air Fryer presets",
+            "Operation": "Automatic keypad",
+            "Power": "1500W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Nagoya Holdings",
+        "description": "A pro-level kitchen system with 29 combined presets and Tender Crisp technology for perfect results."
+    },
+    "ramtons-rm-381": {
+        "name": "Ramtons RM\/381 Single Induction Cooker",
+        "price": 9900,
+        "image": "assets\/Ramtons RM 381 Induction cooker.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "Single Burner",
+            "Material": "Premium black crystal glass panel",
+            "Key Features": "Includes FREE non-stick 24 cm pan, Child Lock",
+            "Power": "2000W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Hypermart Limited",
+        "description": "Fast, safe, and efficient single induction burner. Includes a free non-stick pan for immediate use."
+    },
+    "ramtons-rm-773": {
+        "name": "Ramtons RM\/773 Double Induction Cooker",
+        "price": 14990,
+        "image": "assets\/Ramtons RM 773 Induction cooker.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "Double Burner",
+            "Material": "Black crystal glass panels",
+            "Key Features": "Up to 24-hour scheduling timer, Child Lock",
+            "Power": "2000W",
+            "Warranty": "12 Months"
+        },
+        "distributor": "Hypermart Limited",
+        "description": "Double the cooking power with sleek glass panels and advanced safety features for the modern kitchen."
+    },
+    "ecook-double-induction": {
+        "name": "ECook Double Induction Cooker",
+        "price": 28000,
+        "image": "assets\/ECook Induction cooker.png",
+        "category": "Electric Cooking",
+        "specs": {
+            "Capacity": "Double Burner",
+            "Material": "High-grade black crystal glass panels",
+            "Key Features": "7 menu functions, 3-hour delay start, Child Lock",
+            "Power": "2000W",
+            "Warranty": "24 Months"
+        },
+        "distributor": "Mwangaza Light",
+        "description": "Top-tier double induction cooker with 24-month warranty support and advanced menu functions."
+    },
+    "moto-safe-double": {
+        "name": "Moto Safe Bio Ethanol Stove (Double)",
+        "price": 2500,
+        "image": "assets\/Moto Safe Bio Ethanol Stove.png",
+        "category": "Bio-Ethanol Stoves",
+        "specs": {
+            "Capacity": "Double burner stove",
+            "Material": "Iron construction",
+            "Operation": "Manual",
+            "Distributor": "PharmChem Laboratories"
+        },
+        "distributor": "PharmChem Laboratories",
+        "description": "An ultra-affordable, clean-burning double burner stove that uses liquid bio-ethanol fuel."
+    },
+    "moto-safe-single": {
+        "name": "Moto Safe Bio Ethanol Stove (Single)",
+        "price": 2000,
+        "image": "assets\/Moto Safe Bio Ethanol Stove sINGLE BURNER.png",
+        "category": "Bio-Ethanol Stoves",
+        "specs": {
+            "Capacity": "Single burner stove",
+            "Material": "Iron construction",
+            "Operation": "Manual"
+        },
+        "distributor": "PharmChem Laboratories",
+        "description": "Compact and portable single burner bio-ethanol stove, ideal for small spaces and quick meals."
+    },
+    "moto-smart-medium": {
+        "name": "Moto Smart Gel Stove (Medium)",
+        "price": 1500,
+        "image": "assets\/Moto Smart Stove.png",
+        "category": "Bio-Ethanol Stoves",
+        "specs": {
+            "Capacity": "Single burner (Medium)",
+            "Material": "Pure Aluminium"
+        },
+        "distributor": "SilverTech Technologies",
+        "description": "High-quality aluminium gel stove designed for efficiency and durability."
+    },
+    "fixed-dome-biodigester": {
+        "name": "Fixed Dome Biodigester System",
+        "price": 0,
+        "image": "assets\/Biodigester Dome.png",
+        "category": "Bio-Digesters",
+        "specs": {
+            "Type": "Built-to-last, underground structural system",
+            "Material": "Masonry brick, concrete, and dome-shaped top",
+            "Maintenance": "Close to zero maintenance"
+        },
+        "distributor": "KEREA Certified Installers",
+        "description": "A long-term household or farm investment. Completely static with no moving parts."
+    },
+    "prefab-biodigester": {
+        "name": "Prefabricated Biodigester System",
+        "price": 0,
+        "image": "assets\/Prefabricated Biodigester.png",
+        "category": "Bio-Digesters",
+        "specs": {
+            "Type": "Portable, ready-to-use modern setup",
+            "Material": "Premium High-Density Polyethylene (HDPE)",
+            "Setup": "Can be installed in just one day"
+        },
+        "distributor": "KEREA Certified Installers",
+        "description": "Modern, lightweight, and cost-effective biogas solution that starts producing fuel immediately."
+    },
+    "portable-jiko-kisasa": {
+        "name": "Portable Jiko Kisasa Cookstove",
+        "price": 0,
+        "image": "assets\/Portable Jikosasa Stove.png",
+        "category": "Improved Cookstoves",
+        "specs": {
+            "Liner": "Traditional ceramic liner",
+            "Housing": "Durable metal housing",
+            "Savings": "High efficiency fuel savings"
+        },
+        "distributor": "Kerea Verified Artisans",
+        "description": "Features a traditional ceramic liner encased in a durable metal housing. Best for immediate fuel savings."
+    },
+    "fixed-jiko-kisasa": {
+        "name": "Fixed Jiko Kisasa Cookstove",
+        "price": 0,
+        "image": "assets\/Fixed Jikosasa Stove.png",
+        "category": "Improved Cookstoves",
+        "specs": {
+            "Type": "Stationary brick\/clay installation",
+            "Custom": "Multiple burner holes for multitasking",
+            "Requirement": "Requires dedicated kitchen floor space"
+        },
+        "distributor": "Kerea Verified Artisans",
+        "description": "A stationary kitchen installation that delivers the highest thermal efficiency for family cooking."
+    }
+}

@@ -1,3 +1,4 @@
+<?php include_once 'config.php'; ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,17 +24,17 @@
             extend: {
                 colors: {
                     primary: {
-                        DEFAULT: '#39DE4F',
-                        light: '#5be66d',
-                        dark: '#2fb741',
+                        DEFAULT: '<?php echo $settings['primary_color']; ?>',
+                        light: '<?php echo $settings['primary_color']; ?>cc',
+                        dark: '<?php echo $settings['primary_color']; ?>ee',
                     },
                     accent: {
-                        DEFAULT: '#F59E0B',
-                        light: '#fbbf24',
-                        dark: '#d97706',
+                        DEFAULT: '<?php echo $settings['accent_color']; ?>',
+                        light: '<?php echo $settings['accent_color']; ?>cc',
+                        dark: '<?php echo $settings['accent_color']; ?>ee',
                     },
-                    black: '#000000',
-                    white: '#FFFFFF',
+                    black: '<?php echo $settings['hero_bg_color']; ?>',
+                    white: '<?php echo $settings['header_bg']; ?>',
                 },
                 fontFamily: {
                     sans: ['"Plus Jakarta Sans"', 'sans-serif'],
