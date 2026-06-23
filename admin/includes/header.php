@@ -1,8 +1,8 @@
 <?php
 include_once __DIR__ . '/../../includes/config.php';
-// Admin pages are in /admin/, so assets are in /assets/ (one level up)
-$base_url = "../"; 
-$admin_base = "./";
+// Use absolute paths for Vercel router compatibility
+$base_url = "/"; 
+$admin_base = "/admin/";
 ?>
 <!DOCTYPE html>
 <html lang="en">
