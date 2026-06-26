@@ -19,7 +19,7 @@ $active_page = "marketplace";
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-32">
         
         <!-- 1. MARKETPLACE HERO -->
-        <section class="gsap-reveal relative bg-black min-h-[650px] rounded-[4rem] overflow-hidden flex flex-col justify-center px-10 sm:px-24 py-20 text-white shadow-2xl">
+        <section class="reveal-on-scroll relative bg-black min-h-[650px] rounded-[4rem] overflow-hidden flex flex-col justify-center px-10 sm:px-24 py-20 text-white shadow-2xl">
             <!-- Background Image -->
             <div class="absolute right-0 top-0 bottom-0 w-full lg:w-1/2 h-full opacity-30 lg:opacity-100">
                  <img src="https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=80" alt="Solar Hardware" class="w-full h-full object-cover">
@@ -62,7 +62,7 @@ $active_page = "marketplace";
         </section>
 
         <!-- 2. FILTERS bar -->
-        <section class="gsap-reveal sticky top-24 z-30 bg-white/80 backdrop-blur-2xl border border-slate-100 rounded-[3rem] p-6 shadow-premium flex flex-wrap items-center justify-between gap-6 px-10">
+        <section class="reveal-on-scroll sticky top-24 z-30 bg-white/80 backdrop-blur-2xl border border-slate-100 rounded-[3rem] p-6 shadow-premium flex flex-wrap items-center justify-between gap-6 px-10">
             <div class="flex items-center gap-4 flex-wrap">
                 <button onclick="MarketUI.filter('all')" class="cat-filter filter-active px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-slate-50 transition-all">All Gears</button>
                 <button onclick="MarketUI.filter('Solar')" class="cat-filter px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-slate-100 hover:bg-slate-50 transition-all">Solar Energy</button>
@@ -207,9 +207,7 @@ $active_page = "marketplace";
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            gsap.registerPlugin(ScrollTrigger);
-            gsap.from('.gsap-reveal', { opacity: 0, y: 50, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: '.gsap-reveal', start: 'top 90%' } });
-            gsap.from('.stagger-reveal > .product-card', { opacity: 0, y: 30, stagger: 0.1, duration: 1, ease: "expo.out" });
+            // Global animations handled in footer.php
         });
     </script>
 </body>

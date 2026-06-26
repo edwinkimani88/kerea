@@ -13,7 +13,7 @@ $active_page = "marketplace";
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-20">
         <!-- Hero -->
-        <section class="gsap-reveal flex flex-col md:flex-row justify-between items-end gap-10 border-b-4 border-slate-100 pb-20">
+        <section class="reveal-on-scroll flex flex-col md:flex-row justify-between items-end gap-10 border-b-4 border-slate-100 pb-20">
             <div class="space-y-6 max-w-3xl">
                 <span class="text-primary font-black text-[11px] uppercase tracking-[0.5em] block">Certified SME Ecosystem</span>
                 <h1 class="text-6xl sm:text-7xl font-black text-slate-900 tracking-tighter leading-none italic uppercase">Steward Directory.</h1>
@@ -69,7 +69,7 @@ $active_page = "marketplace";
         </section>
 
         <!-- Partner Banner -->
-        <section class="gsap-reveal relative bg-slate-900 rounded-[4rem] p-20 text-center text-white shadow-3xl overflow-hidden group">
+        <section class="reveal-on-scroll relative bg-slate-900 rounded-[4rem] p-20 text-center text-white shadow-3xl overflow-hidden group">
             <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
             <h2 class="text-4xl sm:text-5xl font-black mb-8 italic uppercase text-primary">Become a Verified Steward.</h2>
             <p class="text-slate-400 text-lg max-w-2xl mx-auto mb-12 font-bold leading-relaxed">Join the most prestigious network of renewable energy suppliers in East Africa and access verified institutional procurement channels.</p>
@@ -81,11 +81,7 @@ $active_page = "marketplace";
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            gsap.registerPlugin(ScrollTrigger);
-            gsap.utils.toArray('.gsap-reveal').forEach(el => {
-                gsap.from(el, { opacity: 0, y: 50, duration: 1.2, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 90%" } });
-            });
-            gsap.from('.stagger-reveal > div', { opacity: 0, y: 30, stagger: 0.15, duration: 1, ease: "power2.out", scrollTrigger: { trigger: '.stagger-reveal', start: "top 85%" } });
+             // Global animations handled in footer.php
         });
     </script>
 </body>

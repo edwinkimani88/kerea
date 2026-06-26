@@ -122,16 +122,16 @@
         if (isInViewport(el)) {
             // Already visible — animate in immediately
             gsap.fromTo(el,
-                { y: 24, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.65, delay: delay, ease: 'power2.out' }
+                { y: 24, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.65, delay: delay, ease: 'power2.out' }
             );
         } else {
             // Off-screen — use ScrollTrigger
             gsap.fromTo(el,
-                { y: 30, opacity: 0 },
+                { y: 30, autoAlpha: 0 },
                 {
                     y: 0,
-                    opacity: 1,
+                    autoAlpha: 1,
                     duration: 0.7,
                     ease: 'power2.out',
                     scrollTrigger: {
@@ -154,15 +154,15 @@
         const children = Array.from(container.children);
         if (isInViewport(container)) {
             gsap.fromTo(children,
-                { y: 24, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power2.out', delay: 0.1 }
+                { y: 24, autoAlpha: 0 },
+                { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.08, ease: 'power2.out', delay: 0.1 }
             );
         } else {
             gsap.fromTo(children,
-                { y: 30, opacity: 0 },
+                { y: 30, autoAlpha: 0 },
                 {
                     y: 0,
-                    opacity: 1,
+                    autoAlpha: 1,
                     duration: 0.65,
                     stagger: 0.09,
                     ease: 'power2.out',

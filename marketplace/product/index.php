@@ -27,7 +27,7 @@ $p = $products[$product_id];
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <!-- Breadcrumbs -->
-        <nav class="gsap-reveal flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-16 px-4">
+        <nav class="reveal-on-scroll flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.4em] text-slate-400 mb-16 px-4">
             <a href="../../marketplace/" class="hover:text-primary transition-colors">Registry</a>
             <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
             <span class="text-slate-300"><?php echo $p['category']; ?></span>
@@ -37,7 +37,7 @@ $p = $products[$product_id];
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-start">
             <!-- Image Gallery -->
-            <div class="gsap-reveal space-y-10 lg:sticky lg:top-32">
+            <div class="reveal-on-scroll space-y-10 lg:sticky lg:top-32">
                 <div class="aspect-square bg-white rounded-[4rem] border border-slate-100 overflow-hidden shadow-4xl relative group">
                     <img id="main-product-img" src="<?php echo $base_url . $p['image']; ?>" 
                          onerror="this.src='https://placehold.co/800x800/39DE4F/000000?text=KEREA+ANALYSIS'"
@@ -60,7 +60,7 @@ $p = $products[$product_id];
             </div>
 
             <!-- Configuration Options -->
-            <div class="gsap-reveal space-y-16">
+            <div class="reveal-on-scroll space-y-16">
                 <div class="space-y-8">
                     <div class="flex items-center gap-5">
                         <span class="px-5 py-2 bg-emerald-100 text-emerald-700 font-black text-[10px] uppercase tracking-[0.3em] rounded-full flex items-center gap-2">
@@ -233,9 +233,7 @@ $p = $products[$product_id];
         };
 
         document.addEventListener('DOMContentLoaded', () => {
-            gsap.registerPlugin(ScrollTrigger);
-            gsap.from('.gsap-reveal', { opacity: 0, y: 60, duration: 1.5, ease: "expo.out", stagger: 0.2 });
-            gsap.from('.stagger-reveal > div', { opacity: 0, scale: 0.9, y: 30, stagger: 0.1, duration: 1.5, ease: "expo.out", scrollTrigger: { trigger: '.stagger-reveal', start: "top 85%" } });
+            // Global animations handled in footer.php
         });
     </script>
 </body>

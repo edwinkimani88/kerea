@@ -97,13 +97,37 @@
     }
 
     /* GSAP reveal Initial State */
-    .gsap-reveal {
+    .gsap-reveal, .reveal-on-scroll, .stagger-reveal > * {
         opacity: 0;
         visibility: hidden;
+    }
+
+    .stroke-text {
+        -webkit-text-stroke: 2px currentColor;
+        color: transparent;
     }
 
     /* Fix Header Legibility */
     #main-nav {
         @apply shadow-sm border-b border-slate-100;
+    }
+
+    /* Dashboard Scrollbar */
+    .custom-scrollbar {
+        scrollbar-width: thin;
+        scrollbar-color: #e2e8f0 transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 99px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #cbd5e1;
     }
 </style>
