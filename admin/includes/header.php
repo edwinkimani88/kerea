@@ -131,6 +131,17 @@ $admin_base = "/admin/";
             <a href="<?php echo $admin_base; ?>support.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
                 <i data-lucide="message-square" class="w-5 h-5"></i> Support Desk
             </a>
+
+            <!-- Portals Divider -->
+            <div class="pt-4 pb-2 px-2">
+                <p class="text-[8px] font-black uppercase tracking-[0.3em] text-slate-300">Member Portals</p>
+            </div>
+            <a href="<?php echo $base_url; ?>membership" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+                <i data-lucide="award" class="w-5 h-5"></i> Membership
+            </a>
+            <a href="<?php echo $base_url; ?>vendor" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
+                <i data-lucide="store" class="w-5 h-5"></i> Vendor Portal
+            </a>
         </nav>
         <div class="p-6 border-t border-slate-100">
             <div class="bg-primary/5 rounded-3xl p-6 space-y-4">
