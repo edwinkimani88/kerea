@@ -51,7 +51,8 @@
 <style>
     @layer base {
         body {
-            @apply font-sans antialiased text-slate-900 bg-white overflow-x-hidden;
+            @apply font-sans antialiased text-slate-900 bg-white;
+            overflow-x: clip; /* Use clip instead of hidden so scroll events are not blocked */
         }
     }
 

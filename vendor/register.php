@@ -1,6 +1,14 @@
 <?php
 $active_page = "vendor_account";
 $base_url = "../";
+session_start();
+// After form submit, set session and redirect to dashboard (pending state)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $_SESSION['vendor_registered'] = true;
+    $_SESSION['vendor_approved'] = false;
+    header('Location: dashboard.php');
+    exit;
+}
 include_once '../includes/head.php';
 ?>
 <title>Vendor Registration | KEREA Marketplace</title>
@@ -21,7 +29,7 @@ include_once '../includes/head.php';
             </div>
 
             <div class="bg-white/5 backdrop-blur-xl p-10 rounded-4xl border border-white/10 shadow-2xl">
-                <form class="space-y-6" onsubmit="event.preventDefault(); window.location='kyc.php'">
+                <form class="space-y-6" method="post" action="register.php">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Business Name</label>

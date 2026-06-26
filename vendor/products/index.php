@@ -1,6 +1,7 @@
 <?php
 $active_page = "vendor_products";
 $base_url = "../../";
+$dashboard_layout = true;
 include_once '../../includes/head.php';
 ?>
 <title>Product Management | Vendor Dashboard</title>
@@ -50,7 +51,7 @@ include_once '../../includes/head.php';
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 h-screen overflow-y-auto bg-slate-50 lg:ml-72 custom-scrollbar">
+    <main class="flex-1 min-h-screen bg-slate-50 lg:ml-72 custom-scrollbar">
         <header class="bg-white/80 backdrop-blur-xl border-b border-slate-100 px-8 py-6 flex flex-col sm:flex-row justify-between items-center gap-4 sticky top-0 z-40">
             <div class="flex items-center gap-4">
                 <a href="../dashboard.php?mode=approved" class="p-2 hover:bg-slate-100 rounded-xl transition-colors lg:hidden">

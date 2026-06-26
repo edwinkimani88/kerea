@@ -85,7 +85,11 @@
     // Initialize Lucide Icons
     lucide.createIcons();
 
-    // Lenis Smooth Scroll Initialization
+    // ─── Master Animation System ────────────────────────────────────────────────
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Lenis Smooth Scroll — only on public pages, not dashboard layouts
+    <?php if(!isset($dashboard_layout) || !$dashboard_layout): ?>
     const lenis = new Lenis({
         duration: 1.1,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -104,13 +108,13 @@
     }
     requestAnimationFrame(raf);
 
-    // ─── Master Animation System ───────────────────────────────────────────────
-    gsap.registerPlugin(ScrollTrigger);
-
     // Connect Lenis to GSAP ScrollTrigger
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add((time) => { lenis.raf(time * 1000); });
     gsap.ticker.lagSmoothing(0);
+    <?php else: ?>
+    // Dashboard layout — native browser scroll handles everything
+    <?php endif; ?>
 
     function isInViewport(el) {
         const rect = el.getBoundingClientRect();

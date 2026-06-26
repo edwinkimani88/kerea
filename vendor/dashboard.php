@@ -1,10 +1,44 @@
 <?php
 $active_page = "vendor_dashboard";
 $base_url = "../";
+$dashboard_layout = true;
 include_once '../includes/head.php';
 
-// Mock state handling
-$mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
+/**
+ * Auth Guard: Check if user is registered.
+ * Uses a simple session flag. If not set, treat as unregistered.
+ * In production, replace this with a real DB session check.
+ */
+session_start();
+$is_registered = isset($_SESSION['vendor_registered']) && $_SESSION['vendor_registered'] === true;
+
+// Allow demo mode override via URL (remove in production)
+if (isset($_GET['mode'])) {
+    if ($_GET['mode'] === 'approved') {
+        $_SESSION['vendor_registered'] = true;
+        $_SESSION['vendor_approved'] = true;
+        $is_registered = true;
+    } elseif ($_GET['mode'] === 'pending') {
+        $_SESSION['vendor_registered'] = true;
+        $_SESSION['vendor_approved'] = false;
+        $is_registered = true;
+    } elseif ($_GET['mode'] === 'logout') {
+        session_destroy();
+        header('Location: register.php');
+        exit;
+    }
+}
+
+// If not registered, the dashboard renders in a preview/locked state
+// All action buttons will point to register.php
+$is_approved = $is_registered && isset($_SESSION['vendor_approved']) && $_SESSION['vendor_approved'] === true;
+$mode = $is_approved ? 'approved' : ($is_registered ? 'pending' : 'unregistered');
+
+// If not registered, any POST request or action-click redirects to register
+if (!$is_registered && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Location: register.php');
+    exit;
+}
 ?>
 <title>Vendor Dashboard | KEREA Marketplace</title>
 
@@ -40,7 +74,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
     }
 </style>
 
-<div class="flex">
+<div class="flex min-h-screen">
     <!-- Sidebar -->
     <aside class="vendor-sidebar hidden lg:block" data-lenis-prevent>
         <div class="p-8 border-b border-white/5">
@@ -53,58 +87,60 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
         </div>
         
         <nav class="py-10 space-y-2">
-            <a href="dashboard.php?mode=<?php echo $mode; ?>" class="nav-link active">
+            <a href="dashboard.php" class="nav-link active">
                 <i data-lucide="grid-3x3" class="w-5 h-5"></i> Dashboard
             </a>
             
-            <?php $is_approved = ($mode == 'approved'); ?>
-            
-            <a href="products/index.php" class="nav-link <?php echo !$is_approved ? 'locked-feature' : ''; ?>">
+            <a href="<?php echo $is_approved ? 'products/index.php' : 'register.php'; ?>" class="nav-link <?php echo !$is_approved ? 'opacity-50' : ''; ?>">
                 <i data-lucide="package" class="w-5 h-5"></i> Products
                 <?php if(!$is_approved): ?><i data-lucide="lock" class="w-3 h-3 ml-auto opacity-40"></i><?php endif; ?>
             </a>
             
-            <a href="#" class="nav-link <?php echo !$is_approved ? 'locked-feature' : ''; ?>">
+            <a href="<?php echo $is_approved ? '#' : 'register.php'; ?>" class="nav-link <?php echo !$is_approved ? 'opacity-50' : ''; ?>">
                 <i data-lucide="shopping-cart" class="w-5 h-5"></i> Orders
                 <?php if(!$is_approved): ?><i data-lucide="lock" class="w-3 h-3 ml-auto opacity-40"></i><?php endif; ?>
             </a>
 
-            <a href="#" class="nav-link <?php echo !$is_approved ? 'locked-feature' : ''; ?>">
+            <a href="<?php echo $is_approved ? '#' : 'register.php'; ?>" class="nav-link <?php echo !$is_approved ? 'opacity-50' : ''; ?>">
                 <i data-lucide="bar-chart-3" class="w-5 h-5"></i> Analytics
                 <?php if(!$is_approved): ?><i data-lucide="lock" class="w-3 h-3 ml-auto opacity-40"></i><?php endif; ?>
             </a>
 
-            <a href="kyc.php" class="nav-link">
+            <a href="<?php echo $is_registered ? 'kyc.php' : 'register.php'; ?>" class="nav-link <?php echo !$is_registered ? 'opacity-50' : ''; ?>">
                 <i data-lucide="shield-check" class="w-5 h-5"></i> KYC Status
+                <?php if(!$is_registered): ?><i data-lucide="lock" class="w-3 h-3 ml-auto opacity-40"></i><?php endif; ?>
             </a>
 
-            <a href="#" class="nav-link">
+            <a href="<?php echo $is_registered ? '#' : 'register.php'; ?>" class="nav-link <?php echo !$is_registered ? 'opacity-50' : ''; ?>">
                 <i data-lucide="message-square" class="w-5 h-5"></i> Messages
+                <?php if(!$is_registered): ?><i data-lucide="lock" class="w-3 h-3 ml-auto opacity-40"></i><?php endif; ?>
             </a>
 
-            <a href="#" class="nav-link">
+            <a href="<?php echo $is_registered ? '#' : 'register.php'; ?>" class="nav-link <?php echo !$is_registered ? 'opacity-50' : ''; ?>">
                 <i data-lucide="settings" class="w-5 h-5"></i> Settings
+                <?php if(!$is_registered): ?><i data-lucide="lock" class="w-3 h-3 ml-auto opacity-40"></i><?php endif; ?>
             </a>
         </nav>
 
         <div class="absolute bottom-0 w-full p-8 space-y-4">
-             <!-- State Toggle -->
+            <!-- State Toggle (Demo Only - Remove in Production) -->
             <div class="p-4 bg-white/5 rounded-2xl border border-white/10">
-                <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-3 text-center italic">Dashboard Persistence Mode</p>
-                <div class="grid grid-cols-2 gap-2">
-                    <a href="dashboard.php?mode=pending" class="px-2 py-2 text-center text-[8px] font-black uppercase rounded-lg <?php echo $mode=='pending' ? 'bg-primary text-black' : 'bg-slate-800 text-slate-400'; ?>">Review</a>
-                    <a href="dashboard.php?mode=approved" class="px-2 py-2 text-center text-[8px] font-black uppercase rounded-lg <?php echo $mode=='approved' ? 'bg-primary text-black' : 'bg-slate-800 text-slate-400'; ?>">Active</a>
+                <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-3 text-center italic">Preview Mode</p>
+                <div class="grid grid-cols-3 gap-1.5">
+                    <a href="dashboard.php?mode=logout" class="px-2 py-2 text-center text-[7px] font-black uppercase rounded-lg <?php echo $mode=='unregistered' ? 'bg-primary text-black' : 'bg-slate-800 text-slate-400'; ?>">Guest</a>
+                    <a href="dashboard.php?mode=pending" class="px-2 py-2 text-center text-[7px] font-black uppercase rounded-lg <?php echo $mode=='pending' ? 'bg-primary text-black' : 'bg-slate-800 text-slate-400'; ?>">Review</a>
+                    <a href="dashboard.php?mode=approved" class="px-2 py-2 text-center text-[7px] font-black uppercase rounded-lg <?php echo $mode=='approved' ? 'bg-primary text-black' : 'bg-slate-800 text-slate-400'; ?>">Active</a>
                 </div>
             </div>
 
-            <a href="<?php echo $base_url; ?>auth" class="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 transition-colors group">
+            <a href="<?php echo $base_url; ?>vendor/dashboard.php?mode=logout" class="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-red-400 hover:text-red-300 transition-colors group">
                 <i data-lucide="log-out" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Exit Dashboard
             </a>
         </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 h-screen overflow-y-auto bg-slate-50 lg:ml-72 relative custom-scrollbar">
+    <main class="flex-1 min-h-screen bg-slate-50 lg:ml-72 relative overflow-y-auto">
         
         <!-- Header -->
         <header class="sticky top-0 bg-white/90 backdrop-blur-xl border-b border-slate-100 px-8 py-6 flex justify-between items-center z-40">
@@ -114,7 +150,11 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
             
             <div class="flex items-center gap-6">
                 <!-- Status Badge -->
-                <?php if($mode == 'pending'): ?>
+                <?php if($mode == 'unregistered'): ?>
+                    <span class="hidden sm:flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-slate-200">
+                        <span class="w-2 h-2 bg-slate-400 rounded-full"></span> Not Registered
+                    </span>
+                <?php elseif($mode == 'pending'): ?>
                     <span class="hidden sm:flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 text-[10px] font-black uppercase tracking-widest rounded-full border border-orange-100">
                         <span class="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span> KYC Pending Verification
                     </span>
@@ -124,6 +164,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
                     </span>
                 <?php endif; ?>
 
+                <?php if($is_registered): ?>
                 <div class="flex items-center gap-4 pl-6 border-l border-slate-100">
                     <div class="w-10 h-10 rounded-2xl bg-slate-900 flex items-center justify-center text-primary font-black uppercase italic">LE</div>
                     <div class="hidden md:block">
@@ -131,13 +172,37 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
                         <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Global Merchant #4402</p>
                     </div>
                 </div>
+                <?php else: ?>
+                <a href="register.php" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-black font-black text-[10px] uppercase tracking-widest rounded-xl hover:bg-slate-900 hover:text-primary transition-all">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i> Register Now
+                </a>
+                <?php endif; ?>
             </div>
         </header>
 
         <!-- Main Body -->
         <div class="p-8 space-y-10">
             
-            <?php if($mode == 'pending'): ?>
+            <?php if($mode == 'unregistered'): ?>
+                <!-- Registration CTA Banner -->
+                <div class="bg-slate-900 p-10 rounded-4xl text-white relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -mr-48 -mt-48"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-primary/10 rounded-full blur-2xl -ml-32 -mb-32"></div>
+                    <div class="max-w-2xl relative z-10">
+                        <span class="inline-block px-4 py-1.5 bg-primary/20 text-primary text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6">Marketplace Merchant</span>
+                        <h2 class="text-4xl font-black mb-4">Create Your Vendor Account</h2>
+                        <p class="text-slate-400 text-lg leading-relaxed mb-8 italic">Register to unlock your Merchant Hub — manage listings, track orders, view analytics, and grow your business across East Africa.</p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="register.php" class="px-8 py-4 bg-primary text-black font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-white transition-all shadow-xl shadow-primary/20">
+                                <i data-lucide="user-plus" class="w-4 h-4 inline mr-2"></i> Register as Vendor
+                            </a>
+                            <a href="<?php echo $base_url; ?>auth" class="px-8 py-4 border border-white/20 text-white font-black uppercase text-[10px] tracking-widest rounded-2xl hover:bg-white/5 transition-all">
+                                Already have an account? Sign In
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            <?php elseif($mode == 'pending'): ?>
                 <!-- Pending Banner -->
                 <div class="bg-slate-900 p-10 rounded-4xl text-white relative overflow-hidden">
                     <div class="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -mr-48 -mt-48"></div>
@@ -160,7 +225,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
             <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
                 <!-- Stat Card 1 -->
                 <div class="stat-card">
-                    <?php if($mode == 'pending'): ?>
+                    <?php if($mode != 'approved'): ?>
                         <div class="lock-overlay"><i data-lucide="lock" class="w-6 h-6 text-slate-300"></i></div>
                     <?php endif; ?>
                     <h3 class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-4">Marketplace Views</h3>
@@ -172,7 +237,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
 
                 <!-- Stat Card 2 -->
                 <div class="stat-card">
-                    <?php if($mode == 'pending'): ?>
+                    <?php if($mode != 'approved'): ?>
                         <div class="lock-overlay"><i data-lucide="lock" class="w-6 h-6 text-slate-300"></i></div>
                     <?php endif; ?>
                     <h3 class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-4">Pending Orders</h3>
@@ -184,7 +249,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
 
                 <!-- Stat Card 3 -->
                 <div class="stat-card">
-                    <?php if($mode == 'pending'): ?>
+                    <?php if($mode != 'approved'): ?>
                         <div class="lock-overlay"><i data-lucide="lock" class="w-6 h-6 text-slate-300"></i></div>
                     <?php endif; ?>
                     <h3 class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-4">Total Revenue</h3>
@@ -196,7 +261,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
 
                 <!-- Stat Card 4 -->
                 <div class="stat-card">
-                    <?php if($mode == 'pending'): ?>
+                    <?php if($mode != 'approved'): ?>
                         <div class="lock-overlay"><i data-lucide="lock" class="w-6 h-6 text-slate-300"></i></div>
                     <?php endif; ?>
                     <h3 class="text-slate-400 font-bold text-[10px] uppercase tracking-widest mb-4">Product Health</h3>
@@ -213,7 +278,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
                 <div class="xl:col-span-2 space-y-10">
                     <!-- Recent Activity -->
                     <div class="space-y-6 relative">
-                        <?php if($mode == 'pending'): ?>
+                        <?php if($mode != 'approved'): ?>
                             <div class="lock-overlay"><i data-lucide="lock" class="w-8 h-8 text-slate-300"></i></div>
                         <?php endif; ?>
                          <div class="flex justify-between items-center">
@@ -246,12 +311,12 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
 
                     <!-- Products Grid Preview -->
                     <div class="space-y-6 relative">
-                        <?php if($mode == 'pending'): ?>
+                        <?php if($mode != 'approved'): ?>
                             <div class="lock-overlay"><i data-lucide="lock" class="w-8 h-8 text-slate-300"></i></div>
                         <?php endif; ?>
                         <div class="flex justify-between items-center">
                             <h3 class="text-xl font-black text-black uppercase tracking-tight">Managed Products</h3>
-                            <a href="products/index.php" class="text-[10px] font-black text-primary uppercase tracking-widest">Manage All</a>
+                            <a href="<?php echo $is_approved ? 'products/index.php' : 'register.php'; ?>" class="text-[10px] font-black text-primary uppercase tracking-widest">Manage All</a>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <?php 
@@ -279,7 +344,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
                 <div class="space-y-10">
                     <!-- Marketplace Insights -->
                     <div class="bg-slate-950 p-8 rounded-4xl text-white relative overflow-hidden">
-                        <?php if($mode == 'pending'): ?>
+                        <?php if($mode != 'approved'): ?>
                             <div class="lock-overlay bg-black/40"><i data-lucide="lock" class="w-8 h-8 text-white/20"></i></div>
                         <?php endif; ?>
                         <h4 class="text-xs font-black uppercase tracking-widest text-primary mb-6">Marketplace Insights</h4>
@@ -314,7 +379,7 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
 
                     <!-- Enquiries -->
                     <div class="bg-white p-8 rounded-4xl border border-slate-100 shadow-sm relative overflow-hidden">
-                         <?php if($mode == 'pending'): ?>
+                         <?php if($mode != 'approved'): ?>
                             <div class="lock-overlay"><i data-lucide="lock" class="w-8 h-8 text-slate-300"></i></div>
                          <?php endif; ?>
                          <h4 class="text-xs font-black uppercase tracking-widest text-black mb-6">Customer Enquiries</h4>
@@ -340,11 +405,16 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : 'pending';
 
         </div>
 
-        <?php if($mode == 'pending'): ?>
+        <?php if($mode != 'approved'): ?>
             <!-- Floating Banner to remind user -->
             <div class="fixed bottom-10 left-1/2 -translate-x-1/2 z-50 animate-bounce">
                 <div class="bg-primary text-black px-8 py-4 rounded-full font-black uppercase text-[10px] tracking-widest shadow-2xl flex items-center gap-3">
+                    <?php if($mode == 'unregistered'): ?>
+                    <i data-lucide="user-plus" class="w-4 h-4"></i> 
+                    <a href="register.php" class="hover:underline">Register to Unlock Full Access</a>
+                    <?php else: ?>
                     <i data-lucide="lock" class="w-4 h-4"></i> Account Restricted - Under Review
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endif; ?>
