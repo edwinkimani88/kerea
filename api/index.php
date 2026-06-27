@@ -44,6 +44,8 @@ $routes = [
     '/membership/dashboard/resources.php' => 'membership/dashboard/resources.php',
     '/membership/dashboard/status'  => 'membership/dashboard/status.php',
     '/membership/dashboard/status.php' => 'membership/dashboard/status.php',
+    '/membership/renewal'           => 'membership/renewal.php',
+    '/membership/renewal.php'       => 'membership/renewal.php',
 
     // Vendor portal
     '/vendor'                       => 'vendor/dashboard.php',

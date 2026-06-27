@@ -52,13 +52,20 @@
     @layer base {
         body {
             @apply font-sans antialiased text-slate-900 bg-white;
-            overflow-x: clip; /* Use clip instead of hidden so scroll events are not blocked */
+            overflow-x: hidden !important;
+            overflow-y: auto !important;
+            height: auto !important;
+            -webkit-overflow-scrolling: touch;
         }
     }
 
     /* Smooth Scroll Classes */
+    html {
+        overflow-y: auto !important;
+        height: auto !important;
+    }
     html.lenis {
-        height: auto;
+        height: auto !important;
     }
     .lenis.lenis-smooth {
         scroll-behavior: auto !important;
@@ -67,7 +74,7 @@
         overscroll-behavior: contain;
     }
     .lenis.lenis-stopped {
-        overflow: hidden;
+        overflow: visible;
     }
 
     .text-gradient {

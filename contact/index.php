@@ -49,7 +49,7 @@ $active_page = "contact";
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-black text-black text-sm uppercase tracking-tight">Main Secretariat Hub</h4>
-                                    <p class="text-slate-500 text-xs leading-relaxed">Westlands Plaza, 2nd Floor,<br>Wood Avenue, Nairobi, Kenya</p>
+                                    <p class="text-slate-500 text-xs leading-relaxed">Keri Road, Nairobi West,<br>Nairobi, Kenya</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-6">
@@ -58,7 +58,7 @@ $active_page = "contact";
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-black text-black text-sm uppercase tracking-tight">Official Email</h4>
-                                    <p class="text-slate-500 text-xs leading-relaxed">membership@kerea.org<br>info@kerea.org</p>
+                                    <p class="text-slate-500 text-xs leading-relaxed">info@kerea.org</p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-6">
@@ -67,7 +67,7 @@ $active_page = "contact";
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-black text-black text-sm uppercase tracking-tight">Direct Hotline</h4>
-                                    <p class="text-slate-500 text-xs leading-relaxed">+254 (0) 20 2345678<br>+254 (0) 720 000000</p>
+                                    <p class="text-slate-500 text-xs leading-relaxed">(+254) 740 541 896</p>
                                 </div>
                             </div>
                         </div>

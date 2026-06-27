@@ -21,17 +21,17 @@ if(!isset($active_page)) $active_page = "home";
             <span class="font-bold tracking-widest text-primary uppercase">Kerea Guaranteed Compliance</span>
             <div class="hidden sm:flex items-center gap-2 text-slate-300">
                 <i data-lucide="map-pin" class="w-3 h-3 text-primary"></i>
-                <span>Nairobi Secretariat Hub</span>
+                <span>Keri Road, Nairobi West, Nairobi</span>
             </div>
         </div>
         <div class="flex items-center gap-6">
-            <a href="mailto:membership@kerea.org" class="flex items-center gap-2 hover:text-primary transition-colors">
+            <a href="mailto:info@kerea.org" class="flex items-center gap-2 hover:text-primary transition-colors">
                 <i data-lucide="mail" class="w-3 h-3 text-primary"></i>
-                <span>membership@kerea.org</span>
+                <span>info@kerea.org</span>
             </a>
             <div class="hidden md:flex items-center gap-2">
                 <i data-lucide="phone" class="w-3 h-3 text-primary"></i>
-                <span>+254 (0) 20 2345678</span>
+                <span>(+254) 740 541 896</span>
             </div>
         </div>
     </div>
@@ -58,10 +58,21 @@ if(!isset($active_page)) $active_page = "home";
                     <button class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary flex items-center gap-1 cursor-pointer transition-colors">
                         Institutional <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 transition-transform"></i>
                     </button>
-                    <div class="absolute top-full left-0 mt-4 w-64 bg-white border border-slate-100 rounded-2xl shadow-xl p-3 space-y-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200">
+                    <div class="absolute top-full left-0 pt-2 w-64 bg-white border border-slate-100 rounded-2xl shadow-xl p-3 space-y-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-50">
                         <a href="<?php echo $base_url; ?>about/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">About Us</a>
                         <a href="<?php echo $base_url; ?>leadership/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Executive Board</a>
                         <a href="<?php echo $base_url; ?>member-directory/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Member Directory</a>
+                    </div>
+                </div>
+
+                <div class="relative group">
+                    <button class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary flex items-center gap-1 cursor-pointer transition-colors <?php echo ($active_page == 'membership') ? 'text-primary' : ''; ?>">
+                        Membership <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute top-full left-0 pt-2 w-64 bg-white border border-slate-100 rounded-2xl shadow-xl p-3 space-y-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-50">
+                        <a href="<?php echo $base_url; ?>membership/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Join KEREA</a>
+                        <a href="<?php echo $base_url; ?>membership/register.php" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Registration Form</a>
+                        <a href="<?php echo $base_url; ?>membership/renewal.php" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Renew Association</a>
                     </div>
                 </div>
 
@@ -102,6 +113,9 @@ if(!isset($active_page)) $active_page = "home";
             </a>
             <a href="<?php echo $base_url; ?>about/" class="flex items-center gap-3 px-4 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest <?php echo $active_page=='about' ? 'bg-primary text-black' : 'text-slate-700 hover:bg-slate-50 hover:text-primary'; ?> transition-all">
                 <i data-lucide="info" class="w-4 h-4"></i> About Us
+            </a>
+            <a href="<?php echo $base_url; ?>membership/" class="flex items-center gap-3 px-4 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest <?php echo $active_page=='membership' ? 'bg-primary text-black' : 'text-slate-700 hover:bg-slate-50 hover:text-primary'; ?> transition-all">
+                <i data-lucide="award" class="w-4 h-4"></i> Membership
             </a>
             <a href="<?php echo $base_url; ?>member-directory/" class="flex items-center gap-3 px-4 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest text-slate-700 hover:bg-slate-50 hover:text-primary transition-all">
                 <i data-lucide="users" class="w-4 h-4"></i> Member Directory

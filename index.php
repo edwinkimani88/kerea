@@ -43,7 +43,7 @@ $active_page = "home";
                     </p>
 
                     <div class="reveal-on-scroll flex flex-wrap gap-5 pt-4">
-                        <a href="member-directory/" class="px-10 py-5 bg-primary hover:bg-primary-dark text-black font-black rounded-2xl text-sm transition-all shadow-xl shadow-primary/25 hover:-translate-y-1 inline-flex items-center gap-3">
+                        <a href="membership/" class="px-10 py-5 bg-primary hover:bg-primary-dark text-black font-black rounded-2xl text-sm transition-all shadow-xl shadow-primary/25 hover:-translate-y-1 inline-flex items-center gap-3">
                             Become a Member <i data-lucide="arrow-right" class="w-5 h-5"></i>
                         </a>
                         <a href="about/" class="px-10 py-5 bg-white/8 hover:bg-white/15 border border-white/20 text-white font-black rounded-2xl text-sm transition-all backdrop-blur-sm inline-flex items-center gap-3">
@@ -348,40 +348,53 @@ $active_page = "home";
             </div>
         </section>
 
-        <!-- ═══ 6. PARTNERSHIPS ═══════════════════════════════════════════════════ -->
-        <section class="py-20 bg-white border-b border-slate-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="reveal-on-scroll text-center space-y-4 mb-16">
-                    <span class="text-primary font-black text-[9px] uppercase tracking-[0.3em] block">Our Ecosystem</span>
-                    <h3 class="text-xl font-black text-slate-900 uppercase tracking-widest">Some of Our Partnerships</h3>
+<style>
+    @keyframes marquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-50%); }
+    }
+    .animate-marquee {
+        display: flex;
+        width: max-content;
+        animation: marquee 40s linear infinite;
+    }
+    .animate-marquee:hover {
+        animation-play-state: paused;
+    }
+</style>
+
+        <!-- ═══ 6. PARTNERSHIPS - MOVING BELT ══════════════════════════════════════════ -->
+        <section class="py-24 bg-white border-b border-slate-100 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16 text-center">
+                <div class="reveal-on-scroll space-y-4">
+                    <span class="text-primary font-black text-[9px] uppercase tracking-[0.3em] block italic">Our Ecosystem</span>
+                    <h3 class="text-2xl font-black text-slate-900 uppercase tracking-widest">Some of Our Members & Partners</h3>
                 </div>
-                <div class="stagger-reveal flex flex-wrap justify-center items-center gap-8 sm:gap-16">
-                    <div class="flex flex-col items-center gap-2 group">
-                        <div class="h-16 w-32 bg-slate-100 rounded-2xl flex items-center justify-center opacity-60 group-hover:opacity-100 group-hover:bg-primary/10 transition-all duration-500 border border-slate-200 group-hover:border-primary/30 px-4">
-                            <span class="text-sm font-black text-slate-700 tracking-tight">ESEDA</span>
-                        </div>
+            </div>
+            
+            <div class="relative flex items-center group">
+                <!-- Moving Belt -->
+                <div class="animate-marquee flex gap-12 items-center">
+                    <?php 
+                    $partners = [
+                        "ARIYA.jpg", "CAT.png", "CLIMACENTO.png", "D LIGHT.png", 
+                        "EENOVATORS.jpg", "Koko.png", "Muresa.png", "Sentec.png", 
+                        "biolite.jpg", "eed advisory.jpg", "mullard.png", "solar panda.jpg", 
+                        "strathmore energy.png", "sun culture.png", "sun king.png", "wanergy.jpg"
+                    ];
+                    // Duplicate for seamless loop
+                    $display_partners = array_merge($partners, $partners);
+                    foreach($display_partners as $p): 
+                    ?>
+                    <div class="h-32 w-64 bg-white border border-slate-100 rounded-3xl flex items-center justify-center p-8 hover:border-primary/20 hover:shadow-xl transition-all duration-500 shrink-0">
+                        <img src="assets/partners/<?php echo $p; ?>" alt="Partner" class="max-h-full max-w-full object-contain">
                     </div>
-                    <div class="flex flex-col items-center gap-2 group">
-                        <div class="h-16 w-32 bg-slate-100 rounded-2xl flex items-center justify-center opacity-60 group-hover:opacity-100 group-hover:bg-primary/10 transition-all duration-500 border border-slate-200 group-hover:border-primary/30 px-4">
-                            <span class="text-sm font-black text-slate-700 tracking-tight">EPRA</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-center gap-2 group">
-                        <div class="h-16 w-32 bg-slate-100 rounded-2xl flex items-center justify-center opacity-60 group-hover:opacity-100 group-hover:bg-primary/10 transition-all duration-500 border border-slate-200 group-hover:border-primary/30 px-4">
-                            <span class="text-sm font-black text-slate-700 tracking-tight">EPD</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-center gap-2 group">
-                        <div class="h-16 w-32 bg-slate-100 rounded-2xl flex items-center justify-center opacity-60 group-hover:opacity-100 group-hover:bg-primary/10 transition-all duration-500 border border-slate-200 group-hover:border-primary/30 px-4">
-                            <span class="text-sm font-black text-slate-700 tracking-tight">CRIEA</span>
-                        </div>
-                    </div>
-                    <div class="flex flex-col items-center gap-2 group">
-                        <div class="h-16 w-48 bg-slate-100 rounded-2xl flex items-center justify-center opacity-60 group-hover:opacity-100 group-hover:bg-primary/10 transition-all duration-500 border border-slate-200 group-hover:border-primary/30 px-4">
-                            <span class="text-xs font-black text-slate-700 tracking-tight text-center leading-tight">Solar & Storage<br>Live Kenya</span>
-                        </div>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
+
+                <!-- Gradient Overlays for smooth entry/exit -->
+                <div class="absolute left-0 top-0 w-40 h-full bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute right-0 top-0 w-40 h-full bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
             </div>
         </section>
 
@@ -403,10 +416,10 @@ $active_page = "home";
                             Join Kenya's peak renewable energy body. Gain access to exclusive advocacy, marketplace listing, technical standards support, and a powerful network of energy sector leaders.
                         </p>
                         <div class="flex flex-col sm:flex-row justify-center gap-5 pt-4">
-                            <a href="member-directory/" class="px-12 py-5 bg-black text-white font-black rounded-2xl text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-2xl inline-flex items-center justify-center gap-3">
+                            <a href="membership/" class="px-12 py-5 bg-black text-white font-black rounded-2xl text-sm uppercase tracking-widest hover:scale-105 transition-all shadow-2xl inline-flex items-center justify-center gap-3">
                                 Become A Member <i data-lucide="user-plus" class="w-5 h-5"></i>
                             </a>
-                            <a href="member-directory/" class="px-12 py-5 bg-white/40 border border-black/10 text-black font-black rounded-2xl text-sm uppercase tracking-widest backdrop-blur-sm hover:bg-white transition-all inline-flex items-center justify-center gap-3">
+                            <a href="membership/register.php" class="px-12 py-5 bg-white/40 border border-black/10 text-black font-black rounded-2xl text-sm uppercase tracking-widest backdrop-blur-sm hover:bg-white transition-all inline-flex items-center justify-center gap-3">
                                 Register <i data-lucide="arrow-right" class="w-5 h-5"></i>
                             </a>
                         </div>

@@ -55,15 +55,15 @@
                 <ul class="space-y-6">
                     <li class="flex items-start gap-4">
                         <i data-lucide="map-pin" class="w-4.5 h-4.5 text-primary mt-0.5"></i>
-                        <span class="text-xs text-slate-400 leading-relaxed font-medium">Westlands Plaza, 2nd Floor,<br>Wood Avenue, Nairobi, KE</span>
+                        <span class="text-xs text-slate-400 leading-relaxed font-medium">Keri Road, Nairobi West,<br>Nairobi, KE</span>
                     </li>
                     <li class="flex items-center gap-4">
                         <i data-lucide="mail" class="w-4.5 h-4.5 text-primary"></i>
-                        <span class="text-xs text-slate-400 font-medium">membership@kerea.org</span>
+                        <span class="text-xs text-slate-400 font-medium">info@kerea.org</span>
                     </li>
                     <li class="flex items-center gap-4">
                         <i data-lucide="phone" class="w-4.5 h-4.5 text-primary"></i>
-                        <span class="text-xs text-slate-400 font-medium">+254 (0) 20 2345678</span>
+                        <span class="text-xs text-slate-400 font-medium">(+254) 740 541 896</span>
                     </li>
                 </ul>
             </div>
