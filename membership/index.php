@@ -9,28 +9,67 @@ include_once '../includes/head.php';
 
 <main class="bg-white">
     <!-- Hero Section -->
-    <section class="relative min-h-[70vh] flex items-center overflow-hidden pt-20">
+    <section class="relative min-h-[85vh] flex items-center overflow-hidden pt-20">
         <div class="absolute inset-0 z-0">
-            <img src="<?php echo $base_url; ?>assets/membership_hero.jpg" alt="KEREA Membership" class="w-full h-full object-cover">
-            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+            <img src="<?php echo $base_url; ?>assets/membership_hero_new.png" alt="KEREA Membership" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/20"></div>
         </div>
         
         <div class="container mx-auto px-6 relative z-10">
-            <div class="max-w-3xl">
-                <span class="inline-block px-4 py-1.5 bg-primary text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6 reveal-on-scroll">Memberships</span>
-                <h1 class="text-5xl md:text-7xl font-black text-white leading-tight mb-6 reveal-on-scroll">
-                    Join KEREA – Powering Kenya’s <span class="text-primary italic">Renewable Energy Future</span>
-                </h1>
-                <p class="text-xl text-slate-300 mb-10 leading-relaxed reveal-on-scroll">
-                    Be part of a thriving community shaping the future of renewable energy in Kenya! Unlock business & career growth, and gain exclusive access to funding, training, and market intelligence.
-                </p>
-                <div class="flex flex-wrap gap-4 reveal-on-scroll">
-                    <a href="register.php" class="px-8 py-4 bg-primary text-black font-black uppercase text-xs tracking-widest rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-xl shadow-primary/20">
-                        Become a Member
-                    </a>
-                    <a href="#benefits" class="px-8 py-4 border border-white/20 text-white font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-white/10 transition-all">
-                        Explore Benefits
-                    </a>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="max-w-3xl">
+                    <span class="inline-block px-4 py-1.5 bg-primary text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6 reveal-on-scroll">Memberships</span>
+                    <h1 class="text-5xl md:text-7xl font-black text-white leading-[1.1] mb-6 reveal-on-scroll">
+                        Join KEREA – Powering Kenya’s <span class="text-primary italic">Renewable Energy Future</span>
+                    </h1>
+                    <p class="text-xl text-slate-300 mb-10 leading-relaxed reveal-on-scroll">
+                        Be part of a thriving community shaping the future of renewable energy in Kenya! Unlock business & career growth, and gain exclusive access to funding, training, and market intelligence.
+                    </p>
+                    <div class="flex flex-wrap gap-4 reveal-on-scroll">
+                        <a href="register.php" class="px-10 py-5 bg-primary text-black font-black uppercase text-xs tracking-widest rounded-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-primary/30">
+                            Become a Member
+                        </a>
+                        <a href="#benefits" class="px-10 py-5 border border-white/20 text-white font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-white/10 transition-all backdrop-blur-sm">
+                            Explore Benefits
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Side Visual -->
+                <div class="hidden lg:block relative reveal-on-scroll" style="transition-delay: 200ms;">
+                    <div class="relative z-10 p-2 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-[3.5rem] shadow-2xl overflow-hidden ring-1 ring-white/10">
+                        <div class="p-6">
+                             <img src="<?php echo $base_url; ?>assets/membership_community.png" alt="KEREA Community" class="w-full h-[400px] object-cover rounded-[2.8rem] mb-8 border border-white/10 shadow-2xl">
+                             
+                             <div class="flex items-center justify-between px-4 pb-4">
+                                <div class="flex items-center gap-5">
+                                    <div class="flex -space-x-4">
+                                        <div class="w-12 h-12 rounded-full border-4 border-slate-900 bg-slate-800 flex items-center justify-center text-[10px] font-black text-white">MK</div>
+                                        <div class="w-12 h-12 rounded-full border-4 border-slate-900 bg-primary flex items-center justify-center text-[10px] font-black text-black">AJ</div>
+                                        <div class="w-12 h-12 rounded-full border-4 border-slate-900 bg-slate-700 flex items-center justify-center text-[10px] font-black text-white">+</div>
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-black text-[11px] uppercase tracking-widest mb-1">500+ Members</p>
+                                        <p class="text-slate-400 text-[9px] font-bold uppercase tracking-wider">The apex body for RE in Kenya</p>
+                                    </div>
+                                </div>
+                                <div class="w-12 h-12 bg-primary/10 border border-primary/20 rounded-2xl flex items-center justify-center">
+                                    <i data-lucide="shield-check" class="w-6 h-6 text-primary"></i>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Floating Elements -->
+                    <div class="absolute -right-8 top-1/4 p-6 bg-white text-slate-950 rounded-3xl shadow-2xl -rotate-6 hover:rotate-0 transition-transform duration-500 hidden xl:flex items-center gap-4 border border-slate-100">
+                        <div class="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center">
+                            <i data-lucide="trending-up" class="w-5 h-5 text-black"></i>
+                        </div>
+                        <div>
+                            <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Growth Rate</p>
+                            <p class="text-lg font-black">+24% YoY</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
