@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kerea-green">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | KEREA Member Portal</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--p-primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--p-radius);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: var(--p-shadow-lg);
+            z-index: 1000;
+            font-weight: 600;
+        }
+        .toast-info { background: var(--p-accent); color: var(--p-primary); }
+    </style>
+</head>
+<body>
+
+    <div class="portal-wrapper">
+        <!-- Sidebar injected by portal.js -->
+        
+        <main class="main-content">
+            <!-- Topbar injected by portal.js -->
+            
+            <div class="dashboard-page">
+                <header class="page-header">
+                    <div>
+                        <h1 class="page-title">Welcome back, <span class="js-user-name">Member</span>!</h1>
+                        <p class="page-subtitle">Here's what's happening with your KEREA membership today.</p>
+                    </div>
+                </header>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-medal-line"></i></div>
+                        <div class="stat-value" data-value="1">Platinum</div>
+                        <div class="stat-label">Membership Tier</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-calendar-check-line"></i></div>
+                        <div class="stat-value" data-value="182">182</div>
+                        <div class="stat-label">Days to Renewal</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-file-search-line"></i></div>
+                        <div class="stat-value" data-value="124">0</div>
+                        <div class="stat-label">Resources Accessed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-group-line"></i></div>
+                        <div class="stat-value" data-value="85">0</div>
+                        <div class="stat-label">% Profile Completion</div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="content-grid">
+                    <!-- Left Column: Activity & Events -->
+                    <div class="left-col">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Recent Activity</h3>
+                                <a href="#" class="p-btn p-btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.75rem;">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <ul style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                    <li style="display: flex; gap: 1rem; align-items: flex-start;">
+                                        <div style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 0.5rem; border-radius: 10px;">
+                                            <i class="ri-download-line"></i>
+                                        </div>
+                                        <div>
+                                            <p style="font-size: 0.9rem; font-weight: 700;">Downloaded Solar PV Guidelines</p>
+                                            <p style="font-size: 0.75rem; color: var(--p-text-muted);">2 hours ago • Technical Resource</p>
+                                        </div>
+                                    </li>
+                                    <li style="display: flex; gap: 1rem; align-items: flex-start;">
+                                        <div style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.5rem; border-radius: 10px;">
+                                            <i class="ri-calendar-event-line"></i>
+                                        </div>
+                                        <div>
+                                            <p style="font-size: 0.9rem; font-weight: 700;">Registered for Annual AGM 2024</p>
+                                            <p style="font-size: 0.75rem; color: var(--p-text-muted);">Yesterday • Event</p>
+                                        </div>
+                                    </li>
+                                    <li style="display: flex; gap: 1rem; align-items: flex-start;">
+                                        <div style="background: rgba(139, 92, 246, 0.1); color: #8b5cf6; padding: 0.5rem; border-radius: 10px;">
+                                            <i class="ri-medal-line"></i>
+                                        </div>
+                                        <div>
+                                            <p style="font-size: 0.9rem; font-weight: 700;">Renewed Membership Certificate</p>
+                                            <p style="font-size: 0.75rem; color: var(--p-text-muted);">3 days ago • System</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Upcoming Industry Events</h3>
+                                <a href="events.html" class="p-btn p-btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.75rem;">Calendar</a>
+                            </div>
+                            <div class="card-body">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                    <div style="border: 1px solid var(--p-border); padding: 1rem; border-radius: var(--p-radius);">
+                                        <span style="background: var(--p-accent); color: var(--p-primary); font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 5px; text-transform: uppercase;">12 JUL</span>
+                                        <h4 style="font-size: 0.9rem; margin-top: 0.5rem;">National Bio-Energy Mini-Grid Summit</h4>
+                                        <p style="font-size: 0.75rem; color: var(--p-text-muted); margin-top: 0.25rem;"><i class="ri-map-pin-line"></i> Nairobi, KE</p>
+                                        <button class="p-btn p-btn-primary" style="width: 100%; margin-top: 0.75rem; padding: 0.4rem;">Register</button>
+                                    </div>
+                                    <div style="border: 1px solid var(--p-border); padding: 1rem; border-radius: var(--p-radius);">
+                                        <span style="background: #3b82f6; color: white; font-size: 0.65rem; font-weight: 800; padding: 0.2rem 0.5rem; border-radius: 5px; text-transform: uppercase;">24 JUL</span>
+                                        <h4 style="font-size: 0.9rem; margin-top: 0.5rem;">Women in RE Training Workshop</h4>
+                                        <p style="font-size: 0.75rem; color: var(--p-text-muted); margin-top: 0.25rem;"><i class="ri-vidicon-line"></i> Virtual Session</p>
+                                        <button class="p-btn p-btn-primary" style="width: 100%; margin-top: 0.75rem; padding: 0.4rem;">Join List</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Membership & Actions -->
+                    <div class="right-col">
+                        <div class="card" style="background: var(--p-primary); color: white; border: none;">
+                            <div class="card-body">
+                                <div style="text-align: center; margin-bottom: 1.5rem;">
+                                    <div style="width: 80px; height: 80px; background: rgba(255,255,255,0.1); border-radius: 50%; margin: 0 auto 1rem; display: flex; align-items: center; justify-content: center; font-size: 2rem;">
+                                        <i class="ri-id-card-line" style="color: var(--p-accent);"></i>
+                                    </div>
+                                    <h3 style="font-size: 1.25rem;">PLATINUM MEMBER</h3>
+                                    <p style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">ID: KEREA/MEM/2024/0482</p>
+                                </div>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <a href="certificate.html" class="p-btn p-btn-accent" style="justify-content: center;"><i class="ri-download-cloud-line"></i> Get Certificate</a>
+                                    <a href="membership.html" class="p-btn p-btn-outline" style="justify-content: center; color: white; border-color: rgba(255,255,255,0.2);"><i class="ri-refresh-line"></i> Renew Early</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Quick Actions</h3>
+                            </div>
+                            <div class="card-body" style="padding: 0;">
+                                <a href="directory.html" class="nav-item" style="border-radius: 0; border-bottom: 1px solid var(--p-border);">
+                                    <i class="ri-search-eye-line"></i> Browse Member Directory
+                                </a>
+                                <a href="resources.html" class="nav-item" style="border-radius: 0; border-bottom: 1px solid var(--p-border);">
+                                    <i class="ri-file-list-3-line"></i> Access Standards Hub
+                                </a>
+                                <a href="support.html" class="nav-item" style="border-radius: 0;">
+                                    <i class="ri-question-answer-line"></i> Contact Technical Support
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/portal.js"></script>
+</body>
+</html>

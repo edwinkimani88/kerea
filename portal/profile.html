@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kerea-green">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | KEREA Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .profile-hero {
+            background: linear-gradient(135deg, var(--p-primary) 0%, var(--p-primary-dark) 100%);
+            border-radius: var(--p-radius-lg);
+            padding: 3rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-hero::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 300px; height: 300px;
+            background: radial-gradient(circle, var(--p-accent) 0%, transparent 70%);
+            opacity: 0.1;
+            filter: blur(50px);
+        }
+        .profile-pic-large {
+            width: 150px;
+            height: 150px;
+            border-radius: 30px;
+            object-fit: cover;
+            border: 4px solid rgba(255,255,255,0.2);
+            box-shadow: var(--p-shadow-lg);
+        }
+        .info-card {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        .info-item {
+            margin-bottom: 1.5rem;
+        }
+        .info-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--p-text-muted);
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+        .info-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--p-text-main);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: var(--p-card-bg);
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--p-radius-lg);
+            padding: 2.5rem;
+            box-shadow: var(--p-shadow-lg);
+            position: relative;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .form-group label {
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .form-group input, .form-group textarea {
+            padding: 0.75rem;
+            border-radius: var(--p-radius);
+            border: 1px solid var(--p-border);
+            background: var(--p-bg);
+            color: var(--p-text-main);
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-wrapper">
+        <main class="main-content">
+            <div class="dashboard-page">
+                <header class="page-header" style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h1 class="page-title">My Profile</h1>
+                        <p class="page-subtitle">Manage your personal and professional identity on KEREA.</p>
+                    </div>
+                    <button class="p-btn p-btn-primary" onclick="openModal()"><i class="ri-edit-line"></i> Edit Profile</button>
+                </header>
+
+                <div class="profile-hero">
+                    <img src="${PORTAL_DATA.user.avatar}" alt="User Avatar" class="profile-pic-large js-user-avatar">
+                    <div>
+                        <span style="background: var(--p-accent); color: var(--p-primary); padding: 0.3rem 0.8rem; border-radius: 99px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;">Platinum Member</span>
+                        <h2 style="font-size: 2.5rem; margin-top: 0.5rem;" class="js-user-name">Dr. Catherine Mwangi</h2>
+                        <p style="font-size: 1.1rem; opacity: 0.8;"><i class="ri-briefcase-line"></i> Director at Mwangi Solar Solutions Ltd</p>
+                        <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                            <a href="#" style="color: white; font-size: 1.5rem;"><i class="ri-linkedin-box-fill"></i></a>
+                            <a href="#" style="color: white; font-size: 1.5rem;"><i class="ri-twitter-x-fill"></i></a>
+                            <a href="#" style="color: white; font-size: 1.5rem;"><i class="ri-earth-line"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title">Professional Identity</h3></div>
+                        <div class="card-body">
+                            <div class="info-card">
+                                <div class="info-item">
+                                    <p class="info-label">Full Name</p>
+                                    <p class="info-value js-user-name">Dr. Catherine Mwangi</p>
+                                </div>
+                                <div class="info-item">
+                                    <p class="info-label">Email Address</p>
+                                    <p class="info-value">c.mwangi@mwangi-solar.com</p>
+                                </div>
+                                <div class="info-item">
+                                    <p class="info-label">Phone Number</p>
+                                    <p class="info-value">+254 712 345 678</p>
+                                </div>
+                                <div class="info-item">
+                                    <p class="info-label">Physical Address</p>
+                                    <p class="info-value">Solar Plaza, Ngong Road, Nairobi</p>
+                                </div>
+                            </div>
+                            <div class="info-item" style="margin-top: 1rem;">
+                                <p class="info-label">Bio</p>
+                                <p class="info-value" style="font-weight: 400; line-height: 1.6;">Sustainability advocate and RE professional with over 15 years experience in Solar PV mini-grid deployment across East Africa. Lead consultant for various World Bank funded energy projects.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header"><h3 class="card-title">Expertise</h3></div>
+                        <div class="card-body">
+                            <div class="info-item">
+                                <p class="info-label">Technologies</p>
+                                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                                    <span style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 0.3rem 0.8rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">Solar PV</span>
+                                    <span style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 0.3rem 0.8rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">Wind Energy</span>
+                                    <span style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 0.3rem 0.8rem; border-radius: 8px; font-size: 0.8rem; font-weight: 700;">E-Mobility</span>
+                                </div>
+                            </div>
+                            <div class="info-item" style="margin-top: 2rem;">
+                                <p class="info-label">Areas of Expertise</p>
+                                <ul style="list-style: disc; margin-left: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; font-weight: 600;">
+                                    <li>Project Management</li>
+                                    <li>Policy Advocacy</li>
+                                    <li>Technical Auditing</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 0.5rem;">Edit Profile</h2>
+            <p style="color: var(--p-text-muted); font-size: 0.9rem;">Update your information. Changes are reflected instantly.</p>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" value="Dr. Catherine Mwangi" id="editName">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="c.mwangi@mwangi-solar.com">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" value="+254 712 345 678">
+                </div>
+                <div class="form-group">
+                    <label>Location</label>
+                    <input type="text" value="Nairobi, KE">
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Bio</label>
+                    <textarea rows="3">Sustainability advocate and RE professional with over 15 years experience...</textarea>
+                </div>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                <button class="p-btn p-btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="p-btn p-btn-primary" onclick="saveProfile()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/portal.js"></script>
+    <script>
+        function openModal() {
+            const modal = document.getElementById('editModal');
+            modal.style.display = 'flex';
+            gsap.from('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3 });
+        }
+        function closeModal() {
+            const modal = document.getElementById('editModal');
+            gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.2, onComplete: () => {
+                modal.style.display = 'none';
+                modal.style.cssText = 'display: none;';
+            }});
+        }
+        function saveProfile() {
+            const newName = document.getElementById('editName').value;
+            PORTAL_DATA.user.name = newName;
+            updateUserInfo();
+            closeModal();
+            showToast("Profile updated successfully!");
+        }
+    </script>
+</body>
+</html>

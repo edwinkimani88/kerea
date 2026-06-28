@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kerea-green">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Directory | KEREA Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .directory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .member-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            /* NO opacity or animation here — cards visible by default */
+        }
+
+        .member-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(12, 23, 48, 0.12);
+            border-color: #39DE4F;
+        }
+
+        .member-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.25rem;
+            display: block;
+            border: 3px solid #39DE4F;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .member-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #0C1730;
+            margin-bottom: 0.25rem;
+        }
+
+        .member-type-badge {
+            display: inline-block;
+            background: #39DE4F;
+            color: #0C1730;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.2rem 0.65rem;
+            border-radius: 99px;
+            margin-bottom: 0.75rem;
+        }
+
+        .member-role {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+
+        .member-company {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .btn-connect {
+            background: #0C1730;
+            color: #fff;
+            border: none;
+            padding: 0.55rem 1.1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .btn-connect:hover {
+            background: #162a56;
+            transform: scale(1.03);
+        }
+
+        .btn-msg {
+            background: transparent;
+            color: #0C1730;
+            border: 1.5px solid #e5e7eb;
+            padding: 0.55rem 0.75rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-msg:hover {
+            border-color: #39DE4F;
+            color: #39DE4F;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrap {
+            flex: 1;
+            min-width: 260px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 99px;
+            padding: 0.65rem 1.2rem;
+        }
+
+        .search-input-wrap i {
+            color: #6b7280;
+        }
+
+        .search-input-wrap input {
+            border: none;
+            outline: none;
+            width: 100%;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: #000;
+        }
+
+        .filter-select {
+            background: #fff;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 0.65rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            color: #0C1730;
+            outline: none;
+        }
+
+        .filter-select:hover {
+            border-color: #39DE4F;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+            grid-column: 1 / -1;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        /* Toast notification */
+        .portal-toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #0C1730;
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            z-index: 9999;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .portal-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .portal-toast i {
+            color: #39DE4F;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-wrapper">
+        <main class="main-content">
+            <div class="dashboard-page">
+
+                <!-- Page Header -->
+                <header class="page-header" style="margin-bottom:2rem;">
+                    <h1 class="page-title" style="color:#0C1730;">Member Directory</h1>
+                    <p class="page-subtitle" style="color:#6b7280;">Browse and connect with renewable energy professionals and organizations.</p>
+                </header>
+
+                <!-- Filter Row -->
+                <div class="filter-row">
+                    <div class="search-input-wrap">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="directorySearch" placeholder="Search by name, company, or role...">
+                    </div>
+                    <select class="filter-select" id="typeFilter">
+                        <option value="">All Member Types</option>
+                        <option value="Corporate">Corporate</option>
+                        <option value="Individual">Individual</option>
+                        <option value="Institutional">Institutional</option>
+                    </select>
+                </div>
+
+                <!-- Directory Grid -->
+                <div class="directory-grid" id="directoryGrid"></div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="portal-toast" id="dirToast">
+        <i class="ri-checkbox-circle-fill"></i>
+        <span id="dirToastMsg">Done</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/portal.js"></script>
+    <script>
+        // ── Member Data ──────────────────────────────────────────
+        const MEMBERS = [
+            {
+                name: "Johnstone Kibuchi",
+                company: "Solar Edge Ltd",
+                role: "Chief Executive Officer",
+                avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Corporate"
+            },
+            {
+                name: "Sarah Omolo",
+                company: "Strathmore Energy Research Centre",
+                role: "Senior Researcher",
+                avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Institutional"
+            },
+            {
+                name: "Peter Kiprono",
+                company: "Independent Consultant",
+                role: "RE Technical Auditor",
+                avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Individual"
+            },
+            {
+                name: "Grace Wanjiku",
+                company: "Wanjiku Bio-power Ltd",
+                role: "Founder & Managing Director",
+                avatar: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Corporate"
+            },
+            {
+                name: "David Mutua",
+                company: "Energy Regulatory Commission",
+                role: "Director, Renewable Energy",
+                avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Institutional"
+            },
+            {
+                name: "Linda Chebet",
+                company: "Sunlink Solutions Kenya",
+                role: "Lead Electrical Engineer",
+                avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Corporate"
+            },
+            {
+                name: "George Abiero",
+                company: "Lakeside Wind Project",
+                role: "Project Manager",
+                avatar: "https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Corporate"
+            },
+            {
+                name: "Amina Hassan",
+                company: "JKUAT — Renewable Energy Dept",
+                role: "Associate Professor",
+                avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?q=80&w=200&h=200&auto=format&fit=crop",
+                type: "Institutional"
+            }
+        ];
+
+        // ── Render Members ────────────────────────────────────────
+        function renderMembers(list) {
+            const grid = document.getElementById('directoryGrid');
+
+            if (list.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <i class="ri-search-2-line"></i>
+                        <strong>No members found</strong>
+                        <p style="margin-top:0.5rem;font-size:0.9rem;">Try adjusting your search or filters.</p>
+                    </div>`;
+                return;
+            }
+
+            grid.innerHTML = list.map(m => `
+                <div class="member-card">
+                    <img
+                        src="${m.avatar}"
+                        class="member-avatar"
+                        alt="${m.name}"
+                        onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(m.name)}&background=0C1730&color=39DE4F&size=200'"
+                    >
+                    <p class="member-name">${m.name}</p>
+                    <span class="member-type-badge">${m.type}</span>
+                    <p class="member-role">${m.role}</p>
+                    <p class="member-company">${m.company}</p>
+                    <div class="member-actions">
+                        <button class="btn-connect" onclick="dirToast('Connection request sent to ${m.name}!')">
+                            <i class="ri-user-add-line"></i> Connect
+                        </button>
+                        <button class="btn-msg" onclick="window.location.href='messages.html'" title="Send Message">
+                            <i class="ri-chat-3-line"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ── Toast Helper ─────────────────────────────────────────
+        function dirToast(msg) {
+            const t = document.getElementById('dirToast');
+            document.getElementById('dirToastMsg').textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // ── Filter Logic ─────────────────────────────────────────
+        function filterMembers() {
+            const term  = document.getElementById('directorySearch').value.toLowerCase();
+            const type  = document.getElementById('typeFilter').value;
+            const result = MEMBERS.filter(m => {
+                const matchText = !term ||
+                    m.name.toLowerCase().includes(term) ||
+                    m.company.toLowerCase().includes(term) ||
+                    m.role.toLowerCase().includes(term);
+                const matchType = !type || m.type === type;
+                return matchText && matchType;
+            });
+            renderMembers(result);
+        }
+
+        // ── Boot ─────────────────────────────────────────────────
+        renderMembers(MEMBERS);
+
+        document.getElementById('directorySearch').addEventListener('input', filterMembers);
+        document.getElementById('typeFilter').addEventListener('change', filterMembers);
+    </script>
+</body>
+</html>

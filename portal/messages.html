@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kerea-green">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | KEREA Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .messaging-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            height: calc(100vh - 180px);
+            background: var(--p-card-bg);
+            border-radius: var(--p-radius-lg);
+            border: 1px solid var(--p-border);
+            overflow: hidden;
+            box-shadow: var(--p-shadow-md);
+        }
+        .message-list {
+            border-right: 1px solid var(--p-border);
+            display: flex;
+            flex-direction: column;
+        }
+        .msg-search { padding: 1.25rem; border-bottom: 1px solid var(--p-border); }
+        .msg-items { flex: 1; overflow-y: auto; }
+        .msg-item {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--p-border);
+            cursor: pointer;
+            transition: var(--p-transition);
+            display: flex;
+            gap: 1rem;
+        }
+        .msg-item:hover, .msg-item.active { background: var(--p-bg); border-left: 4px solid var(--p-accent); }
+        
+        .chat-view { display: flex; flex-direction: column; position: relative; }
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--p-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .chat-body { flex: 1; padding: 2rem; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; }
+        .message-bubble {
+            max-width: 70%;
+            padding: 1rem 1.25rem;
+            border-radius: 1.25rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .msg-received { background: var(--p-bg); align-self: flex-start; border-bottom-left-radius: 0; }
+        .msg-sent { background: var(--p-primary); color: white; align-self: flex-end; border-bottom-right-radius: 0; }
+        
+        .chat-footer {
+            padding: 1.25rem;
+            border-top: 1px solid var(--p-border);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 99px;
+            border: 1px solid var(--p-border);
+            background: var(--p-bg);
+            color: var(--p-text-main);
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-wrapper">
+        <main class="main-content">
+            <div class="dashboard-page">
+                <header class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1 class="page-title">Messages</h1>
+                        <p class="page-subtitle">Connect and collaborate with other KEREA members.</p>
+                    </div>
+                    <button class="p-btn p-btn-primary"><i class="ri-add-line"></i> New Message</button>
+                </header>
+
+                <div class="messaging-container">
+                    <div class="message-list">
+                        <div class="msg-search">
+                            <div class="search-bar" style="width: 100%;">
+                                <i class="ri-search-line"></i>
+                                <input type="text" placeholder="Search conversations...">
+                            </div>
+                        </div>
+                        <div class="msg-items">
+                            <div class="msg-item active">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&h=100&auto=format&fit=crop" style="width: 45px; height: 45px; border-radius: 50%;">
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <h4 style="font-size: 0.9rem;">James Kinyua</h4>
+                                        <span style="font-size: 0.7rem; color: var(--p-text-muted);">10:45 AM</span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--p-text-muted); margin-top: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Thanks for the PV report, Catherine! Very helpful...</p>
+                                </div>
+                            </div>
+                            <div class="msg-item">
+                                <div style="width: 45px; height: 45px; border-radius: 50%; background: var(--p-accent); color: var(--p-primary); display: flex; align-items: center; justify-content: center; font-weight: 800;">KS</div>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <h4 style="font-size: 0.9rem;">KEREA Secretariate</h4>
+                                        <span style="font-size: 0.7rem; color: var(--p-text-muted);">Yesterday</span>
+                                    </div>
+                                    <p style="font-size: 0.8rem; color: var(--p-text-muted); margin-top: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Your Platinum Certificate renewal has been processed.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-view">
+                        <div class="chat-header">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=100&h=100&auto=format&fit=crop" style="width: 40px; height: 40px; border-radius: 50%;">
+                                <div>
+                                    <h4 style="font-size: 1rem;">James Kinyua</h4>
+                                    <span style="font-size: 0.75rem; color: var(--p-emerald); font-weight: 700;">Online</span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 1rem;">
+                                <i class="ri-phone-line" style="cursor: pointer;"></i>
+                                <i class="ri-vidicon-line" style="cursor: pointer;"></i>
+                                <i class="ri-more-2-line" style="cursor: pointer;"></i>
+                            </div>
+                        </div>
+
+                        <div class="chat-body" id="chatBody">
+                            <div class="message-bubble msg-received">
+                                Hello Dr. Catherine! I saw your recent research on E-Mobility. Would love to discuss potential collaborations for our new charging hubs in Nakuru.
+                            </div>
+                            <div class="message-bubble msg-sent">
+                                Hi James! That sounds like an excellent opportunity. I've sent over the full report for your technical team to review.
+                            </div>
+                            <div class="message-bubble msg-received">
+                                Thanks for the PV report, Catherine! Very helpful. We'll review and get back to you by Friday.
+                            </div>
+                        </div>
+
+                        <div class="chat-footer">
+                            <i class="ri-attachment-2" style="cursor: pointer; font-size: 1.25rem;"></i>
+                            <input type="text" class="chat-input" placeholder="Type your message..." id="msgInput">
+                            <button class="p-btn p-btn-primary" style="padding: 0.6rem;" onclick="sendMessage()"><i class="ri-send-plane-2-line"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/portal.js"></script>
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('msgInput');
+            const chatBody = document.getElementById('chatBody');
+            if (!input.value.trim()) return;
+
+            const msg = document.createElement('div');
+            msg.className = 'message-bubble msg-sent';
+            msg.textContent = input.value;
+            chatBody.appendChild(msg);
+            
+            gsap.from(msg, { y: 20, opacity: 0, duration: 0.4 });
+            
+            input.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        document.getElementById('msgInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+    </script>
+</body>
+</html>

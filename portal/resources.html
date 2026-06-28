@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kerea-green">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources | KEREA Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .resource-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+        .resource-type {
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        .type-technical { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .type-policy { background: rgba(168, 85, 247, 0.1); color: #a855f7; }
+        .type-research { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        
+        .bookmark-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            cursor: pointer;
+            font-size: 1.25rem;
+            color: var(--p-text-muted);
+            transition: var(--p-transition);
+        }
+        .bookmark-btn:hover, .bookmark-btn.active { color: var(--p-accent); }
+    </style>
+</head>
+<body>
+
+    <div class="portal-wrapper">
+        <main class="main-content">
+            <div class="dashboard-page">
+                <header class="page-header">
+                    <h1 class="page-title">Technical Resources</h1>
+                    <p class="page-subtitle">Access industry standards, technical guidelines, and research papers.</p>
+                </header>
+
+                <div class="filter-bar">
+                    <div class="search-bar" style="width: 300px; margin-right: auto;">
+                        <i class="ri-filter-2-line"></i>
+                        <input type="text" placeholder="Filter by title..." id="resourceSearch">
+                    </div>
+                    <select class="p-btn p-btn-outline" style="appearance: none; padding-right: 2.5rem;">
+                        <option>All Categories</option>
+                        <option>Technical</option>
+                        <option>Policy</option>
+                        <option>Research</option>
+                    </select>
+                    <select class="p-btn p-btn-outline" style="appearance: none; padding-right: 2.5rem;">
+                        <option>Most Recent</option>
+                        <option>Popular</option>
+                        <option>A-Z</option>
+                    </select>
+                </div>
+
+                <div class="grid-3" id="resourceGrid">
+                    <!-- Resources will be injected here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/portal.js"></script>
+    <script>
+        const resources = [
+            { title: "Solar Home Systems Technical Manual", cat: "Technical", type: "PDF", size: "4.2 MB", desc: "Comprehensive installation and maintenance guide for residential units." },
+            { title: "Renewable Energy Act 2023 Summary", cat: "Policy", type: "PDF", size: "1.5 MB", desc: "Key takeaways from the latest energy legislation affecting small producers." },
+            { title: "E-Mobility Growth Strategy 2024", cat: "Research", type: "DOCX", size: "2.8 MB", desc: "Market analysis and strategic roadmap for electric vehicle charging infrastructure." },
+            { title: "Wind Turbine Noise Impact Assessment", cat: "Technical", type: "PDF", size: "3.1 MB", desc: "Standardized methodology for evaluating acoustic impact of wind farms." },
+            { title: "Bio-Energy Sustainability Framework", cat: "Research", type: "PDF", size: "5.5 MB", desc: "Evaluation of environmental and social impacts of large scale biomass." },
+            { title: "KEREA Mini-Grid Grid Connection Best Practices", cat: "Technical", type: "Video", size: "15 min", desc: "Step-by-step video guide on synchronizing mini-grids with the national grid." }
+        ];
+
+        function renderResources(items) {
+            const grid = document.getElementById('resourceGrid');
+            grid.innerHTML = items.map(r => `
+                <div class="card resource-card" style="position: relative;">
+                    <i class="ri-bookmark-line bookmark-btn" onclick="this.classList.toggle('active'); this.classList.toggle('ri-bookmark-fill'); this.classList.toggle('ri-bookmark-line')"></i>
+                    <div class="card-body">
+                        <span class="resource-type type-${r.cat.toLowerCase()}">${r.cat}</span>
+                        <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${r.title}</h3>
+                        <p style="font-size: 0.85rem; color: var(--p-text-muted); margin-bottom: 1.5rem;">${r.desc}</p>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--p-border); padding-top: 1rem; margin-top: auto;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: var(--p-text-muted);">
+                                <i class="ri-file-text-line"></i> ${r.type} • ${r.size}
+                            </span>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="p-btn p-btn-outline" style="padding: 0.4rem;" onclick="showToast('Previewing ${r.title}')"><i class="ri-eye-line"></i></button>
+                                <button class="p-btn p-btn-primary" style="padding: 0.4rem 0.8rem;" onclick="showToast('Starting download...')"><i class="ri-download-line"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            gsap.from('.resource-card', { opacity: 0, y: 30, stagger: 0.1, duration: 0.6 });
+        }
+
+        renderResources(resources);
+
+        document.getElementById('resourceSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = resources.filter(r => r.title.toLowerCase().includes(term));
+            renderResources(filtered);
+        });
+    </script>
+</body>
+</html>

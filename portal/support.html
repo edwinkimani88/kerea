@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kerea-green">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Centre | KEREA Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .support-hero {
+            background: var(--p-primary);
+            border-radius: var(--p-radius-lg);
+            padding: 3rem;
+            color: white;
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .faq-item {
+            border: 1px solid var(--p-border);
+            border-radius: var(--p-radius);
+            margin-bottom: 1rem;
+            overflow: hidden;
+            background: var(--p-card-bg);
+        }
+        .faq-header {
+            padding: 1.25rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+        .faq-body {
+            padding: 0 1.5rem 1.25rem;
+            color: var(--p-text-muted);
+            font-size: 0.9rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="portal-wrapper">
+        <main class="main-content">
+            <div class="dashboard-page">
+                <div class="support-hero">
+                    <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">How can we help you today?</h1>
+                    <div class="search-bar" style="width: 500px; margin: 0 auto; background: white;">
+                        <i class="ri-search-line"></i>
+                        <input type="text" placeholder="Search knowledge base articles..." style="color: black;">
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div>
+                        <h2 style="margin-bottom: 1.5rem;">Frequently Asked Questions</h2>
+                        <div class="faq-list">
+                            <div class="faq-item">
+                                <div class="faq-header" onclick="toggleFaq(this)">How do I renew my membership? <i class="ri-add-line"></i></div>
+                                <div class="faq-body">You can renew your membership through the 'Membership Details' page. Click on 'Renew Early' or wait for the renewal button to appear 30 days before expiry.</div>
+                            </div>
+                            <div class="faq-item">
+                                <div class="faq-header" onclick="toggleFaq(this)">Where can I find the Solar PV technical standards? <i class="ri-add-line"></i></div>
+                                <div class="faq-body">All technical standards are located in the 'Resources' library under the 'Technical' category.</div>
+                            </div>
+                            <div class="faq-item">
+                                <div class="faq-header" onclick="toggleFaq(this)">Can I post products on the Marketplace? <i class="ri-add-line"></i></div>
+                                <div class="faq-body">Yes! All active KEREA members have basic marketplace access. Navigate to the Workplace and click 'Add Listing'.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="card">
+                            <div class="card-header"><h3 class="card-title">Submit a Support Ticket</h3></div>
+                            <div class="card-body" id="ticketContainer">
+                                <div class="form-group mb-4">
+                                    <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 0.5rem;">Issue Category</label>
+                                    <select class="p-btn p-btn-outline" style="width: 100%; appearance: none; background: var(--p-bg);">
+                                        <option>Membership Renewal</option>
+                                        <option>Certificate Download</option>
+                                        <option>Technical Resource Access</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label style="font-size: 0.8rem; font-weight: 700; display: block; margin-bottom: 0.5rem;">Message</label>
+                                    <textarea rows="4" style="width: 100%; border: 1px solid var(--p-border); padding: 1rem; border-radius: var(--p-radius); background: var(--p-bg); outline: none;" placeholder="Explain your issue..."></textarea>
+                                </div>
+                                <button class="p-btn p-btn-primary" style="width: 100%;" onclick="submitTicket(this)">Submit Ticket</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/portal.js"></script>
+    <script>
+        function toggleFaq(el) {
+            const body = el.nextElementSibling;
+            const icon = el.querySelector('i');
+            if (body.style.display === 'block') {
+                body.style.display = 'none';
+                icon.className = 'ri-add-line';
+            } else {
+                body.style.display = 'block';
+                icon.className = 'ri-subtract-line';
+                gsap.from(body, { opacity: 0, y: -10, duration: 0.3 });
+            }
+        }
+
+        function submitTicket(btn) {
+            const originalText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="ri-loader-4-line ri-spin"></i> Submitting...';
+            
+            setTimeout(() => {
+                document.getElementById('ticketContainer').innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <div style="width: 60px; height: 60px; background: rgba(16, 185, 129, 0.1); color: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.5rem;">
+                            <i class="ri-check-line"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.5rem;">Ticket Received!</h3>
+                        <p style="font-size: 0.85rem; color: var(--p-text-muted); margin-bottom: 1.5rem;">Our support team has received your request (Ref: #KT-84920). We'll get back to you within 24 hours.</p>
+                        <button class="p-btn p-btn-outline" onclick="location.reload()">Create New Ticket</button>
+                    </div>
+                `;
+                showToast("Ticket submitted successfully!", "success");
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

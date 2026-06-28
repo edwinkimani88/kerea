@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="kerea-green">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Hub | KEREA Member Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/portal.css">
+    <style>
+        .hub-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+        }
+        .video-card {
+            background: #000;
+            border-radius: var(--p-radius-lg);
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .video-card img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+        .play-btn {
+            position: absolute;
+            width: 80px; height: 80px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            transition: var(--p-transition);
+        }
+        .video-card:hover .play-btn { transform: scale(1.1); background: var(--p-accent); color: var(--p-primary); }
+    </style>
+</head>
+<body>
+
+    <div class="portal-wrapper">
+        <main class="main-content">
+            <div class="dashboard-page">
+                <header class="page-header">
+                    <h1 class="page-title">Knowledge Hub</h1>
+                    <p class="page-subtitle">Interactive guides, training modules, and video tutorials for member growth.</p>
+                </header>
+
+                <div class="hub-grid">
+                    <div class="left-section">
+                        <div class="video-card" onclick="showToast('Loading Video Player...')">
+                            <img src="https://images.unsplash.com/photo-1509391366360-fe5bb58583bb?q=80&w=600&auto=format&fit=crop" alt="Solar Farm">
+                            <div class="play-btn"><i class="ri-play-fill"></i></div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <h2 style="font-size: 1.4rem;">Feature Training: Mini-Grid Synchronisation</h2>
+                            <p style="color: var(--p-text-muted); margin-top: 0.5rem; font-size: 0.95rem;">Learn the latest industry best practices for synchronising decentralised renewable energy sources with the national utility grid.</p>
+                            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                                <span style="font-size: 0.8rem; font-weight: 700;"><i class="ri-time-line"></i> 15 Minutes</span>
+                                <span style="font-size: 0.8rem; font-weight: 700;"><i class="ri-user-star-line"></i> Advanced Level</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="right-section">
+                        <h3 style="margin-bottom: 1.5rem;">Interactive Guides</h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div class="card" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem; transition: var(--p-transition); cursor: pointer;" onclick="showToast('Opening Guide...')">
+                                <div style="background: rgba(245, 158, 11, 0.1); color: #f59e0b; padding: 1rem; border-radius: 12px; font-size: 1.5rem;">
+                                    <i class="ri-lightbulb-flash-line"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem;">Bio-Energy Waste-to-Watt Guide</h4>
+                                    <p style="font-size: 0.8rem; color: var(--p-text-muted);">Step-by-step process for organic waste conversion to energy.</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line" style="margin-left: auto; font-size: 1.5rem; color: var(--p-text-muted);"></i>
+                            </div>
+
+                            <div class="card" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem; cursor: pointer;" onclick="showToast('Opening Guide...')">
+                                <div style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 1rem; border-radius: 12px; font-size: 1.5rem;">
+                                    <i class="ri-safe-2-line"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem;">Occupational Health & Safety in Wind Farms</h4>
+                                    <p style="font-size: 0.8rem; color: var(--p-text-muted);">Comprehensive safety protocols for high-altitude maintenance.</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line" style="margin-left: auto; font-size: 1.5rem; color: var(--p-text-muted);"></i>
+                            </div>
+
+                            <div class="card" style="display: flex; align-items: center; gap: 1.5rem; padding: 1.25rem; cursor: pointer;" onclick="showToast('Opening Guide...')">
+                                <div style="background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 1rem; border-radius: 12px; font-size: 1.5rem;">
+                                    <i class="ri-coins-line"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 1rem;">Carbon Credit Monetisation Framework</h4>
+                                    <p style="font-size: 0.8rem; color: var(--p-text-muted);">How to register and trade carbon credits for your RE project.</p>
+                                </div>
+                                <i class="ri-arrow-right-s-line" style="margin-left: auto; font-size: 1.5rem; color: var(--p-text-muted);"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/portal.js"></script>
+</body>
+</html>
