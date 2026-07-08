@@ -1,4 +1,73 @@
-<?php include 'includes/header.php'; ?>
+<?php
+// PHP Settings Save Handler
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'save') {
+    header('Content-Type: application/json');
+    try {
+        $settings_file = __DIR__ . '/../settings.json';
+        $current_settings = [];
+        if (file_exists($settings_file)) {
+            $current_settings = json_decode(file_get_contents($settings_file), true) ?? [];
+        }
+
+        // List of all editable text/color fields
+        $fields = [
+            'primary_color', 'accent_color', 'font_family', 'nav_style',
+            'announcement_text', 'footer_bg_color', 'footer_text',
+            'header_email', 'header_phone', 'contact_email', 'contact_phone',
+            'contact_address', 'social_facebook', 'social_twitter', 'social_linkedin'
+        ];
+
+        foreach ($fields as $field) {
+            if (isset($_POST[$field])) {
+                $current_settings[$field] = $_POST[$field];
+            }
+        }
+
+        // Boolean toggle
+        $current_settings['show_market_counter'] = isset($_POST['show_market_counter']) && $_POST['show_market_counter'] === 'true';
+
+        // Logo Upload Handling
+        $assets_dir = __DIR__ . '/../assets/';
+        if (!is_dir($assets_dir)) {
+            mkdir($assets_dir, 0777, true);
+        }
+
+        // Process Main Logo
+        if (isset($_FILES['logo_main']) && $_FILES['logo_main']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['logo_main']['name'], PATHINFO_EXTENSION);
+            if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'svg', 'webp'])) {
+                $filename = 'custom-logo-main-' . time() . '.' . $ext;
+                if (move_uploaded_file($_FILES['logo_main']['tmp_name'], $assets_dir . $filename)) {
+                    $current_settings['logo_main'] = '/assets/' . $filename;
+                }
+            }
+        }
+
+        // Process Loading Logo
+        if (isset($_FILES['logo_load']) && $_FILES['logo_load']['error'] === UPLOAD_ERR_OK) {
+            $ext = pathinfo($_FILES['logo_load']['name'], PATHINFO_EXTENSION);
+            if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'svg', 'webp'])) {
+                $filename = 'custom-logo-load-' . time() . '.' . $ext;
+                if (move_uploaded_file($_FILES['logo_load']['tmp_name'], $assets_dir . $filename)) {
+                    $current_settings['logo_load'] = '/assets/' . $filename;
+                }
+            }
+        }
+
+        // Save back to settings.json
+        if (file_put_contents($settings_file, json_encode($current_settings, JSON_PRETTY_PRINT))) {
+            echo json_encode(['success' => true, 'message' => 'Appearance settings synchronized successfully.']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to write settings file.']);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+    exit;
+}
+
+include 'includes/header.php';
+?>
 
 <div class="space-y-12">
     <div class="flex items-center justify-between">
@@ -27,47 +96,49 @@
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Primary Brand Color</label>
                         <div class="flex gap-4">
-                            <input type="color" id="primary-color-picker" value="#39DE4F" oninput="syncColor('primary')" class="w-14 h-14 rounded-xl border-none cursor-pointer overflow-hidden p-0 bg-transparent">
-                            <input type="text" id="primary-color-text" value="#39DE4F" oninput="syncColorText('primary')" class="flex-1 px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-primary/20">
+                            <input type="color" id="primary-color-picker" value="<?php echo htmlspecialchars($settings['primary_color'] ?? '#39DE4F'); ?>" oninput="syncColor('primary')" class="w-14 h-14 rounded-xl border-none cursor-pointer overflow-hidden p-0 bg-transparent">
+                            <input type="text" id="primary-color-text" value="<?php echo htmlspecialchars($settings['primary_color'] ?? '#39DE4F'); ?>" oninput="syncColorText('primary')" class="flex-1 px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-primary/20">
                         </div>
                     </div>
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Accent UI Color</label>
                         <div class="flex gap-4">
-                            <input type="color" id="accent-color-picker" value="#F59E0B" oninput="syncColor('accent')" class="w-14 h-14 rounded-xl border-none cursor-pointer overflow-hidden p-0 bg-transparent">
-                            <input type="text" id="accent-color-text" value="#F59E0B" oninput="syncColorText('accent')" class="flex-1 px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-amber-500/20">
+                            <input type="color" id="accent-color-picker" value="<?php echo htmlspecialchars($settings['accent_color'] ?? '#F59E0B'); ?>" oninput="syncColor('accent')" class="w-14 h-14 rounded-xl border-none cursor-pointer overflow-hidden p-0 bg-transparent">
+                            <input type="text" id="accent-color-text" value="<?php echo htmlspecialchars($settings['accent_color'] ?? '#F59E0B'); ?>" oninput="syncColorText('accent')" class="flex-1 px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-amber-500/20">
                         </div>
                     </div>
                 </div>
 
+                <?php $active_font = $settings['font_family'] ?? 'Plus Jakarta Sans'; ?>
                 <div class="space-y-3">
                     <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Global Font Family</label>
                     <select id="font-family-select" onchange="UI.toast('Font changed to ' + this.value, 'info')" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold outline-none cursor-pointer hover:border-primary transition-colors">
-                        <option value="Plus Jakarta Sans">Plus Jakarta Sans (KEREA Standard)</option>
-                        <option value="Inter">Inter Responsive</option>
-                        <option value="Outfit">Outfit Geometric</option>
+                        <option value="Plus Jakarta Sans" <?php if ($active_font === 'Plus Jakarta Sans') echo 'selected'; ?>>Plus Jakarta Sans (KEREA Standard)</option>
+                        <option value="Inter" <?php if ($active_font === 'Inter') echo 'selected'; ?>>Inter Responsive</option>
+                        <option value="Outfit" <?php if ($active_font === 'Outfit') echo 'selected'; ?>>Outfit Geometric</option>
                     </select>
                 </div>
             </div>
 
-            <!-- Header/Footer Section -->
+            <!-- Structural Customization -->
             <div class="card-bg p-10 rounded-[3rem] shadow-premium space-y-10">
                 <div class="border-b border-slate-50 pb-6 flex items-center gap-4">
                     <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
                         <i data-lucide="layout" class="w-5 h-5"></i>
                     </div>
-                    <h3 class="text-xl font-black">Structural Customization</h3>
+                    <h3 class="text-xl font-black">Header & Navigation Style</h3>
                 </div>
 
                 <div class="space-y-8">
                     <div class="space-y-3">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Header Navigation Style</label>
+                        <?php $nav_style = $settings['nav_style'] ?? 'static'; ?>
                         <div class="grid grid-cols-2 gap-4">
-                            <div id="nav-style-glass" onclick="setStyle('nav', 'glass')" class="nav-style-btn p-4 border-2 border-primary bg-primary/5 rounded-2xl cursor-pointer">
+                            <div id="nav-style-glass" onclick="setStyle('nav', 'glass')" class="nav-style-btn p-4 border-2 rounded-2xl cursor-pointer <?php echo ($nav_style === 'glass') ? 'border-primary bg-primary/5' : 'border-slate-100 bg-white'; ?>">
                                 <p class="text-xs font-black text-slate-800">Glassmorphic Floating</p>
                                 <p class="text-[9px] text-slate-400 uppercase mt-1">Recommended</p>
                             </div>
-                            <div id="nav-style-static" onclick="setStyle('nav', 'static')" class="nav-style-btn p-4 border-2 border-slate-100 rounded-2xl cursor-pointer hover:bg-slate-50">
+                            <div id="nav-style-static" onclick="setStyle('nav', 'static')" class="nav-style-btn p-4 border-2 rounded-2xl cursor-pointer <?php echo ($nav_style === 'static') ? 'border-primary bg-primary/5' : 'border-slate-100 bg-white'; ?>">
                                 <p class="text-xs font-black text-slate-800">Static Solid</p>
                                 <p class="text-[9px] text-slate-400 uppercase mt-1">Legacy Style</p>
                             </div>
@@ -77,16 +148,152 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-3">
                             <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Announcement Bar Text</label>
-                            <input type="text" value="Kenya's Industry Peak Body · Est. 2002" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
+                            <input type="text" id="announcement_text" oninput="updatePreview()" value="<?php echo htmlspecialchars($settings['announcement_text'] ?? "Kenya's Industry Peak Body · Est. 2002"); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
                         </div>
                         <div class="space-y-3 text-right">
                              <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Show Marketplace Counter</label>
                              <div class="flex items-center justify-end h-full">
-                                  <div id="market-toggle" onclick="toggleSwitch('market')" class="w-14 h-8 bg-primary rounded-full relative p-1 cursor-pointer transition-all duration-300">
-                                      <div id="market-toggle-thumb" class="w-6 h-6 bg-white rounded-full ml-auto shadow-sm transition-all duration-300"></div>
+                                  <?php $market_active = $settings['show_market_counter'] ?? true; ?>
+                                  <div id="market-toggle" onclick="toggleSwitch('market')" class="w-14 h-8 <?php echo $market_active ? 'bg-primary' : 'bg-slate-200'; ?> rounded-full relative p-1 cursor-pointer transition-all duration-300">
+                                      <div id="market-toggle-thumb" class="w-6 h-6 bg-white rounded-full <?php echo $market_active ? 'ml-auto' : 'ml-0'; ?> shadow-sm transition-all duration-300"></div>
                                   </div>
                              </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Brand Logos -->
+            <div class="card-bg p-10 rounded-[3rem] shadow-premium space-y-10">
+                <div class="border-b border-slate-50 pb-6 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                        <i data-lucide="image" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-xl font-black">Brand Logos</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Main Logo -->
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 block">Main Site Logo</label>
+                        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div class="w-16 h-16 bg-white border border-slate-200/50 rounded-xl overflow-hidden flex items-center justify-center p-2 shrink-0">
+                                <img id="preview-logo-main" src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" class="max-h-full max-w-full object-contain">
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" id="logo-main-file" accept="image/*" onchange="previewImage(this, 'preview-logo-main', 'mock-logo-preview', 'mock-logo-footer')" class="hidden">
+                                <button type="button" onclick="document.getElementById('logo-main-file').click()" class="px-4 py-2.5 bg-white border border-slate-200 hover:border-primary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-50 transition-all">Upload Main Logo</button>
+                                <p class="text-[9px] text-slate-400 mt-1 uppercase font-bold">PNG/SVG Preferred</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Preloader Logo -->
+                    <div class="space-y-4">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2 block">Preloader Logo</label>
+                        <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                            <div class="w-16 h-16 bg-white border border-slate-200/50 rounded-xl overflow-hidden flex items-center justify-center p-2 shrink-0">
+                                <img id="preview-logo-load" src="<?php echo $base_url . ltrim($settings['logo_load'] ?? 'assets/logo-load.png', '/'); ?>" class="max-h-full max-w-full object-contain">
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" id="logo-load-file" accept="image/*" onchange="previewImage(this, 'preview-logo-load')" class="hidden">
+                                <button type="button" onclick="document.getElementById('logo-load-file').click()" class="px-4 py-2.5 bg-white border border-slate-200 hover:border-primary text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-50 transition-all">Upload Load Logo</button>
+                                <p class="text-[9px] text-slate-400 mt-1 uppercase font-bold">Square Icon</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contacts Info -->
+            <div class="card-bg p-10 rounded-[3rem] shadow-premium space-y-10">
+                <div class="border-b border-slate-50 pb-6 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center text-amber-600">
+                        <i data-lucide="phone-call" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-xl font-black">Contact Details & Communications</h3>
+                </div>
+
+                <div class="space-y-6">
+                    <h4 class="text-sm font-black text-slate-800 border-b border-slate-50 pb-2">Header Utilities Bar Contacts</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Header Email Address</label>
+                            <input type="email" id="header_email" oninput="updatePreview()" value="<?php echo htmlspecialchars($settings['header_email'] ?? 'info@kerea.org'); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Header Phone Line</label>
+                            <input type="text" id="header_phone" value="<?php echo htmlspecialchars($settings['header_phone'] ?? '(+254) 740 541 896'); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6 pt-6 border-t border-slate-100">
+                    <h4 class="text-sm font-black text-slate-800 border-b border-slate-50 pb-2">Secretariat Hub & Footer Contacts</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Secretariat Official Email</label>
+                            <input type="email" id="contact_email" oninput="updatePreview()" value="<?php echo htmlspecialchars($settings['contact_email'] ?? 'info@kerea.org'); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Secretariat Support Hotline</label>
+                            <input type="text" id="contact_phone" value="<?php echo htmlspecialchars($settings['contact_phone'] ?? '(+254) 740 541 896'); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
+                        </div>
+                        <div class="space-y-3 col-span-full">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Physical Location / Address</label>
+                            <textarea id="contact_address" rows="3" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none resize-none"><?php echo htmlspecialchars($settings['contact_address'] ?? "Keri Road, Nairobi West,\nNairobi"); ?></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Design & Brand Copy -->
+            <div class="card-bg p-10 rounded-[3rem] shadow-premium space-y-10">
+                <div class="border-b border-slate-50 pb-6 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600">
+                        <i data-lucide="layout-panel-left" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-xl font-black">Footer Style & Copy</h3>
+                </div>
+
+                <div class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Footer Background Color</label>
+                            <div class="flex gap-4">
+                                <input type="color" id="footer-bg-picker" value="<?php echo htmlspecialchars($settings['footer_bg_color'] ?? '#0a0a0a'); ?>" oninput="syncFooterColor()" class="w-14 h-14 rounded-xl border-none cursor-pointer overflow-hidden p-0 bg-transparent">
+                                <input type="text" id="footer-bg-text" value="<?php echo htmlspecialchars($settings['footer_bg_color'] ?? '#0a0a0a'); ?>" oninput="syncFooterColorText()" class="flex-1 px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold uppercase outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            </div>
+                        </div>
+                        <div class="space-y-3 col-span-full">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Footer Brand Description</label>
+                            <textarea id="footer_text" oninput="updatePreview()" rows="3" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none resize-none"><?php echo htmlspecialchars($settings['footer_text'] ?? 'The primary representative body for all sustainable energy practitioners and corporate stakeholders across East Africa.'); ?></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Profiles -->
+            <div class="card-bg p-10 rounded-[3rem] shadow-premium space-y-10">
+                <div class="border-b border-slate-50 pb-6 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-sky-50 rounded-xl flex items-center justify-center text-sky-600">
+                        <i data-lucide="share-2" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-xl font-black">Social Media Channels</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Facebook URL</label>
+                        <input type="text" id="social_facebook" value="<?php echo htmlspecialchars($settings['social_facebook'] ?? '#'); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">Twitter / X URL</label>
+                        <input type="text" id="social_twitter" value="<?php echo htmlspecialchars($settings['social_twitter'] ?? '#'); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
+                    </div>
+                    <div class="space-y-3">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest px-2">LinkedIn URL</label>
+                        <input type="text" id="social_linkedin" value="<?php echo htmlspecialchars($settings['social_linkedin'] ?? '#'); ?>" class="w-full px-5 py-4 bg-slate-50 border border-slate-100 rounded-xl text-xs font-bold focus:ring-2 focus:ring-primary/20 outline-none">
                     </div>
                 </div>
             </div>
@@ -94,46 +301,63 @@
 
         <!-- Live Preview Sidebar -->
         <div class="gsap-reveal lg:col-span-4 space-y-10 focus:outline-none">
-            <div class="card-bg p-8 rounded-[2.5rem] shadow-premium space-y-6">
+            <div class="card-bg p-8 rounded-[2.5rem] shadow-premium space-y-6 sticky top-24">
                 <div class="flex items-center justify-between">
-                    <h3 class="font-black text-sm">Theme Preview</h3>
-                    <span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded text-[9px] font-black uppercase">Live Mock</span>
+                    <h3 class="font-black text-sm">Design Preview</h3>
+                    <span class="px-2 py-1 bg-emerald-50 text-emerald-600 rounded text-[9px] font-black uppercase">Live Mockup</span>
                 </div>
-                <!-- Mockup -->
-                <div class="w-full aspect-[4/3] bg-slate-100 rounded-[2rem] border border-slate-200 overflow-hidden relative">
-                    <div class="h-4 bg-white border-b border-slate-200"></div>
-                    <div class="flex h-full">
-                        <div class="w-8 bg-white border-r border-slate-200 h-full"></div>
-                        <div class="flex-1 p-3 space-y-2">
-                             <div id="preview-primary-bar" class="w-1/2 h-2 bg-primary/20 rounded transition-colors"></div>
-                             <div class="grid grid-cols-2 gap-2">
-                                 <div class="h-10 bg-white rounded-lg border border-slate-200 flex flex-col justify-center items-center gap-1">
-                                     <div id="preview-dot-1" class="w-4 h-1 bg-primary/30 rounded-full transition-colors"></div>
-                                     <div class="w-6 h-0.5 bg-slate-100 rounded-full"></div>
-                                 </div>
-                                 <div class="h-10 bg-white rounded-lg border border-slate-200 flex flex-col justify-center items-center gap-1">
-                                     <div id="preview-accent-dot" class="w-4 h-1 bg-amber-400 rounded-full transition-colors"></div>
-                                     <div class="w-6 h-0.5 bg-slate-100 rounded-full"></div>
-                                 </div>
-                             </div>
+                
+                <!-- Live Page Layout Mock -->
+                <div class="w-full bg-slate-50 border border-slate-200/60 rounded-[2rem] p-4 space-y-4 shadow-inner">
+                    <!-- Mini Announcement Bar -->
+                    <div class="bg-black text-[7px] text-white px-2.5 py-1.5 flex justify-between items-center rounded-lg select-none">
+                        <span class="text-primary truncate w-24 font-bold" id="mock-announce"><?php echo htmlspecialchars($settings['announcement_text'] ?? 'Kerea Guaranteed Compliance'); ?></span>
+                        <span id="mock-email" class="text-slate-400 truncate w-24 text-right font-medium"><?php echo htmlspecialchars($settings['header_email'] ?? 'info@kerea.org'); ?></span>
+                    </div>
+                    
+                    <!-- Mini Navbar -->
+                    <div id="mock-navbar" class="bg-white border border-slate-200/50 rounded-xl p-2.5 flex justify-between items-center transition-all">
+                        <div class="flex items-center gap-1">
+                            <img id="mock-logo-preview" src="<?php echo $base_url . ltrim($settings['logo_main'] ?? '/assets/kerea-logo-main.png', '/'); ?>" class="h-5 w-auto object-contain">
+                            <span class="text-[8px] font-black text-slate-800">KEREA</span>
+                        </div>
+                        <div class="flex gap-2 text-[6px] text-slate-450 font-bold select-none">
+                            <span>Home</span>
+                            <span>About</span>
+                            <span>Contact</span>
+                        </div>
+                    </div>
+
+                    <!-- Mini Hero -->
+                    <div class="bg-slate-200/40 rounded-xl p-6 flex flex-col items-center justify-center text-center space-y-2 border border-slate-100">
+                        <div id="mock-hero-bar" class="w-16 h-2 rounded transition-colors" style="background-color: <?php echo htmlspecialchars($settings['primary_color'] ?? '#39DE4F'); ?>"></div>
+                        <div class="w-12 h-1 bg-slate-300/40 rounded"></div>
+                    </div>
+
+                    <!-- Mini Footer -->
+                    <div id="mock-footer" class="text-white p-3 rounded-xl space-y-2 text-[6px] transition-all" style="background-color: <?php echo htmlspecialchars($settings['footer_bg_color'] ?? '#0a0a0a'); ?>">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center gap-1">
+                                <img id="mock-logo-footer" src="<?php echo $base_url . ltrim($settings['logo_main'] ?? '/assets/kerea-logo-main.png', '/'); ?>" class="h-3 w-auto filter brightness-0 invert opacity-80">
+                                <span class="font-black">KEREA</span>
+                            </div>
+                            <span id="mock-email-footer" class="text-slate-400 font-medium"><?php echo htmlspecialchars($settings['contact_email'] ?? 'info@kerea.org'); ?></span>
+                        </div>
+                        <div class="text-slate-400 text-[5px] truncate font-medium" id="mock-footer-text">
+                            <?php echo htmlspecialchars($settings['footer_text'] ?? 'The primary representative body...'); ?>
                         </div>
                     </div>
                 </div>
-                <p class="text-[10px] text-slate-400 leading-relaxed italic text-center font-bold px-4">"Changes applied here will affect all public-facing KEREA web components instantly."</p>
-            </div>
 
-            <div class="bg-primary/5 border border-primary/10 p-8 rounded-[2.5rem] space-y-4 relative overflow-hidden group">
-                <div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                <i data-lucide="info" class="w-6 h-6 text-primary relative z-10"></i>
-                <h4 class="text-sm font-black text-slate-800 relative z-10">Asset Management</h4>
-                <p class="text-xs text-slate-500 leading-relaxed relative z-10">High-resolution logos (SVG/PNG) should be updated via the Server Assets folder for consistency.</p>
-                <button onclick="UI.toast('Redirecting to Asset Management...', 'info')" class="w-full py-4 text-[10px] font-black uppercase tracking-widest text-primary bg-white border border-primary/20 rounded-xl hover:bg-primary hover:text-black transition-all relative z-10">Go to Asset Manager</button>
+                <p class="text-[10px] text-slate-400 leading-relaxed italic text-center font-bold px-4">"Modifications made will adjust the site’s public appearance once saved."</p>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+let navStyleSelected = '<?php echo htmlspecialchars($settings["nav_style"] ?? "static"); ?>';
+
 function syncColor(type) {
     const val = document.getElementById(type + '-color-picker').value;
     document.getElementById(type + '-color-text').value = val.toUpperCase();
@@ -149,20 +373,71 @@ function syncColorText(type) {
     }
 }
 
+function syncFooterColor() {
+    const val = document.getElementById('footer-bg-picker').value;
+    document.getElementById('footer-bg-text').value = val.toUpperCase();
+    updatePreview();
+}
+
+function syncFooterColorText() {
+    let val = document.getElementById('footer-bg-text').value;
+    if (val.charAt(0) !== '#') val = '#' + val;
+    if (val.length === 7) {
+        document.getElementById('footer-bg-picker').value = val;
+        updatePreview();
+    }
+}
+
+function previewImage(input, previewId, mockId1, mockId2) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById(previewId).src = e.target.result;
+            if(mockId1) document.getElementById(mockId1).src = e.target.result;
+            if(mockId2) document.getElementById(mockId2).src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
 function updatePreview() {
     const primary = document.getElementById('primary-color-picker').value;
-    const accent = document.getElementById('accent-color-picker').value;
+    const footerBg = document.getElementById('footer-bg-picker').value;
+    const announcement = document.getElementById('announcement_text').value;
+    const headerEmail = document.getElementById('header_email').value;
+    const contactEmail = document.getElementById('contact_email').value;
+    const footerText = document.getElementById('footer_text').value;
     
-    const previewBar = document.getElementById('preview-primary-bar');
-    const previewDot = document.getElementById('preview-dot-1');
-    const previewAccent = document.getElementById('preview-accent-dot');
+    const mockHeroBar = document.getElementById('mock-hero-bar');
+    if (mockHeroBar) mockHeroBar.style.backgroundColor = primary;
+
+    const mockFooter = document.getElementById('mock-footer');
+    if (mockFooter) mockFooter.style.backgroundColor = footerBg;
     
-    if (previewBar) previewBar.style.backgroundColor = primary + '33'; // 20% alpha
-    if (previewDot) previewDot.style.backgroundColor = primary + '4D'; // 30% alpha
-    if (previewAccent) previewAccent.style.backgroundColor = accent;
+    const mockAnnounce = document.getElementById('mock-announce');
+    if (mockAnnounce) mockAnnounce.innerText = announcement;
+    
+    const mockEmail = document.getElementById('mock-email');
+    if (mockEmail) mockEmail.innerText = headerEmail;
+    
+    const mockEmailFooter = document.getElementById('mock-email-footer');
+    if (mockEmailFooter) mockEmailFooter.innerText = contactEmail;
+    
+    const mockFooterText = document.getElementById('mock-footer-text');
+    if (mockFooterText) mockFooterText.innerText = footerText;
+
+    const mockNavbar = document.getElementById('mock-navbar');
+    if (mockNavbar) {
+        if (navStyleSelected === 'glass') {
+            mockNavbar.className = "bg-white/70 backdrop-blur-md border border-slate-200/50 rounded-xl p-2.5 flex justify-between items-center transition-all shadow-md mx-2";
+        } else {
+            mockNavbar.className = "bg-white border border-slate-200/50 rounded-xl p-2.5 flex justify-between items-center transition-all";
+        }
+    }
 }
 
 function setStyle(type, style) {
+    navStyleSelected = style;
     const glass = document.getElementById('nav-style-glass');
     const stat = document.getElementById('nav-style-static');
     
@@ -170,17 +445,18 @@ function setStyle(type, style) {
         glass.classList.add('border-primary', 'bg-primary/5');
         glass.classList.remove('border-slate-100', 'bg-white');
         stat.classList.remove('border-primary', 'bg-primary/5');
-        stat.classList.add('border-slate-100');
+        stat.classList.add('border-slate-100', 'bg-white');
     } else {
         stat.classList.add('border-primary', 'bg-primary/5');
         stat.classList.remove('border-slate-100', 'bg-white');
         glass.classList.remove('border-primary', 'bg-primary/5');
-        glass.classList.add('border-slate-100');
+        glass.classList.add('border-slate-100', 'bg-white');
     }
-    UI.toast('Navigation style set to ' + style, 'info');
+    UI.toast('Navigation style scheduled: ' + style, 'info');
+    updatePreview();
 }
 
-let marketActive = true;
+let marketActive = <?php echo ($settings['show_market_counter'] ?? true) ? 'true' : 'false'; ?>;
 function toggleSwitch(type) {
     marketActive = !marketActive;
     const box = document.getElementById('market-toggle');
@@ -208,25 +484,72 @@ function saveBranding() {
     btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Processing...';
     lucide.createIcons();
     
-    setTimeout(() => {
-        btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Synchronizing...';
-        lucide.createIcons();
-        
-        setTimeout(() => {
-            UI.toast('Global branding synchronized successfully ✓', 'success');
+    const formData = new FormData();
+    formData.append('primary_color', document.getElementById('primary-color-picker').value);
+    formData.append('accent_color', document.getElementById('accent-color-picker').value);
+    formData.append('font_family', document.getElementById('font-family-select').value);
+    formData.append('nav_style', navStyleSelected);
+    formData.append('announcement_text', document.getElementById('announcement_text').value);
+    formData.append('show_market_counter', marketActive ? 'true' : 'false');
+    
+    formData.append('footer_bg_color', document.getElementById('footer-bg-picker').value);
+    formData.append('footer_text', document.getElementById('footer_text').value);
+    formData.append('header_email', document.getElementById('header_email').value);
+    formData.append('header_phone', document.getElementById('header_phone').value);
+    formData.append('contact_email', document.getElementById('contact_email').value);
+    formData.append('contact_phone', document.getElementById('contact_phone').value);
+    formData.append('contact_address', document.getElementById('contact_address').value);
+    formData.append('social_facebook', document.getElementById('social_facebook').value);
+    formData.append('social_twitter', document.getElementById('social_twitter').value);
+    formData.append('social_linkedin', document.getElementById('social_linkedin').value);
+    
+    const logoMain = document.getElementById('logo-main-file').files[0];
+    const logoLoad = document.getElementById('logo-load-file').files[0];
+    if (logoMain) formData.append('logo_main', logoMain);
+    if (logoLoad) formData.append('logo_load', logoLoad);
+    
+    fetch('?action=save', {
+        method: 'POST',
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            btn.innerHTML = '<i data-lucide="check" class="w-4 h-4"></i> Synchronizing...';
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                UI.toast(data.message, 'success');
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                lucide.createIcons();
+                
+                // Effect: Subtle "flash" of the preview
+                gsap.fromTo('.lg\\:col-span-4 .card-bg', { scale: 1 }, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
+                
+                // Reload window after brief success display
+                setTimeout(() => window.location.reload(), 1000);
+            }, 1000);
+        } else {
+            UI.toast('Error: ' + data.message, 'error');
             btn.innerHTML = originalContent;
             btn.disabled = false;
             lucide.createIcons();
-            
-            // Effect: Subtle "flash" of the preview
-            gsap.fromTo('.lg\\:col-span-4 .card-bg', { scale: 1 }, { scale: 1.02, duration: 0.2, yoyo: true, repeat: 1 });
-        }, 1000);
-    }, 1500);
+        }
+    })
+    .catch(error => {
+        console.error(error);
+        UI.toast('An unexpected communications error occurred.', 'error');
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+        lucide.createIcons();
+    });
 }
 
 // Initial preview sync
-document.addEventListener('DOMContentLoaded', updatePreview);
+document.addEventListener('DOMContentLoaded', () => {
+    updatePreview();
+});
 </script>
 
 <?php include 'includes/footer.php'; ?>
-

@@ -1,27 +1,30 @@
-<?php if(!isset($base_url)) $base_url = "/"; ?>
-<footer class="bg-black text-white pt-24 pb-12 border-t border-white/5 relative overflow-hidden">
+<?php 
+include_once __DIR__ . '/config.php';
+if(!isset($base_url)) $base_url = "/"; 
+?>
+<footer class="text-white pt-24 pb-12 border-t border-white/5 relative overflow-hidden" style="background-color: <?php echo htmlspecialchars($settings['footer_bg_color'] ?? '#0a0a0a'); ?>">
     <!-- Parallax Background Pattern -->
-    <div class="absolute inset-0 opacity-[0.03] pointer-events-none footer-bg-parallax" style="background-image: radial-gradient(#39DE4F 1px, transparent 1px); background-size: 40px 40px;"></div>
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none footer-bg-parallax" style="background-image: radial-gradient(<?php echo htmlspecialchars($settings['primary_color'] ?? '#39DE4F'); ?> 1px, transparent 1px); background-size: 40px 40px;"></div>
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20">
             <!-- Brand Column -->
             <div class="space-y-8">
                 <a href="<?php echo $base_url; ?>" class="flex items-center gap-3">
-                    <img src="<?php echo $base_url; ?>assets/kerea-logo-main.png" alt="KEREA" class="h-10 w-auto filter brightness-0 invert opacity-90">
+                    <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="KEREA" class="h-10 w-auto filter brightness-0 invert opacity-90">
                     <span class="text-xl font-black tracking-tight">KEREA</span>
                 </a>
                 <p class="text-sm text-slate-400 leading-relaxed max-w-xs font-medium">
-                    The primary representative body for all sustainable energy practitioners and corporate stakeholders across East Africa.
+                    <?php echo htmlspecialchars($settings['footer_text'] ?? 'The primary representative body for all sustainable energy practitioners and corporate stakeholders across East Africa.'); ?>
                 </p>
                 <div class="flex gap-4">
-                    <a href="#" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
+                    <a href="<?php echo htmlspecialchars($settings['social_facebook'] ?? '#'); ?>" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
                         <i data-lucide="facebook" class="w-4.5 h-4.5 text-slate-400 group-hover:text-black"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
+                    <a href="<?php echo htmlspecialchars($settings['social_twitter'] ?? '#'); ?>" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
                         <i data-lucide="twitter" class="w-4.5 h-4.5 text-slate-400 group-hover:text-black"></i>
                     </a>
-                    <a href="#" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
+                    <a href="<?php echo htmlspecialchars($settings['social_linkedin'] ?? '#'); ?>" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
                         <i data-lucide="linkedin" class="w-4.5 h-4.5 text-slate-400 group-hover:text-black"></i>
                     </a>
                 </div>
@@ -56,15 +59,15 @@
                 <ul class="space-y-6">
                     <li class="flex items-start gap-4">
                         <i data-lucide="map-pin" class="w-4.5 h-4.5 text-primary mt-0.5"></i>
-                        <span class="text-xs text-slate-400 leading-relaxed font-medium">Keri Road, Nairobi West,<br>Nairobi, KE</span>
+                        <span class="text-xs text-slate-400 leading-relaxed font-medium"><?php echo nl2br(htmlspecialchars($settings['contact_address'] ?? "Keri Road, Nairobi West,\nNairobi, KE")); ?></span>
                     </li>
                     <li class="flex items-center gap-4">
                         <i data-lucide="mail" class="w-4.5 h-4.5 text-primary"></i>
-                        <span class="text-xs text-slate-400 font-medium">info@kerea.org</span>
+                        <span class="text-xs text-slate-400 font-medium"><?php echo htmlspecialchars($settings['contact_email'] ?? 'info@kerea.org'); ?></span>
                     </li>
                     <li class="flex items-center gap-4">
                         <i data-lucide="phone" class="w-4.5 h-4.5 text-primary"></i>
-                        <span class="text-xs text-slate-400 font-medium">(+254) 740 541 896</span>
+                        <span class="text-xs text-slate-400 font-medium"><?php echo htmlspecialchars($settings['contact_phone'] ?? '(+254) 740 541 896'); ?></span>
                     </li>
                 </ul>
             </div>

@@ -8,5 +8,18 @@
     "footer_bg_color": "#0a0a0a",
     "announcement_text": "Kerea Guaranteed Compliance",
     "header_bg": "white",
-    "text_color": "#0f172a"
+    "text_color": "#0f172a",
+    "header_email": "info@kerea.org",
+    "header_phone": "(+254) 740 541 896",
+    "contact_address": "Keri Road, Nairobi West, Nairobi",
+    "contact_email": "info@kerea.org",
+    "contact_phone": "(+254) 740 541 896",
+    "logo_main": "/assets/kerea-logo-main.png",
+    "logo_load": "/assets/logo-load.png",
+    "social_facebook": "#",
+    "social_twitter": "#",
+    "social_linkedin": "#",
+    "nav_style": "static",
+    "show_market_counter": true,
+    "footer_text": "The primary representative body for all sustainable energy practitioners and corporate stakeholders across East Africa."
 }

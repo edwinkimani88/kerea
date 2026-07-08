@@ -49,7 +49,7 @@ $active_page = "contact";
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-black text-black text-sm uppercase tracking-tight">Main Secretariat Hub</h4>
-                                    <p class="text-slate-500 text-xs leading-relaxed">Keri Road, Nairobi West,<br>Nairobi, Kenya</p>
+                                    <p class="text-slate-500 text-xs leading-relaxed"><?php echo nl2br(htmlspecialchars($settings['contact_address'] ?? "Keri Road, Nairobi West,\nNairobi, Kenya")); ?></p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-6">
@@ -58,7 +58,7 @@ $active_page = "contact";
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-black text-black text-sm uppercase tracking-tight">Official Email</h4>
-                                    <p class="text-slate-500 text-xs leading-relaxed">info@kerea.org</p>
+                                    <p class="text-slate-500 text-xs leading-relaxed"><?php echo htmlspecialchars($settings['contact_email'] ?? 'info@kerea.org'); ?></p>
                                 </div>
                             </div>
                             <div class="flex items-start gap-6">
@@ -67,7 +67,7 @@ $active_page = "contact";
                                 </div>
                                 <div class="space-y-1">
                                     <h4 class="font-black text-black text-sm uppercase tracking-tight">Direct Hotline</h4>
-                                    <p class="text-slate-500 text-xs leading-relaxed">(+254) 740 541 896</p>
+                                    <p class="text-slate-500 text-xs leading-relaxed"><?php echo htmlspecialchars($settings['contact_phone'] ?? '(+254) 740 541 896'); ?></p>
                                 </div>
                             </div>
                         </div>

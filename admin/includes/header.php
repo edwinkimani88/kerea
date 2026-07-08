@@ -102,7 +102,7 @@ $admin_base = "/admin/";
     <aside class="w-72 sidebar-bg flex flex-col shrink-0 z-30 relative shadow-premium">
         <div class="p-8 border-b border-slate-100 flex items-center gap-4">
             <div class="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform overflow-hidden">
-                <img src="<?php echo $base_url; ?>assets/kerea-logo-main.png" alt="K" class="w-6 h-6 object-contain pointer-events-none">
+                <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="K" class="w-6 h-6 object-contain pointer-events-none">
             </div>
             <div>
                 <span class="font-black text-xl tracking-tight block">KEREA</span>

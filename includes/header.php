@@ -1,12 +1,17 @@
 <?php
+include_once __DIR__ . '/config.php';
 if(!isset($base_url)) $base_url = "/";
 if(!isset($active_page)) $active_page = "home";
+
+$nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass') 
+    ? 'sticky top-4 z-50 max-w-7xl mx-auto rounded-3xl bg-white/70 backdrop-blur-xl border border-slate-200/50 shadow-xl py-3 px-6 transition-all duration-300'
+    : 'sticky top-0 z-50 w-full bg-white py-4 border-b border-slate-100';
 ?>
 
 <!-- Premium Preloader - Using Logo Load -->
 <div id="preloader">
     <div class="loader-content">
-        <img src="<?php echo $base_url; ?>assets/logo-load.png" alt="Kerea Loading" class="loader-logo">
+        <img src="<?php echo $base_url . ltrim($settings['logo_load'] ?? 'assets/logo-load.png', '/'); ?>" alt="Kerea Loading" class="loader-logo">
 
         <div class="w-32 h-1 bg-slate-100 rounded-full overflow-hidden mt-4">
             <div id="preloader-bar" class="h-full bg-primary w-0 transition-all duration-700"></div>
@@ -18,32 +23,32 @@ if(!isset($active_page)) $active_page = "home";
 <div class="bg-black text-white py-2 px-4 sm:px-6 lg:px-8 text-[10px] sm:text-xs select-none">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center gap-6">
-            <span class="font-bold tracking-widest text-primary uppercase">Kerea Guaranteed Compliance</span>
+            <span class="font-bold tracking-widest text-primary uppercase"><?php echo htmlspecialchars($settings['announcement_text'] ?? 'Kerea Guaranteed Compliance'); ?></span>
             <div class="hidden sm:flex items-center gap-2 text-slate-300">
                 <i data-lucide="map-pin" class="w-3 h-3 text-primary"></i>
-                <span>Keri Road, Nairobi West, Nairobi</span>
+                <span><?php echo htmlspecialchars($settings['contact_address'] ?? 'Keri Road, Nairobi West, Nairobi'); ?></span>
             </div>
         </div>
         <div class="flex items-center gap-6">
-            <a href="mailto:info@kerea.org" class="flex items-center gap-2 hover:text-primary transition-colors">
+            <a href="mailto:<?php echo htmlspecialchars($settings['header_email'] ?? 'info@kerea.org'); ?>" class="flex items-center gap-2 hover:text-primary transition-colors">
                 <i data-lucide="mail" class="w-3 h-3 text-primary"></i>
-                <span>info@kerea.org</span>
+                <span><?php echo htmlspecialchars($settings['header_email'] ?? 'info@kerea.org'); ?></span>
             </a>
             <div class="hidden md:flex items-center gap-2">
                 <i data-lucide="phone" class="w-3 h-3 text-primary"></i>
-                <span>(+254) 740 541 896</span>
+                <span><?php echo htmlspecialchars($settings['header_phone'] ?? '(+254) 740 541 896'); ?></span>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Main Header - Static & High Legibility -->
-<header id="main-nav" class="sticky top-0 z-50 w-full bg-white py-4 border-b border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!-- Main Header - Dynamic Navigation Style -->
+<header id="main-nav" class="<?php echo $nav_style_class; ?>">
+    <div class="<?php echo (($settings['nav_style'] ?? 'static') === 'glass') ? 'w-full' : 'max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'; ?>">
         <div class="flex justify-between items-center">
             <!-- Logo - Official KereaMain -->
             <a href="<?php echo $base_url; ?>" class="flex items-center gap-4 group">
-                <img src="<?php echo $base_url; ?>assets/kerea-logo-main.png" alt="KEREA" class="h-12 w-auto object-contain">
+                <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="KEREA" class="h-12 w-auto object-contain">
                 <div class="hidden sm:flex flex-col border-l border-slate-200 pl-4">
                     <span class="text-xl font-black tracking-tight text-black leading-none">KEREA</span>
                     <span class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mt-1">Industry Peak Body</span>
@@ -100,7 +105,7 @@ if(!isset($active_page)) $active_page = "home";
     <div class="absolute top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl flex flex-col overflow-y-auto">
         <div class="p-6 border-b border-slate-100 flex items-center justify-between">
             <a href="<?php echo $base_url; ?>" class="flex items-center gap-3">
-                <img src="<?php echo $base_url; ?>assets/kerea-logo-main.png" alt="KEREA" class="h-9 w-auto">
+                <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="KEREA" class="h-9 w-auto">
                 <span class="font-black text-lg tracking-tight text-black">KEREA</span>
             </a>
             <button id="mobile-menu-close" class="p-2 rounded-xl bg-slate-100 hover:bg-primary transition-all">
