@@ -1,60 +1,88 @@
-        </div>
-    </main>
+    </main><!-- /main -->
+</div><!-- /ml-64 -->
 
-    <script>
-        // Page title map based on filename
-        const pageTitles = {
-            'index.php': 'Dashboard',
-            'vendors.php': 'Vendor Management',
-            'products.php': 'Marketplace Oversight',
-            'analytics.php': 'Sector Intelligence',
-            'content.php': 'Content Management',
-            'support.php': 'Support Desk',
-            'customization.php': 'Appearance Hub'
+<script>
+// ── Global UI utilities ──────────────────────────────────────────────────────
+const UI = {
+    toast(msg, type = 'success', duration = 3500) {
+        const icons = {
+            success: 'check-circle',
+            error:   'x-circle',
+            warning: 'alert-triangle',
+            info:    'info',
         };
+        const t = document.createElement('div');
+        t.className = `toast toast-${type}`;
+        t.innerHTML = `<i data-lucide="${icons[type] || 'info'}" class="w-4 h-4 shrink-0"></i><span>${msg}</span>`;
+        document.getElementById('toast-container').appendChild(t);
+        lucide.createIcons();
+        gsap.fromTo(t, {x: 60, opacity: 0}, {x: 0, opacity: 1, duration: 0.3, ease: 'power2.out'});
+        setTimeout(() => {
+            gsap.to(t, {x: 60, opacity: 0, duration: 0.3, ease: 'power2.in', onComplete: () => t.remove()});
+        }, duration);
+    },
 
-        // Initialize all page-level scripts
-        document.addEventListener('DOMContentLoaded', () => {
-            lucide.createIcons();
+    modal: {
+        open(id)  { const m = document.getElementById(id); if(m) { m.classList.remove('hidden'); document.body.style.overflow = 'hidden'; } },
+        close(id) { const m = document.getElementById(id); if(m) { m.classList.add('hidden');    document.body.style.overflow = ''; } },
+    },
 
-            // Active link highlighting & page title
-            const currentFile = window.location.pathname.split('/').pop() || 'index.php';
-            document.querySelectorAll('.sidebar-link').forEach(link => {
-                const linkHref = link.getAttribute('href');
-                if (linkHref === currentFile || (currentFile === '' && linkHref === 'index.php')) {
-                    link.classList.add('active');
-                }
-            });
+    confirm(msg) { return window.confirm(msg); },
 
-            // Set page title from map
-            const titleEl = document.getElementById('page-title');
-            if (titleEl && pageTitles[currentFile]) {
-                titleEl.innerText = pageTitles[currentFile];
-            }
+    async apiPost(url, formData) {
+        try {
+            const res  = await fetch(url, { method: 'POST', body: formData });
+            return await res.json();
+        } catch(e) {
+            console.error(e);
+            return { success: false, message: 'Network error. Please try again.' };
+        }
+    },
 
-            // GSAP Animations
-            gsap.registerPlugin(ScrollTrigger);
+    async apiGet(url) {
+        try {
+            const res = await fetch(url);
+            return await res.json();
+        } catch(e) {
+            return { success: false, message: 'Network error.' };
+        }
+    },
+};
 
-            // Stagger reveal for all gsap-reveal elements
-            gsap.to('.gsap-reveal', {
-                opacity: 1,
-                y: 0,
-                duration: 0.8,
-                stagger: 0.12,
-                ease: 'power3.out',
-                delay: 0.15
-            });
+// ── Logout ────────────────────────────────────────────────────────────────────
+async function handleLogout() {
+    const fd = new FormData();
+    fd.append('csrf_token', '<?php echo Security::esc($csrfToken); ?>');
+    const data = await UI.apiPost('/backend/api/auth.php?action=logout', fd);
+    if (data.success) window.location.href = '/auth/';
+    else UI.toast('Logout failed.', 'error');
+}
 
-            // Hover lift animations for cards
-            document.querySelectorAll('.card-bg').forEach(card => {
-                card.addEventListener('mouseenter', () => {
-                    gsap.to(card, { y: -5, boxShadow: '0 20px 40px -15px rgba(0,0,0,0.12)', duration: 0.3 });
-                });
-                card.addEventListener('mouseleave', () => {
-                    gsap.to(card, { y: 0, boxShadow: '0 10px 30px -10px rgba(0,0,0,0.05)', duration: 0.3 });
-                });
-            });
-        });
-    </script>
+// ── Sidebar toggle (mobile) ────────────────────────────────────────────────
+function toggleSidebar() {
+    const sb = document.getElementById('sidebar');
+    const bd = document.getElementById('sidebar-backdrop');
+    sb.classList.toggle('-translate-x-full');
+    bd.classList.toggle('hidden');
+}
+
+// ── GSAP animations ───────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+    gsap.to('.gsap-reveal', {
+        y: 0, opacity: 1, duration: 0.5, stagger: 0.07, ease: 'power2.out'
+    });
+});
+
+// ── Global CSRF helper for fetch calls ────────────────────────────────────
+window.CSRF_TOKEN = '<?php echo Security::esc($csrfToken); ?>';
+
+function makeFormData(obj) {
+    const fd = new FormData();
+    fd.append('csrf_token', window.CSRF_TOKEN);
+    for (const [k, v] of Object.entries(obj)) fd.append(k, v);
+    return fd;
+}
+</script>
 </body>
 </html>

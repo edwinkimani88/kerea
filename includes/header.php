@@ -82,7 +82,7 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
                 </div>
 
                 <a href="<?php echo $base_url; ?>policy-advocacy/" class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary transition-colors">Policy Briefs</a>
-                <a href="<?php echo $base_url; ?>marketplace/" class="px-6 py-2.5 bg-primary text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-lg shadow-primary/20 text-center">Marketplace</a>
+                <a href="<?php echo htmlspecialchars($settings['marketplace_url'] ?? 'https://marketplace.kerea.org/'); ?>" target="_blank" rel="noopener noreferrer" class="px-6 py-2.5 bg-primary text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-lg shadow-primary/20 text-center">Marketplace ↗</a>
                 <a href="<?php echo $base_url; ?>contact/" class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary transition-colors"><?php echo ($active_page == 'contact') ? '<span class="text-primary">Contact</span>' : 'Contact'; ?></a>
             </nav>
 
@@ -136,8 +136,8 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
             </a>
         </nav>
         <div class="p-6 border-t border-slate-100 space-y-3">
-            <a href="<?php echo $base_url; ?>marketplace/" class="w-full py-4 bg-primary text-black font-black text-[10px] uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all">
-                <i data-lucide="shopping-bag" class="w-4 h-4"></i> Marketplace
+            <a href="<?php echo htmlspecialchars($settings['marketplace_url'] ?? 'https://marketplace.kerea.org/'); ?>" target="_blank" rel="noopener noreferrer" class="w-full py-4 bg-primary text-black font-black text-[10px] uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all">
+                <i data-lucide="shopping-bag" class="w-4 h-4"></i> Marketplace ↗
             </a>
             <a href="<?php echo $base_url; ?>auth/" class="w-full py-4 bg-slate-100 text-black font-black text-[10px] uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 hover:bg-slate-200 transition-all">
                 <i data-lucide="lock" class="w-4 h-4"></i> Sign In

@@ -1,280 +1,191 @@
 <?php
-include_once __DIR__ . '/../../includes/config.php';
-// Use absolute paths for Vercel router compatibility
-$base_url = "/"; 
-$admin_base = "/admin/";
+/**
+ * KEREA — Admin Header (with Auth Guard)
+ * All admin pages include this. Redirects to /auth/ if not logged in.
+ */
+declare(strict_types=1);
+
+// Bootstrap backend
+require_once dirname(__DIR__, 2) . '/backend/config/database.php';
+require_once dirname(__DIR__, 2) . '/backend/core/Database.php';
+require_once dirname(__DIR__, 2) . '/backend/core/Auth.php';
+require_once dirname(__DIR__, 2) . '/backend/core/Security.php';
+require_once dirname(__DIR__, 2) . '/backend/models/Setting.php';
+
+// Start session & enforce login
+Auth::startSession();
+Auth::requireRole('content_manager', '/auth/');
+
+// Load settings from DB
+$settingModel = new Setting();
+$settings     = $settingModel->all();
+$currentUser  = Auth::user();
+
+// Get current page for active nav state
+$currentFile = basename($_SERVER['PHP_SELF'], '.php');
+
+// CSRF token for all forms on admin pages
+$csrfToken = Auth::csrfToken();
+
+// Nav items configuration
+$navItems = [
+    ['file' => 'index',         'icon' => 'layout-dashboard', 'label' => 'Dashboard',    'role' => 'content_manager'],
+    ['file' => 'content',       'icon' => 'file-text',        'label' => 'Content',       'role' => 'content_manager'],
+    ['file' => 'pages',         'icon' => 'layout',           'label' => 'Pages',         'role' => 'content_manager'],
+    ['file' => 'events',        'icon' => 'calendar',         'label' => 'Events',        'role' => 'content_manager'],
+    ['file' => 'partners',      'icon' => 'handshake',        'label' => 'Partners',      'role' => 'content_manager'],
+    ['file' => 'media',         'icon' => 'image',            'label' => 'Media',         'role' => 'content_manager'],
+    ['file' => 'menus',         'icon' => 'menu',             'label' => 'Menus',         'role' => 'admin'],
+    ['file' => 'users',         'icon' => 'users',            'label' => 'Users',         'role' => 'admin'],
+    ['file' => 'analytics',     'icon' => 'bar-chart-2',      'label' => 'Analytics',     'role' => 'admin'],
+    ['file' => 'customization', 'icon' => 'settings',         'label' => 'Settings',      'role' => 'admin'],
+];
+
+$roleHierarchy = ['member' => 1, 'content_manager' => 2, 'admin' => 3, 'super_admin' => 4];
+$currentLevel  = $roleHierarchy[Auth::role()] ?? 0;
+
+function canAccess(string $requiredRole, array $hierarchy, int $currentLevel): bool {
+    return $currentLevel >= ($hierarchy[$requiredRole] ?? 99);
+}
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KEREA Admin Dashboard</title>
+    <title><?php echo Security::esc($settings['site_name'] ?? 'KEREA'); ?> — Admin CMS</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="<?php echo $admin_base; ?>js/themes.js"></script>
-    <script src="<?php echo $admin_base; ?>js/ui.js"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: 'var(--primary)',
-                        accent: 'var(--accent)',
-                        dark: 'var(--bg-main)',
-                        'base-100': 'var(--bg-main)',
-                        'base-200': 'var(--sidebar-bg)',
-                        'base-content': 'var(--text-main)',
-                        'base-muted': 'var(--text-muted)'
-                    },
-                    fontFamily: {
-                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'premium': '0 10px 30px -10px rgba(0,0,0,0.05)',
-                        'premium-hover': '0 20px 40px -15px rgba(0,0,0,0.1)',
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
+        * { font-family: 'Inter', sans-serif; }
         :root {
-            --primary: #39DE4F;
-            --accent: #F59E0B;
-            --bg-main: #f8fafc;
-            --sidebar-bg: #ffffff;
-            --topbar-bg: #ffffff;
-            --card-bg: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --border: #f1f5f9;
-            --sidebar-text: #475569;
-            --sidebar-active-bg: rgba(57, 222, 79, 0.1);
-            --sidebar-active-text: #39DE4F;
+            --primary: <?php echo Security::esc($settings['primary_color'] ?? '#39DE4F'); ?>;
+            --accent:  <?php echo Security::esc($settings['accent_color']  ?? '#F59E0B'); ?>;
         }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-main); 
-            color: var(--text-main);
-            transition: background-color 0.4s ease, color 0.4s ease;
-        }
-        
-        .sidebar-bg { background-color: var(--sidebar-bg); border-right: 1px solid var(--border); }
-        .topbar-bg { background-color: var(--topbar-bg); border-bottom: 1px solid var(--border); }
-        .card-bg { background-color: var(--card-bg); border: 1px solid var(--border); }
-        .content-bg { background-color: var(--bg-main); transition: background-color 0.4s ease; }
-        .sidebar-link { color: var(--sidebar-text); }
-        .sidebar-link:hover { background-color: var(--sidebar-active-bg); color: var(--sidebar-active-text); }
-        .sidebar-link.active { background-color: var(--sidebar-active-bg); color: var(--sidebar-active-text); border-right: 4px solid var(--primary); }
-        
-        /* Typography overrides for themes */
-        h1, h2, h3, h4, h5, h6 { color: var(--text-main); }
-        p, span, label { color: var(--text-muted); }
-        .text-main { color: var(--text-main) !important; }
-        .text-muted { color: var(--text-muted) !important; }
-        
-        button.bg-primary, .btn-primary { color: var(--btn-text) !important; }
-        
-        /* Premium Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-        
-        .gsap-reveal { opacity: 0; transform: translateY(20px); }
-
-        /* Modal Overlay */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 100;
+        .text-primary   { color: var(--primary) !important; }
+        .bg-primary     { background-color: var(--primary) !important; }
+        .border-primary { border-color: var(--primary) !important; }
+        .text-accent    { color: var(--accent) !important; }
+        .bg-accent      { background-color: var(--accent) !important; }
+        .shadow-premium { box-shadow: 0 4px 40px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04); }
+        .card-bg        { background: #fff; border: 1px solid #f1f5f9; }
+        .sidebar-item.active { background: var(--primary); color: #000 !important; font-weight: 900; }
+        .sidebar-item:not(.active):hover { background: #f8fafc; color: #000; }
+        .modal-overlay  { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+        .modal-overlay.hidden { display: none; }
+        /* Toast notifications */
+        #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 99999; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
+        .toast { pointer-events: all; display: flex; align-items: center; gap: 0.75rem; padding: 1rem 1.25rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 700; box-shadow: 0 8px 30px rgba(0,0,0,0.15); min-width: 280px; transition: all 0.3s ease; }
+        .toast-success { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
+        .toast-error   { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+        .toast-warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        .toast-info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+        .gsap-reveal   { opacity: 0; transform: translateY(20px); }
+        /* Table styling */
+        table th { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; }
+        table td { font-size: 13px; }
+        /* Form focus */
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(57,222,79,0.12);
         }
     </style>
 </head>
-<body class="flex min-h-screen opacity-0" id="body-main">
-    <!-- Sidebar -->
-    <aside class="w-72 sidebar-bg flex flex-col shrink-0 z-30 relative shadow-premium">
-        <div class="p-8 border-b border-slate-100 flex items-center gap-4">
-            <div class="w-10 h-10 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform overflow-hidden">
-                <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="K" class="w-6 h-6 object-contain pointer-events-none">
-            </div>
+<body class="bg-slate-50 min-h-screen flex">
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- Sidebar -->
+<aside id="sidebar" class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-100 shadow-xl z-40 flex flex-col">
+    <!-- Logo -->
+    <div class="p-6 border-b border-slate-100">
+        <a href="/admin/" class="flex items-center gap-3">
+            <img src="<?php echo Security::esc($settings['logo_main'] ?? '/assets/kerea-logo-main.png'); ?>" alt="KEREA" class="h-8 w-auto">
             <div>
-                <span class="font-black text-xl tracking-tight block">KEREA</span>
-                <span class="text-[8px] font-black uppercase tracking-[0.2em] text-primary">Intelligence Dash</span>
+                <span class="text-base font-black tracking-tight text-slate-900 block">KEREA</span>
+                <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Admin CMS</span>
             </div>
-        </div>
-        <nav class="flex-1 p-6 space-y-2">
-            <a href="<?php echo $admin_base; ?>index.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
-            </a>
-            <a href="<?php echo $admin_base; ?>customization.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="palette" class="w-5 h-5"></i> Appearance
-            </a>
-            <a href="<?php echo $admin_base; ?>vendors.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="users" class="w-5 h-5"></i> Vendors
-            </a>
-            <a href="<?php echo $admin_base; ?>products.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="shopping-bag" class="w-5 h-5"></i> Marketplace
-            </a>
-            <a href="<?php echo $admin_base; ?>analytics.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="pie-chart" class="w-5 h-5"></i> Sector Analytics
-            </a>
-            <a href="<?php echo $admin_base; ?>content.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="file-text" class="w-5 h-5"></i> Knowledge Hub
-            </a>
-            <a href="<?php echo $admin_base; ?>support.php" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="message-square" class="w-5 h-5"></i> Support Desk
-            </a>
+        </a>
+    </div>
 
-            <!-- Portals Divider -->
-            <div class="pt-4 pb-2 px-2">
-                <p class="text-[8px] font-black uppercase tracking-[0.3em] text-slate-300">Member Portals</p>
-            </div>
-            <a href="<?php echo $base_url; ?>membership" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="award" class="w-5 h-5"></i> Membership
+    <!-- Navigation -->
+    <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+        <?php foreach ($navItems as $item): ?>
+            <?php if (!canAccess($item['role'], $roleHierarchy, $currentLevel)) continue; ?>
+            <a href="/admin/<?php echo $item['file']; ?>.php"
+               class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 transition-all
+                      <?php echo $currentFile === $item['file'] ? 'active' : ''; ?>">
+                <i data-lucide="<?php echo Security::esc($item['icon']); ?>" class="w-4 h-4 shrink-0"></i>
+                <?php echo Security::esc($item['label']); ?>
             </a>
-            <a href="<?php echo $base_url; ?>vendor" class="sidebar-link flex items-center gap-4 px-5 py-4 rounded-2xl text-xs font-black uppercase tracking-widest transition-all hover:translate-x-2">
-                <i data-lucide="store" class="w-5 h-5"></i> Vendor Portal
-            </a>
-        </nav>
-        <div class="p-6 border-t border-slate-100">
-            <div class="bg-primary/5 rounded-3xl p-6 space-y-4">
-                <p class="text-[9px] font-black text-primary uppercase tracking-[0.2em]">Compliance Score</p>
-                <div class="flex items-center justify-between">
-                    <span class="text-2xl font-black">94.8%</span>
-                    <i data-lucide="shield-check" class="w-6 h-6 text-primary"></i>
-                </div>
-                <div class="w-full h-1 bg-slate-100 rounded-full overflow-hidden">
-                    <div class="h-full bg-primary w-[94.8%]"></div>
-                </div>
-            </div>
-            <a href="<?php echo $base_url; ?>" class="flex items-center gap-3 px-5 py-4 mt-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-[#a8a8a8] hover:text-primary transition-all">
-                <i data-lucide="external-link" class="w-4 h-4"></i> View Website
+        <?php endforeach; ?>
+
+        <div class="pt-4 border-t border-slate-100 mt-4">
+            <a href="/" target="_blank"
+               class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-500 transition-all">
+                <i data-lucide="external-link" class="w-4 h-4 shrink-0"></i>
+                View Website
             </a>
         </div>
-    </aside>
+    </nav>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col overflow-hidden relative">
-        <!-- Top Nav -->
-        <header class="h-24 topbar-bg flex items-center justify-between px-10 shrink-0 z-20">
+    <!-- User Info & Logout -->
+    <div class="p-4 border-t border-slate-100 bg-slate-50/50">
+        <div class="flex items-center gap-3 mb-3">
+            <div class="w-9 h-9 bg-primary rounded-xl flex items-center justify-center text-black font-black text-sm shrink-0">
+                <?php echo strtoupper(substr($currentUser['first_name'] ?? 'A', 0, 1)); ?>
+            </div>
+            <div class="min-w-0">
+                <p class="text-xs font-black text-slate-800 truncate">
+                    <?php echo Security::esc(($currentUser['first_name'] ?? '') . ' ' . ($currentUser['last_name'] ?? '')); ?>
+                </p>
+                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest truncate">
+                    <?php echo Security::esc($currentUser['role_label'] ?? $currentUser['role_name'] ?? 'Admin'); ?>
+                </p>
+            </div>
+        </div>
+        <button onclick="handleLogout()" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white border border-slate-200 rounded-xl text-[10px] font-black uppercase tracking-widest text-slate-500 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-all">
+            <i data-lucide="log-out" class="w-3.5 h-3.5"></i> Sign Out
+        </button>
+    </div>
+</aside>
+
+<!-- Mobile Sidebar Backdrop -->
+<div id="sidebar-backdrop" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden" onclick="toggleSidebar()"></div>
+
+<!-- Main Content Area -->
+<div class="ml-64 flex-1 flex flex-col min-h-screen">
+    <!-- Top Bar -->
+    <header class="sticky top-0 z-20 bg-white border-b border-slate-100 shadow-sm">
+        <div class="flex items-center justify-between px-8 py-4">
             <div class="flex items-center gap-4">
-                <h1 class="text-2xl font-black tracking-tight" id="page-title">Management</h1>
-                <span class="px-3 py-1 bg-primary/10 text-primary rounded-full text-[10px] font-black uppercase tracking-widest">v2.4 Pro</span>
-            </div>
-            
-            <div class="flex items-center gap-8">
-                <!-- Theme Switcher -->
-                <div class="relative">
-                    <button onclick="UI.toggleDropdown('theme-dropdown')" class="flex items-center gap-3 px-5 py-3 bg-slate-50 border border-slate-100 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-white hover:shadow-premium transition-all">
-                        <i data-lucide="palette" class="w-4 h-4 text-primary"></i> 
-                        Change Theme
-                        <i data-lucide="chevron-down" class="w-3 h-3"></i>
-                    </button>
-                    <div id="theme-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-white border border-slate-100 rounded-[2rem] shadow-2xl p-4 hidden z-50">
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-4 px-3">Professional Presets</p>
-                        <div class="grid grid-cols-1 gap-1">
-                            <?php 
-                            $themes = [
-                                'kerea-green' => ['KEREA Green', '#39DE4F'],
-                                'midnight-blue' => ['Midnight Blue', '#0f172a'],
-                                'carbon-dark' => ['Carbon Dark', '#121212'],
-                                'forest-premium' => ['Forest Premium', '#14532d'],
-                                'earth-tone' => ['Earth Tone', '#44403c'],
-                                'modern-light' => ['Modern Light', '#ffffff'],
-                                'ocean-blue' => ['Ocean Blue', '#0c4a6e'],
-                                'executive-dark' => ['Executive Dark', '#09090b'],
-                                'warm-sunset' => ['Warm Sunset', '#7c2d12'],
-                                'sapphire-pro' => ['Sapphire Pro', '#1e3a8a']
-                            ];
-                            foreach($themes as $id => $info):
-                            ?>
-                            <button onclick="applyTheme('<?php echo $id; ?>'); UI.toast('Theme changed to <?php echo $info[0]; ?>', 'success'); UI.toggleDropdown('theme-dropdown');" class="flex items-center justify-between w-full p-3 rounded-xl hover:bg-slate-50 text-[10px] font-bold text-slate-600 transition-all text-left">
-                                <?php echo $info[0]; ?> <div class="w-3 h-3 rounded-full border border-slate-100" style="background-color: <?php echo $info[1]; ?>"></div>
-                            </button>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-6">
-                    <div onclick="UI.toggleDropdown('notif-dropdown')" class="relative p-3 bg-slate-50 rounded-2xl border border-slate-100 hover:bg-white transition-all cursor-pointer group">
-                        <i data-lucide="bell" class="w-5 h-5 text-slate-400 group-hover:text-primary transition-colors"></i>
-                        <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                        
-                        <!-- Notifications Dropdown -->
-                        <div id="notif-dropdown" class="absolute top-full right-0 mt-3 w-80 bg-white border border-slate-100 rounded-[2rem] shadow-2xl p-6 hidden">
-                            <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-6">Recent Alerts</h4>
-                            <div class="space-y-4">
-                                <div class="flex gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-all">
-                                    <div class="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
-                                        <i data-lucide="check-circle" class="w-5 h-5"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-[11px] font-black text-slate-800">Vendor Verified</p>
-                                        <p class="text-[9px] text-slate-500 font-bold">SolarLink completed KYC</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-4 p-3 hover:bg-slate-50 rounded-2xl transition-all">
-                                    <div class="w-10 h-10 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center shrink-0">
-                                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
-                                    </div>
-                                    <div>
-                                        <p class="text-[11px] font-black text-slate-800">Stock Alert</p>
-                                        <p class="text-[9px] text-slate-500 font-bold">Moto Stoves low in stock</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div onclick="UI.toggleDropdown('user-dropdown')" class="flex items-center gap-4 bg-slate-50 p-2 pr-5 rounded-2xl border border-slate-100 hover:shadow-premium transition-all cursor-pointer relative">
-                        <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-black text-xs shadow-lg shadow-primary/20">
-                            AD
-                        </div>
-                        <div class="hidden sm:block">
-                            <p class="text-xs font-black text-slate-800 leading-none">Admin User</p>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase mt-1 tracking-widest">Secretariat</p>
-                        </div>
-
-                        <!-- User Dropdown -->
-                        <div id="user-dropdown" class="absolute top-full right-0 mt-3 w-64 bg-white border border-slate-100 rounded-[2rem] shadow-2xl p-6 hidden">
-                            <div class="pb-4 mb-4 border-b border-slate-100">
-                                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Signed in as</p>
-                                <p class="text-xs font-black text-slate-800">admin@kerea.org</p>
-                            </div>
-                            <div class="space-y-2">
-                                <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest text-slate-600">
-                                    <i data-lucide="user" class="w-4 h-4"></i> Profile
-                                </a>
-                                <a href="#" class="flex items-center gap-3 p-3 hover:bg-slate-50 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest text-slate-600">
-                                    <i data-lucide="settings" class="w-4 h-4"></i> Settings
-                                </a>
-                                <div class="pt-2">
-                                    <a href="<?php echo $base_url; ?>auth/" class="flex items-center gap-3 p-3 bg-red-50 text-red-600 rounded-xl transition-all text-[10px] font-black uppercase tracking-widest">
-                                        <i data-lucide="log-out" class="w-4 h-4"></i> Sign Out
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-xl bg-slate-100 hover:bg-primary transition-all">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h1 class="text-lg font-black text-slate-900 capitalize"><?php echo Security::esc(str_replace(['_','-'], ' ', $currentFile)); ?></h1>
+                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                        <?php echo Security::esc($settings['site_name'] ?? 'KEREA'); ?> Admin Panel
+                    </p>
                 </div>
             </div>
-        </header>
+            <div class="flex items-center gap-3">
+                <span class="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-100">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                    DB Connected
+                </span>
+                <a href="/admin/customization.php" class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:bg-primary hover:text-black hover:border-primary transition-all">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </header>
 
-        <script>
-            // Page fade-in on load (runs immediately after GSAP is available)
-            window.addEventListener('load', () => {
-                gsap.to('#body-main', { opacity: 1, duration: 0.8, ease: "power2.out" });
-            });
-        </script>
-
-        <!-- Dynamic Content Area -->
-        <div class="flex-1 overflow-y-auto p-10 space-y-12 content-bg">
-
+    <!-- Page Content Injected Here -->
+    <main class="flex-1 p-8">

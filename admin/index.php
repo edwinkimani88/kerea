@@ -1,196 +1,239 @@
-<?php include 'includes/header.php'; ?>
+<?php
+/**
+ * KEREA Admin — Live Dashboard
+ * Real data from MySQL: member counts, content stats, recent activity.
+ */
+declare(strict_types=1);
 
-<div class="space-y-12">
-    <!-- Stat Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div onclick="UI.toast('Detailed member audit initiated', 'info')" class="gsap-reveal card-bg p-8 rounded-[2.5rem] shadow-premium transition-all hover:border-primary cursor-pointer group">
-            <div class="flex items-center justify-between mb-6">
-                <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                    <i data-lucide="users" class="w-7 h-7"></i>
-                </div>
-                <div class="text-right">
-                    <span class="text-[10px] font-black text-emerald-500 uppercase tracking-widest">+12.5%</span>
-                    <p class="text-[8px] font-bold text-slate-400 uppercase">Growth</p>
-                </div>
-            </div>
-            <h3 class="text-4xl font-black tracking-tight">1,284</h3>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Verified Members</p>
-        </div>
-        
-        <div onclick="UI.toast('Inventory sync in progress...', 'info')" class="gsap-reveal card-bg p-8 rounded-[2.5rem] shadow-premium transition-all hover:border-accent cursor-pointer group">
-            <div class="flex items-center justify-between mb-6">
-                <div class="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
-                    <i data-lucide="shopping-bag" class="w-7 h-7"></i>
-                </div>
-                <div class="text-right">
-                    <span class="text-[10px] font-black text-amber-500 uppercase tracking-widest">+42 units</span>
-                    <p class="text-[8px] font-bold text-slate-400 uppercase">Weekly</p>
-                </div>
-            </div>
-            <h3 class="text-4xl font-black tracking-tight">542</h3>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Active Listings</p>
-        </div>
+require_once dirname(__DIR__) . '/backend/models/Content.php';
+require_once dirname(__DIR__) . '/backend/models/User.php';
 
-        <div onclick="UI.toast('SLA Performance: Excellent', 'success')" class="gsap-reveal card-bg p-8 rounded-[2.5rem] shadow-premium transition-all hover:border-blue-400 cursor-pointer group">
-            <div class="flex items-center justify-between mb-6">
-                <div class="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                    <i data-lucide="shield-check" class="w-7 h-7"></i>
-                </div>
-                <div class="text-right">
-                    <span class="text-[10px] font-black text-blue-500 uppercase tracking-widest">98.2%</span>
-                    <p class="text-[8px] font-bold text-slate-400 uppercase">SLA</p>
-                </div>
-            </div>
-            <h3 class="text-4xl font-black tracking-tight">92%</h3>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Compliance Rate</p>
-        </div>
+$contentModel = new Content();
+$userModel    = new User();
+$stats        = $contentModel->dashboardStats();
+$userStats    = $userModel->stats();
 
-        <div onclick="UI.toast('Sector valuation updated live', 'info')" class="gsap-reveal card-bg p-8 rounded-[2.5rem] shadow-premium transition-all hover:border-purple-400 cursor-pointer group">
-            <div class="flex items-center justify-between mb-6">
-                <div class="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
-                    <i data-lucide="zap" class="w-7 h-7"></i>
+// Recent activity
+$db     = Database::getInstance();
+$recent = $db->fetchAll(
+    'SELECT l.action, l.entity_type, l.description, l.created_at, u.first_name, u.last_name
+       FROM activity_log l
+       LEFT JOIN users u ON u.id = l.user_id
+      ORDER BY l.created_at DESC LIMIT 8'
+);
+
+// Upcoming events
+$events = $db->fetchAll(
+    "SELECT title, venue, start_date, event_type FROM events
+      WHERE status = 'upcoming' AND start_date >= CURDATE()
+      ORDER BY start_date ASC LIMIT 4"
+);
+
+// Recent messages
+$messages = $db->fetchAll(
+    "SELECT name, subject, created_at FROM contact_messages
+      WHERE status = 'unread'
+      ORDER BY created_at DESC LIMIT 5"
+);
+
+require_once __DIR__ . '/includes/header.php';
+?>
+
+<div class="space-y-10">
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Members -->
+        <a href="/admin/users.php" class="gsap-reveal card-bg p-7 rounded-[2rem] shadow-premium hover:border-primary transition-all group cursor-pointer">
+            <div class="flex items-center justify-between mb-5">
+                <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                    <i data-lucide="users" class="w-6 h-6"></i>
                 </div>
-                <div class="text-right">
-                    <span class="text-[10px] font-black text-purple-500 uppercase tracking-widest">1.2M kWh</span>
-                    <p class="text-[8px] font-bold text-slate-400 uppercase">Savings</p>
-                </div>
+                <span class="text-[10px] font-black text-emerald-600 bg-emerald-50 px-2 py-1 rounded-lg uppercase"><?php echo $userStats['this_month']; ?> this month</span>
             </div>
-            <h3 class="text-4xl font-black tracking-tight">KSh 32M</h3>
-            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-2">Total Sector Value</p>
+            <h3 class="text-3xl font-black tracking-tight"><?php echo number_format($userStats['active']); ?></h3>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Active Members</p>
+            <p class="text-[9px] text-slate-400 mt-2"><?php echo $userStats['pending']; ?> pending · <?php echo $userStats['suspended']; ?> suspended</p>
+        </a>
+
+        <!-- News -->
+        <a href="/admin/content.php?type=news" class="gsap-reveal card-bg p-7 rounded-[2rem] shadow-premium hover:border-blue-400 transition-all group cursor-pointer">
+            <div class="flex items-center justify-between mb-5">
+                <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                    <i data-lucide="newspaper" class="w-6 h-6"></i>
+                </div>
+                <span class="text-[10px] font-black text-blue-600 bg-blue-50 px-2 py-1 rounded-lg uppercase">Published</span>
+            </div>
+            <h3 class="text-3xl font-black tracking-tight"><?php echo $stats['news']; ?></h3>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">News Articles</p>
+        </a>
+
+        <!-- Events -->
+        <a href="/admin/events.php" class="gsap-reveal card-bg p-7 rounded-[2rem] shadow-premium hover:border-accent transition-all group cursor-pointer">
+            <div class="flex items-center justify-between mb-5">
+                <div class="w-12 h-12 bg-accent/10 rounded-2xl flex items-center justify-center text-accent group-hover:scale-110 transition-transform">
+                    <i data-lucide="calendar" class="w-6 h-6"></i>
+                </div>
+                <span class="text-[10px] font-black text-amber-700 bg-amber-50 px-2 py-1 rounded-lg uppercase">Upcoming</span>
+            </div>
+            <h3 class="text-3xl font-black tracking-tight"><?php echo $stats['events']; ?></h3>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Upcoming Events</p>
+        </a>
+
+        <!-- Unread Messages -->
+        <div class="gsap-reveal card-bg p-7 rounded-[2rem] shadow-premium hover:border-purple-400 transition-all group <?php echo $stats['messages'] > 0 ? 'ring-2 ring-purple-200' : ''; ?>">
+            <div class="flex items-center justify-between mb-5">
+                <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform">
+                    <i data-lucide="mail" class="w-6 h-6"></i>
+                </div>
+                <?php if ($stats['messages'] > 0): ?>
+                <span class="text-[10px] font-black text-red-600 bg-red-50 px-2 py-1 rounded-lg uppercase animate-pulse"><?php echo $stats['messages']; ?> Unread</span>
+                <?php endif; ?>
+            </div>
+            <h3 class="text-3xl font-black tracking-tight"><?php echo $stats['messages']; ?></h3>
+            <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Unread Messages</p>
         </div>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-        <!-- Recent Activities Feed -->
-        <div class="gsap-reveal lg:col-span-8 card-bg p-10 rounded-[3rem] shadow-premium space-y-8">
-            <div class="flex items-center justify-between border-b border-slate-50 pb-6">
+    <!-- Middle Row -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <!-- Activity Feed -->
+        <div class="gsap-reveal lg:col-span-8 card-bg p-8 rounded-[2rem] shadow-premium">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-5 mb-6">
                 <div>
-                    <h3 class="text-2xl font-black tracking-tight italic uppercase">Intelligence Feed</h3>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Real-time marketplace movements</p>
+                    <h3 class="text-xl font-black tracking-tight">Activity Feed</h3>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-0.5">Live system activity log</p>
                 </div>
-                <button onclick="UI.toast('Fetching latest marketplace events...', 'info'); location.reload();" class="px-5 py-2.5 bg-slate-50 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary transition-all flex items-center gap-2">
-                    <i data-lucide="refresh-cw" class="w-3 h-3"></i> Sync Data
-                </button>
+                <a href="/admin/analytics.php" class="px-5 py-2.5 bg-slate-50 text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-primary transition-all flex items-center gap-2">
+                    <i data-lucide="bar-chart-2" class="w-3.5 h-3.5"></i> View All
+                </a>
             </div>
-            
-            <div class="space-y-6">
-                <!-- Activity Item -->
-                <div onclick="UI.toast('Viewing Vendor Details...', 'info')" class="flex items-start gap-6 p-6 rounded-[2rem] hover:bg-slate-50 transition-all group cursor-pointer border border-transparent hover:border-slate-100">
-                    <div class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 shrink-0 group-hover:rotate-12 transition-transform shadow-sm">
-                        <i data-lucide="check-circle" class="w-6 h-6"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-tight">New Vendor Approved</h4>
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">2 mins ago</span>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-2 font-bold leading-relaxed">SolarLink Technologies has successfully completed KYC/KYB level 3 verification and is now active.</p>
-                        <div class="mt-4 flex gap-3">
-                            <span class="px-3 py-1 bg-slate-200/50 text-[8px] font-black uppercase text-slate-500 rounded-lg">Sector: Solar</span>
-                            <span class="px-3 py-1 bg-emerald-50 text-[8px] font-black uppercase text-emerald-600 rounded-lg shadow-sm">Verified Elite</span>
-                        </div>
-                    </div>
-                </div>
 
-                <div onclick="UI.toast('Opening Investigation Module...', 'warning')" class="flex items-start gap-6 p-6 rounded-[2rem] hover:bg-amber-50 transition-all group border-l-4 border-amber-400 bg-amber-50/5 cursor-pointer border-y border-r border-transparent hover:border-amber-100">
-                    <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 shrink-0 shadow-sm">
-                        <i data-lucide="alert-circle" class="w-6 h-6 animate-pulse"></i>
+            <div class="space-y-3">
+                <?php if (empty($recent)): ?>
+                    <div class="text-center py-8 text-slate-400">
+                        <i data-lucide="activity" class="w-8 h-8 mx-auto mb-2 opacity-30"></i>
+                        <p class="text-xs font-bold uppercase">No activity yet</p>
                     </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-tight">Flagged Transaction</h4>
-                            <span class="text-[9px] font-black text-amber-600 uppercase tracking-widest bg-amber-100 px-2 py-1 rounded">45 mins ago</span>
+                <?php else: foreach ($recent as $log):
+                    $icon = match(true) {
+                        str_contains($log['action'], 'login')    => ['check-circle','emerald'],
+                        str_contains($log['action'], 'create')   => ['plus-circle','blue'],
+                        str_contains($log['action'], 'update')   => ['edit-3','amber'],
+                        str_contains($log['action'], 'delete')   => ['trash-2','red'],
+                        str_contains($log['action'], 'settings') => ['settings','purple'],
+                        default                                   => ['activity','slate'],
+                    };
+                    $timeAgo = human_time_diff($log['created_at']);
+                ?>
+                <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-slate-50 transition-all">
+                    <div class="w-9 h-9 bg-<?php echo $icon[1]; ?>-100 rounded-xl flex items-center justify-center text-<?php echo $icon[1]; ?>-600 shrink-0">
+                        <i data-lucide="<?php echo $icon[0]; ?>" class="w-4 h-4"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-start gap-2">
+                            <p class="text-xs font-black text-slate-800 uppercase tracking-tight truncate">
+                                <?php echo Security::esc(str_replace('.', ' › ', $log['action'])); ?>
+                            </p>
+                            <span class="text-[9px] font-black text-slate-400 bg-slate-100 px-2 py-0.5 rounded shrink-0"><?php echo $timeAgo; ?></span>
                         </div>
-                        <p class="text-xs text-slate-500 mt-2 font-bold leading-relaxed">Potential escrow mismatch detected in biomass stove order #BK-9022 from Nakuru Hub.</p>
-                        <button class="mt-4 text-[9px] font-black text-primary uppercase tracking-[0.2em] flex items-center gap-2 hover:translate-x-1 transition-transform">
-                            Investigate Case <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                        </button>
+                        <p class="text-[11px] text-slate-500 font-bold mt-0.5 truncate"><?php echo Security::esc($log['description'] ?? ''); ?></p>
+                        <?php if ($log['first_name']): ?>
+                        <p class="text-[9px] text-slate-400 mt-0.5">by <?php echo Security::esc($log['first_name'] . ' ' . $log['last_name']); ?></p>
+                        <?php endif; ?>
                     </div>
                 </div>
-
-                <div onclick="UI.toast('Accessing Knowledge Hub...', 'info')" class="flex items-start gap-6 p-6 rounded-[2rem] hover:bg-blue-50 transition-all group cursor-pointer border border-transparent hover:border-blue-100">
-                    <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600 shrink-0 shadow-sm">
-                        <i data-lucide="newspaper" class="w-6 h-6"></i>
-                    </div>
-                    <div class="flex-1">
-                        <div class="flex justify-between items-start">
-                            <h4 class="text-sm font-black text-slate-800 uppercase tracking-tight">New Publication Active</h4>
-                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest bg-slate-100 px-2 py-1 rounded">3h ago</span>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-2 font-bold leading-relaxed">KEREA Standards 2026: Official Bio-Ethanol Fuel Certification guidelines are now live.</p>
-                    </div>
-                </div>
+                <?php endforeach; endif; ?>
             </div>
         </div>
 
-        <!-- Marketplace Health -->
-        <div class="gsap-reveal lg:col-span-4 space-y-10">
-            <div class="bg-slate-900 p-10 rounded-[3rem] text-white shadow-2xl relative overflow-hidden group border border-white/5">
-                <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/20 rounded-full blur-[100px] transition-transform duration-1000 group-hover:scale-150"></div>
-                <h3 class="text-xl font-black mb-10 relative z-10 italic uppercase border-l-4 border-primary pl-6">Sector Health</h3>
-                <div class="space-y-10 relative z-10">
-                    <div class="space-y-4">
-                        <div class="flex justify-between text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-                            <span>KYC verification rate</span>
-                            <span class="text-primary">85%</span>
-                        </div>
-                        <div class="h-2 bg-white/5 rounded-full overflow-hidden p-0.5">
-                            <div class="h-full bg-primary rounded-full shadow-[0_0_15px_rgba(57,222,79,0.5)]" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex justify-between text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-                            <span>Vendor Tier Status</span>
-                            <span class="text-accent">92% Tier 1</span>
-                        </div>
-                        <div class="h-2 bg-white/5 rounded-full overflow-hidden p-0.5">
-                            <div class="h-full bg-accent rounded-full shadow-[0_0_15px_rgba(245,158,11,0.5)]" style="width: 92%"></div>
-                        </div>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="flex justify-between text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
-                            <span>Audit Completion</span>
-                            <span class="text-blue-400">64%</span>
-                        </div>
-                        <div class="h-2 bg-white/5 rounded-full overflow-hidden p-0.5">
-                            <div class="h-full bg-blue-400 rounded-full shadow-[0_0_15px_rgba(96,165,250,0.5)]" style="width: 64%"></div>
-                        </div>
-                    </div>
+        <!-- Right Column -->
+        <div class="gsap-reveal lg:col-span-4 space-y-6">
+            <!-- Upcoming Events -->
+            <div class="card-bg p-7 rounded-[2rem] shadow-premium">
+                <div class="flex items-center justify-between mb-5">
+                    <h3 class="text-base font-black">Upcoming Events</h3>
+                    <a href="/admin/events.php" class="text-[10px] font-black text-primary uppercase tracking-widest hover:underline">Manage</a>
                 </div>
-                <button onclick="UI.toast('Generating comprehensive audit export...', 'warning')" class="w-full mt-12 py-6 bg-white/5 border border-white/10 rounded-[2rem] text-[10px] font-black uppercase tracking-[0.3em] hover:bg-white hover:text-black transition-all shadow-xl">Generate Audit Data</button>
+                <div class="space-y-3">
+                    <?php if (empty($events)): ?>
+                        <p class="text-xs text-slate-400 font-bold text-center py-4">No upcoming events</p>
+                    <?php else: foreach ($events as $ev):
+                        $d = new DateTime($ev['start_date']);
+                    ?>
+                    <div class="flex gap-4 items-center p-3 hover:bg-slate-50 rounded-xl transition-all">
+                        <div class="w-12 h-12 bg-slate-900 rounded-xl flex flex-col items-center justify-center shrink-0">
+                            <span class="text-[8px] font-black uppercase text-primary"><?php echo $d->format('M'); ?></span>
+                            <span class="text-sm font-black text-white"><?php echo $d->format('d'); ?></span>
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-[11px] font-black text-slate-800 uppercase tracking-tight truncate"><?php echo Security::esc($ev['title']); ?></p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase truncate mt-0.5"><?php echo Security::esc($ev['venue'] ?? ''); ?></p>
+                        </div>
+                    </div>
+                    <?php endforeach; endif; ?>
+                </div>
+                <a href="/admin/events.php#create" class="w-full mt-4 py-3 bg-slate-50 hover:bg-primary text-[10px] font-black uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i> Add Event
+                </a>
             </div>
 
-            <div class="card-bg p-10 rounded-[3rem] shadow-premium space-y-8">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-xl font-black italic uppercase tracking-tighter">Events</h3>
-                    <i data-lucide="calendar" class="w-5 h-5 text-slate-300"></i>
+            <!-- Quick Content Links -->
+            <div class="card-bg p-7 rounded-[2rem] shadow-premium">
+                <h3 class="text-base font-black mb-5">Quick Actions</h3>
+                <div class="space-y-2">
+                    <?php $quickLinks = [
+                        ['url'=>'/admin/content.php?type=news&action=create','icon'=>'newspaper','label'=>'Post News Article'],
+                        ['url'=>'/admin/content.php?type=publication&action=create','icon'=>'file-text','label'=>'Add Publication'],
+                        ['url'=>'/admin/events.php#create','icon'=>'calendar-plus','label'=>'Schedule Event'],
+                        ['url'=>'/admin/media.php','icon'=>'upload-cloud','label'=>'Upload Media'],
+                        ['url'=>'/admin/customization.php','icon'=>'settings','label'=>'Edit Settings'],
+                    ]; foreach ($quickLinks as $ql): ?>
+                    <a href="<?php echo Security::esc($ql['url']); ?>"
+                        class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-50 text-xs font-black text-slate-600 hover:text-primary transition-all group">
+                        <i data-lucide="<?php echo $ql['icon']; ?>" class="w-4 h-4 shrink-0 text-slate-400 group-hover:text-primary transition-colors"></i>
+                        <?php echo Security::esc($ql['label']); ?>
+                    </a>
+                    <?php endforeach; ?>
                 </div>
-                <div class="space-y-6">
-                    <div onclick="UI.toast('Event details: Nairobi KICC, Hall 4', 'info')" class="flex gap-6 items-center p-4 hover:bg-slate-50 rounded-2xl transition-all cursor-pointer group">
-                        <div class="w-14 h-14 bg-slate-900 rounded-2xl flex flex-col items-center justify-center shrink-0 shadow-lg group-hover:rotate-6 transition-transform">
-                            <span class="text-[9px] font-black uppercase text-primary leading-none mb-1">Jun</span>
-                            <span class="text-lg font-black text-white">24</span>
-                        </div>
-                        <div>
-                            <p class="text-[11px] font-black text-slate-800 uppercase tracking-tight">Solar Tech Expo 2026</p>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Nairobi Gateway</p>
-                        </div>
-                    </div>
-                    <div onclick="UI.toast('Event details: Mombasa Trade Center', 'info')" class="flex gap-6 items-center p-4 hover:bg-slate-50 rounded-2xl transition-all cursor-pointer group">
-                        <div class="w-14 h-14 bg-slate-100 border border-slate-200 rounded-2xl flex flex-col items-center justify-center shrink-0 group-hover:rotate-6 transition-transform">
-                            <span class="text-[9px] font-black uppercase text-slate-400 leading-none mb-1">Jul</span>
-                            <span class="text-lg font-black text-slate-800">12</span>
-                        </div>
-                        <div>
-                            <p class="text-[11px] font-black text-slate-800 uppercase tracking-tight">Biomass Policy Summit</p>
-                            <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1">Coast Region Hub</p>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="UI.toast('Loading full calendar view...', 'info')" class="w-full py-4 text-[9px] font-black uppercase text-slate-400 tracking-[0.3em] hover:text-primary transition-colors">View All Events</button>
             </div>
         </div>
     </div>
+
+    <!-- Unread Contact Messages -->
+    <?php if (!empty($messages)): ?>
+    <div class="gsap-reveal card-bg rounded-[2rem] shadow-premium overflow-hidden">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+            <h3 class="text-base font-black flex items-center gap-2">
+                <i data-lucide="inbox" class="w-5 h-5 text-purple-500"></i>
+                Unread Contact Messages
+                <span class="inline-flex items-center justify-center w-5 h-5 bg-red-500 text-white text-[9px] font-black rounded-full"><?php echo count($messages); ?></span>
+            </h3>
+        </div>
+        <div class="divide-y divide-slate-50">
+            <?php foreach ($messages as $msg): ?>
+            <div class="flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition-all">
+                <div>
+                    <p class="text-sm font-black text-slate-800"><?php echo Security::esc($msg['name']); ?></p>
+                    <p class="text-xs text-slate-500 font-bold"><?php echo Security::esc($msg['subject'] ?? 'No subject'); ?></p>
+                </div>
+                <span class="text-[9px] font-black text-slate-400 uppercase"><?php echo human_time_diff($msg['created_at']); ?></span>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
 </div>
 
-<?php include 'includes/footer.php'; ?>
+<?php
+function human_time_diff(string $dateStr): string {
+    $now  = new DateTime();
+    $then = new DateTime($dateStr);
+    $diff = $now->getTimestamp() - $then->getTimestamp();
+    if ($diff < 60)     return $diff . 's ago';
+    if ($diff < 3600)   return floor($diff/60) . 'm ago';
+    if ($diff < 86400)  return floor($diff/3600) . 'h ago';
+    return floor($diff/86400) . 'd ago';
+}
+
+require_once __DIR__ . '/includes/footer.php';
+?>

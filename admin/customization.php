@@ -1,72 +1,90 @@
 <?php
-// PHP Settings Save Handler
+/**
+ * KEREA Admin — Site Customization & Settings
+ * Saves all settings to MySQL via the backend Settings API.
+ */
+
+// ── DB Settings Save Handler (proxied to backend API) ───────────────────────
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action']) && $_GET['action'] === 'save') {
     header('Content-Type: application/json');
     try {
-        $settings_file = __DIR__ . '/../settings.json';
-        $current_settings = [];
-        if (file_exists($settings_file)) {
-            $current_settings = json_decode(file_get_contents($settings_file), true) ?? [];
-        }
+        // Bootstrap the backend stack so we can call the Setting model directly
+        require_once dirname(__DIR__) . '/backend/config/database.php';
+        require_once dirname(__DIR__) . '/backend/core/Database.php';
+        require_once dirname(__DIR__) . '/backend/core/Auth.php';
+        require_once dirname(__DIR__) . '/backend/core/Security.php';
+        require_once dirname(__DIR__) . '/backend/core/Uploader.php';
+        require_once dirname(__DIR__) . '/backend/models/Setting.php';
 
-        // List of all editable text/color fields
-        $fields = [
-            'primary_color', 'accent_color', 'font_family', 'nav_style',
-            'announcement_text', 'footer_bg_color', 'footer_text',
-            'header_email', 'header_phone', 'contact_email', 'contact_phone',
-            'contact_address', 'social_facebook', 'social_twitter', 'social_linkedin'
+        Auth::startSession();
+        Auth::requireRole('content_manager', BASE_URL . '/auth/');
+        Auth::requireCsrf();
+
+        $allowedFields = [
+            'site_name', 'site_tagline', 'primary_color', 'accent_color',
+            'font_family', 'nav_style', 'announcement_text', 'footer_bg_color',
+            'footer_text', 'header_email', 'header_phone', 'contact_email',
+            'contact_phone', 'contact_address', 'social_facebook',
+            'social_twitter', 'social_linkedin', 'social_youtube',
+            'hero_title', 'hero_subtitle', 'hero_cta_text', 'hero_cta_url',
+            'marketplace_url', 'show_market_counter',
+            'meta_description', 'google_analytics',
+            'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass',
+            'smtp_from', 'smtp_from_name',
         ];
 
-        foreach ($fields as $field) {
-            if (isset($_POST[$field])) {
-                $current_settings[$field] = $_POST[$field];
+        $toSave = [];
+        foreach ($allowedFields as $field) {
+            if (array_key_exists($field, $_POST)) {
+                $toSave[$field] = Security::clean((string)$_POST[$field]);
             }
         }
 
-        // Boolean toggle
-        $current_settings['show_market_counter'] = isset($_POST['show_market_counter']) && $_POST['show_market_counter'] === 'true';
+        // Handle logo uploads via Uploader
+        $assetsDir = dirname(__DIR__) . '/assets/';
+        if (!is_dir($assetsDir)) mkdir($assetsDir, 0755, true);
 
-        // Logo Upload Handling
-        $assets_dir = __DIR__ . '/../assets/';
-        if (!is_dir($assets_dir)) {
-            mkdir($assets_dir, 0777, true);
-        }
-
-        // Process Main Logo
-        if (isset($_FILES['logo_main']) && $_FILES['logo_main']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES['logo_main']['name'], PATHINFO_EXTENSION);
-            if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'svg', 'webp'])) {
-                $filename = 'custom-logo-main-' . time() . '.' . $ext;
-                if (move_uploaded_file($_FILES['logo_main']['tmp_name'], $assets_dir . $filename)) {
-                    $current_settings['logo_main'] = '/assets/' . $filename;
+        foreach (['logo_main', 'logo_load'] as $logoField) {
+            if (isset($_FILES[$logoField]) && $_FILES[$logoField]['error'] === UPLOAD_ERR_OK) {
+                $result = Uploader::upload($_FILES[$logoField], 'logos', ['image']);
+                if ($result['success']) {
+                    $destName = $logoField . '_' . time() . '.' .
+                                pathinfo($result['file']['filename'], PATHINFO_EXTENSION);
+                    copy($result['file']['file_path'], $assetsDir . $destName);
+                    $toSave[$logoField] = '/assets/' . $destName;
                 }
             }
         }
 
-        // Process Loading Logo
-        if (isset($_FILES['logo_load']) && $_FILES['logo_load']['error'] === UPLOAD_ERR_OK) {
-            $ext = pathinfo($_FILES['logo_load']['name'], PATHINFO_EXTENSION);
-            if (in_array(strtolower($ext), ['png', 'jpg', 'jpeg', 'svg', 'webp'])) {
-                $filename = 'custom-logo-load-' . time() . '.' . $ext;
-                if (move_uploaded_file($_FILES['logo_load']['tmp_name'], $assets_dir . $filename)) {
-                    $current_settings['logo_load'] = '/assets/' . $filename;
-                }
-            }
+        if (empty($toSave)) {
+            echo json_encode(['success' => false, 'message' => 'No valid settings to save.']);
+            exit;
         }
 
-        // Save back to settings.json
-        if (file_put_contents($settings_file, json_encode($current_settings, JSON_PRETTY_PRINT))) {
-            echo json_encode(['success' => true, 'message' => 'Appearance settings synchronized successfully.']);
+        $model  = new Setting();
+        $result = $model->saveMultiple($toSave);
+
+        if ($result['success']) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Settings saved to database. Changes are now live.',
+                'saved'   => $result['saved'],
+            ]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Failed to write settings file.']);
+            echo json_encode(['success' => false, 'message' => 'Some settings could not be saved.']);
         }
-    } catch (Exception $e) {
+
+    } catch (Throwable $e) {
         echo json_encode(['success' => false, 'message' => $e->getMessage()]);
     }
     exit;
 }
 
+// ── Load the admin shell ────────────────────────────────────────────────────
 include 'includes/header.php';
+
+// $settings is loaded in header.php; provide base_url for logo preview paths
+$base_url = '';
 ?>
 
 <div class="space-y-12">
@@ -485,13 +503,15 @@ function saveBranding() {
     lucide.createIcons();
     
     const formData = new FormData();
+    // Security: CSRF token required by the backend
+    formData.append('csrf_token', window.CSRF_TOKEN);
     formData.append('primary_color', document.getElementById('primary-color-picker').value);
     formData.append('accent_color', document.getElementById('accent-color-picker').value);
     formData.append('font_family', document.getElementById('font-family-select').value);
     formData.append('nav_style', navStyleSelected);
     formData.append('announcement_text', document.getElementById('announcement_text').value);
     formData.append('show_market_counter', marketActive ? 'true' : 'false');
-    
+
     formData.append('footer_bg_color', document.getElementById('footer-bg-picker').value);
     formData.append('footer_text', document.getElementById('footer_text').value);
     formData.append('header_email', document.getElementById('header_email').value);
@@ -502,7 +522,7 @@ function saveBranding() {
     formData.append('social_facebook', document.getElementById('social_facebook').value);
     formData.append('social_twitter', document.getElementById('social_twitter').value);
     formData.append('social_linkedin', document.getElementById('social_linkedin').value);
-    
+
     const logoMain = document.getElementById('logo-main-file').files[0];
     const logoLoad = document.getElementById('logo-load-file').files[0];
     if (logoMain) formData.append('logo_main', logoMain);
