@@ -65,7 +65,7 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
                     </button>
                     <div class="absolute top-full left-0 pt-2 w-64 bg-white border border-slate-100 rounded-2xl shadow-xl p-3 space-y-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-200 z-50">
                         <a href="<?php echo $base_url; ?>about/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">About Us</a>
-                        <a href="<?php echo $base_url; ?>leadership/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Executive Board</a>
+                        <a href="<?php echo $base_url; ?>leadership/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Leadership & Governance</a>
                         <a href="<?php echo $base_url; ?>member-directory/" class="block w-full text-left font-black text-[10px] uppercase tracking-widest p-3 rounded-xl text-black hover:bg-slate-50 hover:text-primary transition-all">Member Directory</a>
                     </div>
                 </div>
@@ -82,6 +82,7 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
                 </div>
 
                 <a href="<?php echo $base_url; ?>policy-advocacy/" class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary transition-colors">Policy Briefs</a>
+                <a href="<?php echo $base_url; ?>news/" class="text-[11px] font-black uppercase tracking-widest transition-colors <?php echo ($active_page == 'news') ? 'text-primary' : 'text-black hover:text-primary'; ?>">News & Press</a>
                 <a href="<?php echo htmlspecialchars($settings['marketplace_url'] ?? 'https://marketplace.kerea.org/'); ?>" target="_blank" rel="noopener noreferrer" class="px-6 py-2.5 bg-primary text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-lg shadow-primary/20 text-center">Marketplace ↗</a>
                 <a href="<?php echo $base_url; ?>contact/" class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary transition-colors"><?php echo ($active_page == 'contact') ? '<span class="text-primary">Contact</span>' : 'Contact'; ?></a>
             </nav>

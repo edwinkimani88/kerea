@@ -103,7 +103,7 @@ AddDefaultCharset UTF-8
     RewriteRule ^backend/api/([a-z_-]+)/?$ backend/api/$1.php [L,NC]
 
     # Route public page directories (trailing slash → index.php)
-    RewriteRule ^(about|contact|events|news|publications|knowledge-hub|membership|member-directory|standards|policy-advocacy|partnerships|access-to-finance|market-development|kenya-renewable-energy-association)/?$ $1/index.php [L,NC]
+    RewriteRule ^(about|leadership|contact|events|news|publications|knowledge-hub|membership|member-directory|standards|policy-advocacy|partnerships|access-to-finance|market-development|kenya-renewable-energy-association)/?$ $1/index.php [L,NC]
 
     # Route membership sub-pages
     RewriteRule ^membership/([a-z_-]+)/?$ membership/$1.php [L,NC]
