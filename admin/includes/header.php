@@ -16,9 +16,15 @@ require_once dirname(__DIR__, 2) . '/backend/models/Setting.php';
 Auth::startSession();
 Auth::requireRole('content_manager', '/auth/');
 
-// Load settings from DB
-$settingModel = new Setting();
-$settings     = $settingModel->all();
+// Load settings from DB with fallback
+$settings = [];
+try {
+    $settingModel = new Setting();
+    $settings     = $settingModel->all();
+} catch (\Throwable $e) {
+    require_once dirname(__DIR__, 2) . '/includes/config.php';
+    $settings = get_settings();
+}
 $currentUser  = Auth::user();
 
 // Get current page for active nav state

@@ -48,7 +48,6 @@ $logo_main_url  = (str_starts_with($logo_main_path, 'http://') || str_starts_wit
                     <li><a href="<?php echo $base_url; ?>portal/dashboard.html" class="text-xs text-primary hover:text-white transition-all font-bold flex items-center gap-2 group"><i data-lucide="shield-check" class="w-4 h-4 text-primary"></i> Member Portal</a></li>
                     <li><a href="<?php echo htmlspecialchars($settings['marketplace_url'] ?? 'https://marketplace.kerea.org/'); ?>" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="external-link" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> Marketplace ↗</a></li>
                     <li><a href="<?php echo $base_url; ?>member-directory/" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="chevron-right" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> Member Directory</a></li>
-                    <li><a href="<?php echo $base_url; ?>admin/" class="text-xs text-emerald-400 hover:text-white transition-all font-bold flex items-center gap-2 group"><i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-primary"></i> Admin CMS Dashboard</a></li>
                 </ul>
             </div>
 

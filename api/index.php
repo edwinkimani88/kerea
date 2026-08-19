@@ -15,6 +15,8 @@ $routes = [
 
     // ── Public Pages ──────────────────────────────────────
     '/about'                        => 'about/index.php',
+    '/leadership'                   => 'leadership/index.php',
+    '/leadership/index.php'         => 'leadership/index.php',
     '/contact'                      => 'contact/index.php',
     '/standards'                    => 'standards/index.php',
     '/policy-advocacy'              => 'policy-advocacy/index.php',

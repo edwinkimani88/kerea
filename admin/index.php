@@ -8,38 +8,55 @@ declare(strict_types=1);
 require_once dirname(__DIR__) . '/backend/models/Content.php';
 require_once dirname(__DIR__) . '/backend/models/User.php';
 
-$contentModel = new Content();
-$userModel    = new User();
-$stats        = $contentModel->dashboardStats();
-$userStats    = $userModel->stats();
+$stats = ['published_news' => 0, 'published_events' => 0, 'published_pubs' => 0, 'active_members' => 0];
+$userStats = ['total' => 0, 'active' => 0, 'pending' => 0, 'suspended' => 0, 'this_month' => 0];
+$recent = [];
+$events = [];
+$messages = [];
+$dbError = null;
 
-// Recent activity
-$db     = Database::getInstance();
-$recent = $db->fetchAll(
-    'SELECT l.action, l.entity_type, l.description, l.created_at, u.first_name, u.last_name
-       FROM activity_log l
-       LEFT JOIN users u ON u.id = l.user_id
-      ORDER BY l.created_at DESC LIMIT 8'
-);
+try {
+    $contentModel = new Content();
+    $userModel    = new User();
+    $stats        = $contentModel->dashboardStats();
+    $userStats    = $userModel->stats();
 
-// Upcoming events
-$events = $db->fetchAll(
-    "SELECT title, venue, start_date, event_type FROM events
-      WHERE status = 'upcoming' AND start_date >= CURDATE()
-      ORDER BY start_date ASC LIMIT 4"
-);
-
-// Recent messages
-$messages = $db->fetchAll(
-    "SELECT name, subject, created_at FROM contact_messages
-      WHERE status = 'unread'
-      ORDER BY created_at DESC LIMIT 5"
-);
+    $db     = Database::getInstance();
+    $recent = $db->fetchAll(
+        'SELECT l.action, l.entity_type, l.description, l.created_at, u.first_name, u.last_name
+           FROM activity_log l
+           LEFT JOIN users u ON u.id = l.user_id
+          ORDER BY l.created_at DESC LIMIT 8'
+    );
+    $events = $db->fetchAll(
+        "SELECT title, venue, start_date, event_type FROM events
+          WHERE status = 'upcoming' AND start_date >= CURDATE()
+          ORDER BY start_date ASC LIMIT 4"
+    );
+    $messages = $db->fetchAll(
+        "SELECT name, subject, created_at FROM contact_messages
+          WHERE status = 'unread'
+          ORDER BY created_at DESC LIMIT 5"
+    );
+} catch (\Throwable $e) {
+    $dbError = $e->getMessage();
+}
 
 require_once __DIR__ . '/includes/header.php';
 ?>
 
 <div class="space-y-10">
+    <?php if ($dbError): ?>
+    <div class="p-6 bg-amber-50 border border-amber-200 rounded-2xl flex items-start gap-4 text-amber-800">
+        <i data-lucide="database-backup" class="w-6 h-6 text-amber-600 mt-0.5 flex-shrink-0"></i>
+        <div>
+            <h4 class="font-bold text-amber-900 text-sm">Database Connection Notice</h4>
+            <p class="text-xs text-amber-700 mt-1 leading-relaxed">
+                The dashboard is running in offline mode (`<?php echo htmlspecialchars($dbError); ?>`). Please verify MySQL database status and environment configuration (`DB_HOST`, `DB_USER`, `DB_PASS`, `DB_NAME`).
+            </p>
+        </div>
+    </div>
+    <?php endif; ?>
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <!-- Members -->

@@ -6,12 +6,28 @@
 declare(strict_types=1);
 
 // ── Database Credentials ────────────────────────────────────
-// Update these before deploying to production cPanel.
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'kerea_db');
-define('DB_USER', 'root');       // cPanel: your cPanel DB username
-define('DB_PASS', '');           // cPanel: your cPanel DB password
-define('DB_CHARSET', 'utf8mb4');
+if (!defined('DB_HOST')) {
+    $dbHost = getenv('DB_HOST') ?: (getenv('MYSQLHOST') ?: 'localhost');
+    $dbPort = getenv('DB_PORT') ?: (getenv('MYSQLPORT') ?: '3306');
+    if ($dbPort !== '3306' && !str_contains($dbHost, ':')) {
+        $dbHost .= ':' . $dbPort;
+    }
+    define('DB_HOST', $dbHost);
+}
+if (!defined('DB_NAME')) {
+    define('DB_NAME', getenv('DB_NAME') ?: (getenv('MYSQLDATABASE') ?: 'kerea_db'));
+}
+if (!defined('DB_USER')) {
+    define('DB_USER', getenv('DB_USER') ?: (getenv('MYSQLUSER') ?: 'root'));
+}
+if (!defined('DB_PASS')) {
+    $pass = getenv('DB_PASS');
+    if ($pass === false) $pass = getenv('MYSQLPASSWORD');
+    define('DB_PASS', $pass !== false ? (string)$pass : '');
+}
+if (!defined('DB_CHARSET')) {
+    define('DB_CHARSET', 'utf8mb4');
+}
 
 // ── Application URLs ────────────────────────────────────────
 // Set BASE_URL to your actual domain in production.
