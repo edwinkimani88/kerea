@@ -1,6 +1,14 @@
 <?php 
 include_once __DIR__ . '/config.php';
-if(!isset($base_url)) $base_url = "/"; 
+$calculated_base = get_base_url();
+if (!isset($base_url) || $base_url === '/' || $base_url === './') {
+    $base_url = $calculated_base;
+}
+
+$logo_main_path = $settings['logo_main'] ?? 'assets/kerea-logo-main.png';
+$logo_main_url  = (str_starts_with($logo_main_path, 'http://') || str_starts_with($logo_main_path, 'https://'))
+    ? $logo_main_path
+    : $base_url . ltrim($logo_main_path, '/');
 ?>
 <footer class="text-white pt-24 pb-12 border-t border-white/5 relative overflow-hidden" style="background-color: <?php echo htmlspecialchars($settings['footer_bg_color'] ?? '#0a0a0a'); ?>">
     <!-- Parallax Background Pattern -->
@@ -11,20 +19,20 @@ if(!isset($base_url)) $base_url = "/";
             <!-- Brand Column -->
             <div class="space-y-8">
                 <a href="<?php echo $base_url; ?>" class="flex items-center gap-3">
-                    <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="KEREA" class="h-10 w-auto filter brightness-0 invert opacity-90">
+                    <img src="<?php echo $logo_main_url; ?>" alt="KEREA" class="h-10 w-auto filter brightness-0 invert opacity-90">
                     <span class="text-xl font-black tracking-tight">KEREA</span>
                 </a>
                 <p class="text-sm text-slate-400 leading-relaxed max-w-xs font-medium">
                     <?php echo htmlspecialchars($settings['footer_text'] ?? 'The primary representative body for all sustainable energy practitioners and corporate stakeholders across East Africa.'); ?>
                 </p>
                 <div class="flex gap-4">
-                    <a href="<?php echo htmlspecialchars($settings['social_facebook'] ?? '#'); ?>" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
+                    <a href="<?php echo htmlspecialchars($settings['social_facebook'] ?? 'https://www.facebook.com/KEREAKENYA/'); ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
                         <i data-lucide="facebook" class="w-4.5 h-4.5 text-slate-400 group-hover:text-black"></i>
                     </a>
-                    <a href="<?php echo htmlspecialchars($settings['social_twitter'] ?? '#'); ?>" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
+                    <a href="<?php echo htmlspecialchars($settings['social_twitter'] ?? 'https://x.com/KereaInfo'); ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
                         <i data-lucide="twitter" class="w-4.5 h-4.5 text-slate-400 group-hover:text-black"></i>
                     </a>
-                    <a href="<?php echo htmlspecialchars($settings['social_linkedin'] ?? '#'); ?>" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
+                    <a href="<?php echo htmlspecialchars($settings['social_linkedin'] ?? 'https://www.linkedin.com/company/kenya-renewable-energy-association/?originalSubdomain=ke'); ?>" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary transition-all group">
                         <i data-lucide="linkedin" class="w-4.5 h-4.5 text-slate-400 group-hover:text-black"></i>
                     </a>
                 </div>
@@ -36,10 +44,11 @@ if(!isset($base_url)) $base_url = "/";
                 <ul class="space-y-4">
                     <li><a href="<?php echo $base_url; ?>about/" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="chevron-right" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> Institutional Hub</a></li>
                     <li><a href="<?php echo $base_url; ?>leadership/" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="chevron-right" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> Leadership & Governance</a></li>
+                    <li><a href="<?php echo $base_url; ?>news/" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="chevron-right" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> News & Press Releases</a></li>
                     <li><a href="<?php echo $base_url; ?>portal/dashboard.html" class="text-xs text-primary hover:text-white transition-all font-bold flex items-center gap-2 group"><i data-lucide="shield-check" class="w-4 h-4 text-primary"></i> Member Portal</a></li>
                     <li><a href="<?php echo htmlspecialchars($settings['marketplace_url'] ?? 'https://marketplace.kerea.org/'); ?>" target="_blank" rel="noopener noreferrer" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="external-link" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> Marketplace ↗</a></li>
                     <li><a href="<?php echo $base_url; ?>member-directory/" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="chevron-right" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> Member Directory</a></li>
-                    <li><a href="<?php echo $base_url; ?>news/" class="text-xs text-slate-400 hover:text-primary transition-all font-bold flex items-center gap-2 group"><i data-lucide="chevron-right" class="w-3 h-3 text-primary opacity-0 group-hover:opacity-100 transition-opacity"></i> Press Releases</a></li>
+                    <li><a href="<?php echo $base_url; ?>admin/" class="text-xs text-emerald-400 hover:text-white transition-all font-bold flex items-center gap-2 group"><i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-primary"></i> Admin CMS Dashboard</a></li>
                 </ul>
             </div>
 

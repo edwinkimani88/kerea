@@ -7,6 +7,19 @@
  * This file replaces the old settings.json approach.
  */
 
+if (!function_exists('get_base_url')) {
+    function get_base_url(): string
+    {
+        $docRoot = isset($_SERVER['DOCUMENT_ROOT']) ? str_replace('\\', '/', rtrim($_SERVER['DOCUMENT_ROOT'], '/\\')) : '';
+        $appRoot = str_replace('\\', '/', dirname(__DIR__));
+        if (!empty($docRoot) && str_starts_with(strtolower($appRoot), strtolower($docRoot))) {
+            $rel = substr($appRoot, strlen($docRoot));
+            return rtrim(str_replace('\\', '/', $rel), '/') . '/';
+        }
+        return '/';
+    }
+}
+
 if (!function_exists('get_settings')) {
 
     function get_settings(): array

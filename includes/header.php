@@ -1,7 +1,20 @@
 <?php
 include_once __DIR__ . '/config.php';
-if(!isset($base_url)) $base_url = "/";
-if(!isset($active_page)) $active_page = "home";
+$calculated_base = get_base_url();
+if (!isset($base_url) || $base_url === '/' || $base_url === './') {
+    $base_url = $calculated_base;
+}
+if (!isset($active_page)) $active_page = "home";
+
+$logo_main_path = $settings['logo_main'] ?? 'assets/kerea-logo-main.png';
+$logo_main_url  = (str_starts_with($logo_main_path, 'http://') || str_starts_with($logo_main_path, 'https://'))
+    ? $logo_main_path
+    : $base_url . ltrim($logo_main_path, '/');
+
+$logo_load_path = $settings['logo_load'] ?? 'assets/logo-load.png';
+$logo_load_url  = (str_starts_with($logo_load_path, 'http://') || str_starts_with($logo_load_path, 'https://'))
+    ? $logo_load_path
+    : $base_url . ltrim($logo_load_path, '/');
 
 $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass') 
     ? 'sticky top-4 z-50 max-w-7xl mx-auto rounded-3xl bg-white/70 backdrop-blur-xl border border-slate-200/50 shadow-xl py-3 px-6 transition-all duration-300'
@@ -11,7 +24,7 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
 <!-- Premium Preloader - Using Logo Load -->
 <div id="preloader">
     <div class="loader-content">
-        <img src="<?php echo $base_url . ltrim($settings['logo_load'] ?? 'assets/logo-load.png', '/'); ?>" alt="Kerea Loading" class="loader-logo">
+        <img src="<?php echo $logo_load_url; ?>" alt="Kerea Loading" class="loader-logo">
 
         <div class="w-32 h-1 bg-slate-100 rounded-full overflow-hidden mt-4">
             <div id="preloader-bar" class="h-full bg-primary w-0 transition-all duration-700"></div>
@@ -38,6 +51,10 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
                 <i data-lucide="phone" class="w-3 h-3 text-primary"></i>
                 <span><?php echo htmlspecialchars($settings['header_phone'] ?? '(+254) 740 541 896'); ?></span>
             </div>
+            <a href="<?php echo $base_url; ?>admin/" class="flex items-center gap-1.5 text-primary hover:text-white font-bold transition-colors">
+                <i data-lucide="shield" class="w-3 h-3 text-primary"></i>
+                <span>Admin CMS</span>
+            </a>
         </div>
     </div>
 </div>
@@ -48,7 +65,7 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
         <div class="flex justify-between items-center">
             <!-- Logo - Official KereaMain -->
             <a href="<?php echo $base_url; ?>" class="flex items-center gap-4 group">
-                <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="KEREA" class="h-12 w-auto object-contain">
+                <img src="<?php echo $logo_main_url; ?>" alt="KEREA" class="h-12 w-auto object-contain">
                 <div class="hidden sm:flex flex-col border-l border-slate-200 pl-4">
                     <span class="text-xl font-black tracking-tight text-black leading-none">KEREA</span>
                     <span class="text-[10px] font-bold text-slate-500 tracking-widest uppercase mt-1">Industry Peak Body</span>
@@ -82,13 +99,15 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
                 </div>
 
                 <a href="<?php echo $base_url; ?>policy-advocacy/" class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary transition-colors">Policy Briefs</a>
-                <a href="<?php echo $base_url; ?>news/" class="text-[11px] font-black uppercase tracking-widest transition-colors <?php echo ($active_page == 'news') ? 'text-primary' : 'text-black hover:text-primary'; ?>">News & Press</a>
                 <a href="<?php echo htmlspecialchars($settings['marketplace_url'] ?? 'https://marketplace.kerea.org/'); ?>" target="_blank" rel="noopener noreferrer" class="px-6 py-2.5 bg-primary text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-slate-900 hover:text-white transition-all shadow-lg shadow-primary/20 text-center">Marketplace ↗</a>
                 <a href="<?php echo $base_url; ?>contact/" class="text-[11px] font-black uppercase tracking-widest text-black hover:text-primary transition-colors"><?php echo ($active_page == 'contact') ? '<span class="text-primary">Contact</span>' : 'Contact'; ?></a>
             </nav>
 
-            <div class="flex items-center gap-4">
-                <a href="<?php echo $base_url; ?>auth/" class="hidden sm:flex items-center gap-2 px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-black bg-slate-100 hover:bg-primary hover:text-black transition-all border border-slate-200">
+            <div class="flex items-center gap-3">
+                <a href="<?php echo $base_url; ?>admin/" class="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white bg-slate-900 hover:bg-primary hover:text-black transition-all shadow-md">
+                    <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-primary"></i> Admin CMS
+                </a>
+                <a href="<?php echo $base_url; ?>auth/" class="hidden sm:flex items-center gap-2 px-4 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest text-black bg-slate-100 hover:bg-primary hover:text-black transition-all border border-slate-200">
                     <i data-lucide="lock" class="w-4 h-4"></i> Sign In
                 </a>
                 <button id="mobile-menu-btn" class="xl:hidden p-3 rounded-xl bg-slate-100 text-black hover:bg-primary transition-all" aria-label="Menu">
@@ -106,7 +125,7 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
     <div class="absolute top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl flex flex-col overflow-y-auto">
         <div class="p-6 border-b border-slate-100 flex items-center justify-between">
             <a href="<?php echo $base_url; ?>" class="flex items-center gap-3">
-                <img src="<?php echo $base_url . ltrim($settings['logo_main'] ?? 'assets/kerea-logo-main.png', '/'); ?>" alt="KEREA" class="h-9 w-auto">
+                <img src="<?php echo $logo_main_url; ?>" alt="KEREA" class="h-9 w-auto">
                 <span class="font-black text-lg tracking-tight text-black">KEREA</span>
             </a>
             <button id="mobile-menu-close" class="p-2 rounded-xl bg-slate-100 hover:bg-primary transition-all">
@@ -119,6 +138,9 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
             </a>
             <a href="<?php echo $base_url; ?>about/" class="flex items-center gap-3 px-4 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest <?php echo $active_page=='about' ? 'bg-primary text-black' : 'text-slate-700 hover:bg-slate-50 hover:text-primary'; ?> transition-all">
                 <i data-lucide="info" class="w-4 h-4"></i> About Us
+            </a>
+            <a href="<?php echo $base_url; ?>leadership/" class="flex items-center gap-3 px-4 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest text-slate-700 hover:bg-slate-50 hover:text-primary transition-all">
+                <i data-lucide="shield-check" class="w-4 h-4 text-primary"></i> Leadership & Governance
             </a>
             <a href="<?php echo $base_url; ?>membership/" class="flex items-center gap-3 px-4 py-3 rounded-xl font-black text-[11px] uppercase tracking-widest <?php echo $active_page=='membership' ? 'bg-primary text-black' : 'text-slate-700 hover:bg-slate-50 hover:text-primary'; ?> transition-all">
                 <i data-lucide="award" class="w-4 h-4"></i> Membership
@@ -137,6 +159,9 @@ $nav_style_class = (($settings['nav_style'] ?? 'static') === 'glass')
             </a>
         </nav>
         <div class="p-6 border-t border-slate-100 space-y-3">
+            <a href="<?php echo $base_url; ?>admin/" class="w-full py-4 bg-slate-900 text-white font-black text-[10px] uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 hover:bg-primary hover:text-black transition-all">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-primary"></i> Admin CMS Dashboard
+            </a>
             <a href="<?php echo htmlspecialchars($settings['marketplace_url'] ?? 'https://marketplace.kerea.org/'); ?>" target="_blank" rel="noopener noreferrer" class="w-full py-4 bg-primary text-black font-black text-[10px] uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all">
                 <i data-lucide="shopping-bag" class="w-4 h-4"></i> Marketplace ↗
             </a>
