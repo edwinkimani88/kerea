@@ -20,15 +20,29 @@ class Auth
             self::$sessionStarted = true;
             return;
         }
+
+        // On serverless/read-only systems (like Vercel/Lambda), ensure writable session dir
+        $savePath = session_save_path();
+        if (empty($savePath) || !is_writable($savePath)) {
+            $tmp = sys_get_temp_dir();
+            if (!empty($tmp) && is_dir($tmp) && is_writable($tmp)) {
+                @session_save_path($tmp);
+            }
+        }
+
+        $isSecure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+            || (!empty($_SERVER['SERVER_PORT']) && (int)$_SERVER['SERVER_PORT'] === 443);
+
         session_name(SESSION_NAME);
         session_set_cookie_params([
             'lifetime' => SESSION_LIFETIME,
             'path'     => '/',
-            'secure'   => isset($_SERVER['HTTPS']),
+            'secure'   => $isSecure,
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
-        session_start();
+        @session_start();
         self::$sessionStarted = true;
     }
 
