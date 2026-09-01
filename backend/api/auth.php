@@ -13,10 +13,22 @@ require_once dirname(__DIR__, 2) . '/backend/core/Security.php';
 require_once dirname(__DIR__, 2) . '/backend/models/User.php';
 require_once dirname(__DIR__, 2) . '/includes/config.php';
 
+// Suppress any stray PHP warnings/notices so they don't corrupt JSON
+ob_start();
+
 header('Content-Type: application/json');
 Auth::startSession();
 
+// ── Dummy / Fallback Credentials (no DB required) ────────────
+// Used ONLY when the database is unreachable.
+// Change or remove these before going fully live in production.
+define('DUMMY_ADMIN_EMAIL', 'admin@kerea.org');
+define('DUMMY_ADMIN_PASS',  'Admin@KEREA2026');
+
 $action = $_GET['action'] ?? $_POST['action'] ?? '';
+
+// Discard any output printed before dispatch (PHP warnings etc.)
+ob_end_clean();
 
 match ($action) {
     'login'   => handleLogin(),
@@ -25,12 +37,6 @@ match ($action) {
     'reset'   => handleReset(),
     default   => Security::jsonResponse(false, 'Unknown action.', [], 400),
 };
-
-// ── Dummy / Fallback Credentials (no DB required) ────────────
-// These are used ONLY when the database is unreachable.
-// Remove or change these before going fully live in production.
-define('DUMMY_ADMIN_EMAIL', 'admin@kerea.org');
-define('DUMMY_ADMIN_PASS',  'Admin@KEREA2026');
 
 // ── Login ────────────────────────────────────────────────────
 function handleLogin(): never
@@ -57,9 +63,12 @@ function handleLogin(): never
     // ── Try real DB login first ───────────────────────────────
     $user = null;
     try {
+        ob_start();                          // buffer any DB warnings
         $userModel = new User();
         $user      = $userModel->authenticate($email, $password);
+        ob_end_clean();                      // discard buffered output
     } catch (Throwable) {
+        ob_end_clean();                      // discard on error too
         // DB unavailable — fall through to dummy check below
         $user = null;
     }
