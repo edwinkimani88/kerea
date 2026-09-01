@@ -30,6 +30,9 @@ const UI = {
     confirm(msg) { return window.confirm(msg); },
 
     async apiPost(url, formData) {
+        if (url.startsWith('/')) {
+            url = '<?php echo get_base_url(); ?>' + url.replace(/^\//, '');
+        }
         try {
             const res  = await fetch(url, { method: 'POST', body: formData });
             return await res.json();
@@ -40,6 +43,9 @@ const UI = {
     },
 
     async apiGet(url) {
+        if (url.startsWith('/')) {
+            url = '<?php echo get_base_url(); ?>' + url.replace(/^\//, '');
+        }
         try {
             const res = await fetch(url);
             return await res.json();
@@ -54,7 +60,7 @@ async function handleLogout() {
     const fd = new FormData();
     fd.append('csrf_token', '<?php echo Security::esc($csrfToken); ?>');
     const data = await UI.apiPost('/backend/api/auth.php?action=logout', fd);
-    if (data.success) window.location.href = '/auth/';
+    if (data.success) window.location.href = '<?php echo get_base_url(); ?>auth/';
     else UI.toast('Logout failed.', 'error');
 }
 

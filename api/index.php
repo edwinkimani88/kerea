@@ -73,6 +73,8 @@ $routes = [
     // ── Auth ──────────────────────────────────────────────────
     '/auth'                               => 'auth/index.php',
     '/auth/index.php'                     => 'auth/index.php',
+    '/auth/register'                      => 'auth/register.php',
+    '/auth/register.php'                  => 'auth/register.php',
     '/auth/forgot-password'               => 'auth/forgot-password.php',
     '/auth/forgot-password.php'           => 'auth/forgot-password.php',
     '/auth/reset-password'                => 'auth/reset-password.php',

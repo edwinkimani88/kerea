@@ -12,9 +12,12 @@ require_once dirname(__DIR__, 2) . '/backend/core/Auth.php';
 require_once dirname(__DIR__, 2) . '/backend/core/Security.php';
 require_once dirname(__DIR__, 2) . '/backend/models/Setting.php';
 
+require_once dirname(__DIR__, 2) . '/includes/config.php';
+$baseUrl = get_base_url();
+
 // Start session & enforce login
 Auth::startSession();
-Auth::requireRole('content_manager', '/auth/');
+Auth::requireRole('content_manager', $baseUrl . 'auth/');
 
 // Load settings from DB with fallback
 $settings = [];
@@ -111,7 +114,7 @@ function canAccess(string $requiredRole, array $hierarchy, int $currentLevel): b
 <aside id="sidebar" class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-slate-100 shadow-xl z-40 flex flex-col">
     <!-- Logo -->
     <div class="p-6 border-b border-slate-100">
-        <a href="/admin/" class="flex items-center gap-3">
+        <a href="<?php echo $baseUrl; ?>admin/" class="flex items-center gap-3">
             <img src="<?php echo Security::esc($settings['logo_main'] ?? '/assets/kerea-logo-main.png'); ?>" alt="KEREA" class="h-8 w-auto">
             <div>
                 <span class="text-base font-black tracking-tight text-slate-900 block">KEREA</span>
@@ -124,7 +127,7 @@ function canAccess(string $requiredRole, array $hierarchy, int $currentLevel): b
     <nav class="flex-1 overflow-y-auto p-4 space-y-1">
         <?php foreach ($navItems as $item): ?>
             <?php if (!canAccess($item['role'], $roleHierarchy, $currentLevel)) continue; ?>
-            <a href="/admin/<?php echo $item['file']; ?>.php"
+            <a href="<?php echo $baseUrl; ?>admin/<?php echo $item['file']; ?>.php"
                class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-600 transition-all
                       <?php echo $currentFile === $item['file'] ? 'active' : ''; ?>">
                 <i data-lucide="<?php echo Security::esc($item['icon']); ?>" class="w-4 h-4 shrink-0"></i>
@@ -133,7 +136,7 @@ function canAccess(string $requiredRole, array $hierarchy, int $currentLevel): b
         <?php endforeach; ?>
 
         <div class="pt-4 border-t border-slate-100 mt-4">
-            <a href="/" target="_blank"
+            <a href="<?php echo $baseUrl; ?>" target="_blank"
                class="sidebar-item flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-black uppercase tracking-widest text-slate-500 transition-all">
                 <i data-lucide="external-link" class="w-4 h-4 shrink-0"></i>
                 View Website
@@ -186,7 +189,7 @@ function canAccess(string $requiredRole, array $hierarchy, int $currentLevel): b
                     <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
                     DB Connected
                 </span>
-                <a href="/admin/customization.php" class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:bg-primary hover:text-black hover:border-primary transition-all">
+                <a href="<?php echo $baseUrl; ?>admin/customization.php" class="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-500 hover:bg-primary hover:text-black hover:border-primary transition-all">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                 </a>
             </div>

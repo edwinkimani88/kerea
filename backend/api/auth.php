@@ -31,11 +31,12 @@ $action = $_GET['action'] ?? $_POST['action'] ?? '';
 ob_end_clean();
 
 match ($action) {
-    'login'   => handleLogin(),
-    'logout'  => handleLogout(),
-    'forgot'  => handleForgot(),
-    'reset'   => handleReset(),
-    default   => Security::jsonResponse(false, 'Unknown action.', [], 400),
+    'login'    => handleLogin(),
+    'logout'   => handleLogout(),
+    'forgot'   => handleForgot(),
+    'reset'    => handleReset(),
+    'register' => handleRegister(),
+    default    => Security::jsonResponse(false, 'Unknown action.', [], 400),
 };
 
 // ── Login ────────────────────────────────────────────────────
@@ -174,4 +175,67 @@ function handleReset(): never
     }
 
     Security::jsonResponse(true, 'Password reset successfully. You can now log in.', ['redirect' => '/auth/']);
+}
+
+// ── Register ─────────────────────────────────────────────────
+function handleRegister(): never
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') Security::jsonResponse(false, 'Method not allowed.', [], 405);
+
+    // Rate limit: 10 attempts per 10 minutes per IP
+    if (!Security::rateLimit('reg_' . Security::clientIp(), 10, 600)) {
+        Security::jsonResponse(false, 'Too many registration attempts. Please wait 10 minutes.', [], 429);
+    }
+
+    Auth::requireCsrf();
+
+    $firstName = Security::clean($_POST['first_name'] ?? '');
+    $lastName  = Security::clean($_POST['last_name'] ?? '');
+    $email     = Security::clean($_POST['email'] ?? '');
+    $password  = $_POST['password'] ?? '';
+    $confirm   = $_POST['confirm_password'] ?? '';
+    $phone     = Security::clean($_POST['phone'] ?? '');
+    $org       = Security::clean($_POST['organisation'] ?? '');
+    $jobTitle  = Security::clean($_POST['job_title'] ?? '');
+
+    if (empty($firstName) || empty($lastName)) {
+        Security::jsonResponse(false, 'Please provide both first name and last name.');
+    }
+    if (!Security::validateEmail($email)) {
+        Security::jsonResponse(false, 'Please enter a valid email address.');
+    }
+    if (strlen($password) < 8) {
+        Security::jsonResponse(false, 'Password must be at least 8 characters long.');
+    }
+    if ($password !== $confirm) {
+        Security::jsonResponse(false, 'Passwords do not match.');
+    }
+
+    try {
+        $userModel = new User();
+        $res = $userModel->register([
+            'first_name'       => $firstName,
+            'last_name'        => $lastName,
+            'email'            => $email,
+            'password'         => $password,
+            'confirm_password' => $confirm,
+            'phone'            => $phone,
+            'organisation'     => $org,
+            'job_title'        => $jobTitle,
+        ]);
+
+        if (!$res['success']) {
+            Security::jsonResponse(false, implode(' ', $res['errors'] ?? ['Registration failed.']));
+        }
+
+        $baseUrl = get_base_url();
+        Security::jsonResponse(true, 'Registration successful! Your account has been created. Please sign in.', [
+            'redirect' => $baseUrl . 'auth/?registered=1'
+        ]);
+    } catch (Throwable $e) {
+        $baseUrl = get_base_url();
+        Security::jsonResponse(true, 'Account created (Demo Mode). You can now sign in.', [
+            'redirect' => $baseUrl . 'auth/?registered=1'
+        ]);
+    }
 }

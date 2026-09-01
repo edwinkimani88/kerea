@@ -1,20 +1,4 @@
--- ============================================================
--- KEREA Corporate Website — cPanel MySQL Import Script
--- Version: 1.0.0
--- Compatible: MySQL 5.7+ / MariaDB 10.3+
---
--- HOW TO USE IN cPANEL:
--- 1. Log in to cPanel → MySQL Databases
--- 2. Create a new database  e.g.  yourusername_kerea
--- 3. Create a new MySQL user with a strong password
--- 4. Add the user to the database — grant ALL PRIVILEGES
--- 5. Go to cPanel → phpMyAdmin
--- 6. Click on your new database in the left sidebar
--- 7. Click "Import" tab → Choose File → select this file → Go
---
--- NOTE: Do NOT include CREATE DATABASE / USE statements here.
---       cPanel phpMyAdmin already has your database selected.
--- ============================================================
+
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;

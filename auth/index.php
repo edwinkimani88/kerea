@@ -13,10 +13,12 @@ require_once dirname(__DIR__) . '/includes/config.php';
 
 Auth::startSession();
 
+$baseUrl = get_base_url();
+
 // Already logged in → redirect to appropriate dashboard
 if (Auth::check()) {
     $role = Auth::role();
-    $redirect = in_array($role, ['super_admin','admin','content_manager']) ? '/admin/' : '/membership/dashboard/';
+    $redirect = in_array($role, ['super_admin','admin','content_manager']) ? $baseUrl . 'admin/' : $baseUrl . 'membership/dashboard/';
     header('Location: ' . $redirect);
     exit;
 }
@@ -25,7 +27,8 @@ $csrfToken = Auth::csrfToken();
 $error     = '';
 $success   = '';
 
-// Flash messages from session
+// Flash messages from session or query param
+if (isset($_GET['registered']))         { $success = 'Account created successfully! Please sign in with your credentials.'; }
 if (!empty($_SESSION['flash_success'])) { $success = $_SESSION['flash_success']; unset($_SESSION['flash_success']); }
 if (!empty($_SESSION['flash_error']))   { $error   = $_SESSION['flash_error'];   unset($_SESSION['flash_error']); }
 ?>
@@ -138,7 +141,7 @@ if (!empty($_SESSION['flash_error']))   { $error   = $_SESSION['flash_error'];  
                 <div class="space-y-2">
                     <div class="flex justify-between items-center">
                         <label for="password" class="text-xs font-black text-slate-500 uppercase tracking-widest">Password</label>
-                        <a href="/auth/forgot-password.php" class="text-xs font-bold text-primary hover:underline">Forgot password?</a>
+                        <a href="<?php echo $baseUrl; ?>auth/forgot-password.php" class="text-xs font-bold text-primary hover:underline">Forgot password?</a>
                     </div>
                     <div class="relative">
                         <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
@@ -160,10 +163,10 @@ if (!empty($_SESSION['flash_error']))   { $error   = $_SESSION['flash_error'];  
 
             <div class="mt-8 text-center">
                 <p class="text-sm text-slate-500 font-bold">Not a member yet?
-                    <a href="/auth/register.php" class="text-primary hover:underline font-black">Join KEREA</a>
+                    <a href="<?php echo $baseUrl; ?>auth/register.php" class="text-primary hover:underline font-black">Join KEREA</a>
                 </p>
                 <p class="text-sm text-slate-500 font-bold mt-2">
-                    <a href="/" class="text-slate-400 hover:text-primary transition-colors">← Back to Website</a>
+                    <a href="<?php echo $baseUrl; ?>" class="text-slate-400 hover:text-primary transition-colors">← Back to Website</a>
                 </p>
             </div>
         </div>
@@ -198,7 +201,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
     const errDiv = document.getElementById('flash-error');
 
     try {
-        const resp = await fetch('/backend/api/auth.php?action=login', {
+        const resp = await fetch('<?php echo $baseUrl; ?>backend/api/auth.php?action=login', {
             method: 'POST',
             body:   new FormData(form),
         });
@@ -206,7 +209,7 @@ document.getElementById('login-form').addEventListener('submit', async function(
 
         if (data.success) {
             btn.innerHTML = '✓ Redirecting…';
-            window.location.href = data.data?.redirect || '/admin/';
+            window.location.href = data.data?.redirect || '<?php echo $baseUrl; ?>admin/';
         } else {
             if (errDiv) {
                 errDiv.classList.remove('hidden');
