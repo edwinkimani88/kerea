@@ -64,7 +64,7 @@ class User
             'password_hash' => Security::hashPassword($data['password']),
             'organisation'  => Security::clean($data['organisation'] ?? ''),
             'job_title'     => Security::clean($data['job_title'] ?? ''),
-            'status'        => 'pending',
+            'status'        => 'active', // Auto-approved on self-registration
         ]);
 
         Auth::log('user.register', 'user', $userId, 'New member registration: ' . $data['email']);
